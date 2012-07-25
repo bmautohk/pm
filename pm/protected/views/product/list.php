@@ -1,14 +1,18 @@
  <div id="rightmain">
  
  	<div class="rightmain_content">
+ 		<? $this->widget('ResultMessage', array('msg'=>$msg)); ?>
  		<br>
 	 	<div>
+	 		<input type="button" onclick="location.href='<?=Yii::app()->createUrl('product/import') ?>'" value="IMPORT PRODUCT" />
+	 		<input type="button" onclick="location.href='<?=Yii::app()->createUrl('product/export') ?>'" value="EXPORT PRODUCT" /><br>
 			<input type="button" onclick="location.href='<?=Yii::app()->createUrl('product/add') ?>'" value="+ ADD NEW PRODUCT" /><br><br>
+			
 		</div>
 	 
 		<?php $form=$this->beginWidget('CActiveForm', array(
 			'id'=>'form1',
-			'action'=>Yii::app()->createUrl('product/searchByKeyword'),
+			'action'=>Yii::app()->createUrl('product/searchByFilter'),
 			'method'=>'GET',
 			'enableAjaxValidation'=>false,
 		)); ?>
@@ -29,62 +33,62 @@
 			
 			<div class="grid">
 				<div class="grid-c1">
-					<span class="input_label"><? echo Yii::t('product_message', 'customer'); ?></span><? echo $form->textField($model, 'customer', array('style'=>'width:314px')); ?>
+					<span class="input_label"><span><? echo Yii::t('product_message', 'customer'); ?></span></span><span class="input_field"><? echo $form->textField($model, 'customer'); ?></span>
 				</div>
 				<div class="grid-m2"></div>
 				<div class="grid-c2">
-					<span class="input_label"><? echo Yii::t('product_message', 'no_jp'); ?></span><? echo $form->textField($model, 'no_jp', array('style'=>'width:314px')); ?><br/>
+					<span class="input_label"><span><? echo Yii::t('product_message', 'no_jp'); ?></span></span><span class="input_field"><? echo $form->textField($model, 'no_jp'); ?></span>
 				</div>
 				
 				<div class="grid-c1">
-					<span class="input_label"><? echo Yii::t('product_message', 'factory_no'); ?></span><? echo $form->textField($model, 'factory_no', array('style'=>'width:282px')); ?>
+					<span class="input_label"><span><? echo Yii::t('product_message', 'factory_no'); ?></span></span><span class="input_field"><? echo $form->textField($model, 'factory_no'); ?></span>
 				</div>
 				<div class="grid-m2"></div>
 				<div class="grid-c2">
-					<span class="input_label"><? echo Yii::t('product_message', 'made'); ?></span><? echo $form->textField($model, 'made', array('readonly'=>true, 'style'=>'width:314px')); ?>
+					<span class="input_label"><span><? echo Yii::t('product_message', 'made'); ?></span></span><span class="input_field"><? echo $form->textField($model, 'made'); ?></span>
 				</div>
 				
 				<div class="grid-c1">
-					<span class="input_label"><? echo Yii::t('product_message', 'model'); ?></span><? echo $form->textField($model, 'model', array('style'=>'width:314px')); ?>
+					<span class="input_label"><span><? echo Yii::t('product_message', 'model'); ?></span></span><span class="input_field"><? echo $form->textField($model, 'model'); ?></span>
 				</div>
 				<div class="grid-m2"></div>
 				<div class="grid-c2">
-					<span class="input_label"><? echo Yii::t('product_message', 'model_no'); ?></span><? echo $form->textField($model, 'model_no', array('style'=>'width:314px')); ?>
+					<span class="input_label"><span><? echo Yii::t('product_message', 'model_no'); ?></span></span><span class="input_field"><? echo $form->textField($model, 'model_no'); ?></span>
 				</div>
 				<br style="clear:both" />
 			</div>
 			
 			<div id="advanceFilter" class="grid" style="display:none">
 				<div class="grid-c1">
-					<span class="input_label"><? echo Yii::t('product_message', 'year'); ?></span><? echo $form->textField($model, 'year', array('style'=>'width:314px')); ?>
+					<span class="input_label"><span><? echo Yii::t('product_message', 'year'); ?></span></span><span class="input_field"><? echo $form->textField($model, 'year'); ?></span>
 				</div>
 				<div class="grid-m2"></div>
 				<div class="grid-c2">
-					<span class="input_label"><? echo Yii::t('product_message', 'item_group'); ?></span><? echo $form->textField($model, 'item_group', array('style'=>'width:298px')); ?>
+					<span class="input_label"><span><? echo Yii::t('product_message', 'item_group'); ?></span></span><span class="input_field"><? echo $form->textField($model, 'item_group'); ?></span>
 				</div>
 				
 				<div class="grid-c1">
-					<span class="input_label"><? echo Yii::t('product_message', 'colour').'/'.Yii::t('product_message', 'colour_no'); ?></span><? echo $form->textField($model, 'colour', array('style'=>'width:246px')); ?>
+					<span class="input_label"><span><? echo Yii::t('product_message', 'colour').'/'.Yii::t('product_message', 'colour_no'); ?></span></span><span class="input_field"><? echo $form->textField($model, 'colour'); ?></span>
 				</div>
 				<div class="grid-m2"></div>
 				<div class="grid-c2">
-					<span class="input_label"><? echo Yii::t('product_message', 'material'); ?></span><? echo $form->textField($model, 'material', array('style'=>'width:314px')); ?>
+					<span class="input_label"><span><? echo Yii::t('product_message', 'material'); ?></span></span><span class="input_field"><? echo $form->textField($model, 'material'); ?></span>
 				</div>
 				
 				<div class="grid-c1">
-					<span class="input_label">PCS</span><? echo $form->textField($model, 'pcsFrom', array('size'=>10)); ?> To <? echo $form->textField($model, 'pcsTo', array('size'=>10)); ?>
+					<span class="input_label"><span>PCS</span></span><? echo $form->textField($model, 'pcsFrom', array('size'=>10)); ?> To <? echo $form->textField($model, 'pcsTo', array('size'=>10)); ?>
 				</div>
 				<div class="grid-m2"></div>
 				<div class="grid-c2">
-					<span class="input_label"><? echo Yii::t('product_message', 'supplier'); ?></span><? echo $form->textField($model, 'supplier', array('style'=>'width:298px')); ?>
+					<span class="input_label"><span><? echo Yii::t('product_message', 'supplier'); ?></span></span><span class="input_field"><? echo $form->textField($model, 'supplier'); ?></span>
 				</div>
 				
 				<div class="grid-c1">
-					<span class="input_label"><? echo Yii::t('product_message', 'molding'); ?></span><? echo $form->textField($model, 'moldingFrom', array('size'=>10)); ?> To <? echo $form->textField($model, 'moldingTo', array('size'=>10)); ?>
+					<span class="input_label"><span><? echo Yii::t('product_message', 'molding'); ?></span></span><? echo $form->textField($model, 'moldingFrom', array('size'=>10)); ?> To <? echo $form->textField($model, 'moldingTo', array('size'=>10)); ?>
 				</div>
 				<div class="grid-m2"></div>
 				<div class="grid-c2">
-					<span class="input_label"><? echo Yii::t('product_message', 'kaito'); ?></span><? echo $form->textField($model, 'kaitoFrom', array('size'=>10)); ?> To <? echo $form->textField($model, 'kaitoTo', array('size'=>10)); ?>
+					<span class="input_label"><span><? echo Yii::t('product_message', 'kaito'); ?></span></span><? echo $form->textField($model, 'kaitoFrom', array('size'=>10)); ?> To <? echo $form->textField($model, 'kaitoTo', array('size'=>10)); ?>
 				</div>				
 			</div>
 
@@ -106,6 +110,7 @@
 			'method'=>'GET'
 			)); ?>
 				<input type="hidden" name="page" id="page" />
+				<input type="hidden" name="id" id="id" />
 				<? echo $form->hiddenField($model,'itemCount'); ?>
 				<? echo $form->hiddenField($model,'keyword'); ?>
 				<? echo $form->hiddenField($model,'customer'); ?>
@@ -149,6 +154,13 @@ function showAdvanceFilter() {
 	else {
 		$('#advanceFilter').hide();
 	}
+}
+
+function goUpdate(id) {
+	$('#criteriaForm').attr('action', 'update');
+	$('#criteriaForm #id').val(id);
+	$('#page').val($('#currPage').val());
+	$('#criteriaForm').submit();
 }
 
 function goToPage(url, page) {

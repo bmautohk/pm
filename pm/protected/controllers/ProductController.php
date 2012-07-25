@@ -4,28 +4,10 @@ Yii::import('application.models.product.*');
 class ProductController extends Controller {
 	
 	public function actionIndex() {
-		// Set selected made
-		$session=new CHttpSession;
-		$session->open();
-
-		if (isset($_GET['made'])) {
-			$session[GlobalConstants::SESSION_SELECTED_MADE] = $_GET['made'];
-		}
-		
-		$searchForm = new ProductSearchForm();
-		$searchForm->made = $session[GlobalConstants::SESSION_SELECTED_MADE];
-		
-		$session->close();
-
-		$this->render('list', array('model'=>$searchForm));
+		$this->render('list', array('model'=>new ProductSearchForm()));
 	}
 	
 // Search function
-	public function actionSearchByKeyword() {
-		$attr = $this->requestAttrForSearch(new ProductSearchForm, 'searchByKeyword');
-		$this->render('list', $attr);
-	}
-	
 	public function actionSearchByFilter() {
 		$attr = $this->requestAttrForSearch(new ProductSearchForm, 'searchByFilter');
 		$this->render('list', $attr);
@@ -55,26 +37,65 @@ class ProductController extends Controller {
 // Update function
 	public function actionUpdate() {
 		if (isset($_POST['action'])) {
-			// Update product
-			$model = $this->loadProductMaster($_POST['ProductMaster']['id']);
-			$model->attributes = $_POST['ProductMaster'];
-		
-			if ($model->save()) {
-				$successMsg = '&#29986;&#21697;S/N ['.$model->prod_sn.'] is updated successfully!'; // 產品S/N [XXX] is updated successfully!
+			if ($_POST['action'] == 'Update') {
+				// Update product
+				$model = $this->loadProductMaster($_POST['ProductMaster']['id']);
+				$model->attributes = $_POST['ProductMaster'];
+				
+				if ($model->save()) {
+					$successMsg = '&#29986;&#21697;S/N ['.$model->prod_sn.'] is updated successfully!'; // 產品S/N [XXX] is updated successfully!
+				
+					// Go back the search page
+					$session=new CHttpSession;
+					$session->open();
+					$searchModel = new ProductSearchForm();
+					$searchModel->attributes = $session[GlobalConstants::SESSION_PRODUCT_SEARCH_CRITERIA];
+					$attr = $this->searchByAttributes($searchModel, 'searchByFilter', $session[GlobalConstants::SESSION_CURR_PAGE] - 1);
+				
+					// Remove session attribute
+					$session->remove(GlobalConstants::SESSION_PRODUCT_SEARCH_CRITERIA);
+					$session->remove(GlobalConstants::SESSION_CURR_PAGE);
+				
+					$this->render('list', array_merge($attr, array('msg'=>array('success'=>$successMsg))));
+					return;
+				}
+				else {
+					$errorMsg = 'Fail to update product!';
+				}
 			}
 			else {
-				$errorMsg = 'Fail to update product!';
+				// Back to search page
+				$session=new CHttpSession;
+				$session->open();
+				$searchModel = new ProductSearchForm();
+				$searchModel->attributes = $session[GlobalConstants::SESSION_PRODUCT_SEARCH_CRITERIA];
+				$attr = $this->searchByAttributes($searchModel, 'searchByFilter', $session[GlobalConstants::SESSION_CURR_PAGE] - 1);
+				
+				// Remove session attribute
+				$session->remove(GlobalConstants::SESSION_PRODUCT_SEARCH_CRITERIA);
+				$session->remove(GlobalConstants::SESSION_CURR_PAGE);
+				
+				$this->render('list', $attr);
+				return;
 			}
 		}
 		else {
 			// Retrieve product
 			$id = $_GET['id'];
 			$model = $this->loadProductMaster($id);
+			
+			// Store search critiera to session
+			$session=new CHttpSession;
+			$session->open();
+			$session[GlobalConstants::SESSION_PRODUCT_SEARCH_CRITERIA] = $_REQUEST['ProductSearchForm'];
+			$session[GlobalConstants::SESSION_CURR_PAGE] = $_REQUEST['page'];
+			$session->close();
 		}
 		
 		$this->render('maint', array('action'=>'update', 'model'=>$model, 'msg'=>array('success'=>$successMsg, 'error'=>$errorMsg)));
 	}
-	
+
+// Import function
 	public function actionImport() {
 		$model = new ImportProductForm;
 	
@@ -100,6 +121,13 @@ class ProductController extends Controller {
 		}
 	
 		$this->render('import', array('model'=>$model, 'msg'=>array('success'=>$successMsg, 'error'=>$errorMsg)));
+	}
+	
+// Export function
+	public function actionExport() {
+		$model = new ExportProductForm;
+		
+		$model->export();
 	}
 	
 // Private function

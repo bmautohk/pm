@@ -1,18 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <? $baseUrl = Yii::app()->request->baseUrl;
-
-// Get selected made
-$session=new CHttpSession;
-$session->open();
-
-if (isset($session["SELECTED_MADE"])) {
-	$selectedMade = $session[GlobalConstants::SESSION_SELECTED_MADE];
-}
-else {
-	$selectedMade = "TOYOTA";
-}
-
-$session->close();
+$mades =  Made::getDropDownFromCache();
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
@@ -24,7 +12,7 @@ $session->close();
 	
 	<? Yii::app()->clientScript->registerCoreScript('jquery');?>
 
-	<title><?php echo CHtml::encode($this->pageTitle); ?></title>
+	<title><?php echo CHtml::encode(Yii::app()->name); ?></title>
 </head>
 
 <body style="position: relative;background-color:;width:100%;">
@@ -36,10 +24,9 @@ $session->close();
 
 		<div id="body_left_main">
 			<div id="logo_main"><a href="<?=$baseUrl ?>/product"><img src="<?php echo Yii::app()->request->baseUrl; ?>/images/logo.png"/></a></div>
-			<a class="<?=($selectedMade=="TOYOTA"?"menubar_selected" : "menubar") ?>" href="<?=$baseUrl ?>/product?made=TOYOTA">TOYOTA</a>
-			<a class="<?=($selectedMade=="HONDA"?"menubar_selected" : "menubar") ?>" href="<?=$baseUrl ?>/product?made=HONDA">HONDA</a>
-			<a class="<?=($selectedMade=="SUZUKI"?"menubar_selected" : "menubar") ?>" href="<?=$baseUrl ?>/product?made=SUZUKI">SUZUKI</a>
-			<a class="<?=($selectedMade=="MITSUBISHI"?"menubar_selected" : "menubar") ?>" href="<?=$baseUrl ?>/product?made=MITSUBISHI">MITSUBISHI</a>
+			<? foreach ($mades as $made) {?>
+				<a class="menubar" href="<?=$baseUrl ?>/product/searchByFilter?ProductSearchForm%5Bmade%5D=<?=$made ?>"><?=$made ?></a>
+			<? }?>
 		</div>
 		<div id="body_right_main">
 			<?php echo $content; ?>

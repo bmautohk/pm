@@ -13,7 +13,8 @@
 				<td valign='top' width='15%' height='184' class='newitem'><a class='productdetail' href="update?id=<?=$product->id ?>"><img src='../images/product/no_image.png'></a></td>
 				<td width='2%'></td>
 				<td valign='top' width='15%' height='184' class='newitem'>
-					<? echo Yii::t('product_message', 'prod_sn'); ?>: <a class='productdetail' href="update?id=<?=$product->id ?>"><?=$product->prod_sn ?></a><br><br>
+					<? echo Yii::t('product_message', 'prod_sn'); ?>: <a class='productdetail' href="javascript:goUpdate(<?=$product->id ?>)"><?=$product->prod_sn ?></a><br><br>
+					<? echo Yii::t('product_message', 'no_jp'); ?>: <?=$product->no_jp ?><br><br>
 					<? echo Yii::t('product_message', 'made'); ?>: <?=$product->made ?><br><br>
 					<? echo Yii::t('product_message', 'model'); ?>: <?=$product->model ?>
 				</td>

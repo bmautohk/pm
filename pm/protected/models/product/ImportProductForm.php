@@ -1,23 +1,40 @@
 <?php
 //Yii::import('application.extensions.*');
-require_once 'protected/extensions/PHPExcel/IOFactory.php';
+//require_once 'protected/extensions/PHPExcel/IOFactory.php';
 
 class ImportProductForm extends CFormModel {
-	
+
 	public $uplFile;
 	
-	/*public function rules() {
+	public function rules() {
 		return array(
-				array('uplFile', 'file', 'types'=>'csv'),
+				array('uplFile', 'safe'),
 		);
-	}*/
+	}
 	
 	public function import() {
+		// get a reference to the path of PHPExcel classes 
+		//$phpExcelPath = Yii::getPathOfAlias('ext');
+		
+		// Turn off our amazing library autoload
+		//spl_autoload_unregister(array('YiiBase','autoload'));
+		//spl_autoload_register(array('YiiBase','autoload'));
+		
+		// making use of our reference, include the main class
+		// when we do this, phpExcel has its own autoload registration
+		// procedure (PHPExcel_Autoloader::Register();)
+		//include($phpExcelPath . DIRECTORY_SEPARATOR . 'PHPExcel.php');
+		
 		$isValid = true;
 
 		//$objPHPExcel = new PHPExcel();
+		$objPHPExcel = Yii::app()->excel;
 		$objReader = PHPExcel_IOFactory::createReader('Excel5');
 		$objPHPExcel = $objReader->load($this->uplFile->tempName);
+		
+		// Once we have finished using the library, give back the
+		// power to Yii...
+		//spl_autoload_register(array('YiiBase','autoload'));
 		
 		$products = array();
 		$failProducts = array();
@@ -57,18 +74,18 @@ class ImportProductForm extends CFormModel {
 			
 			$i = $i+2; // Skip 2 columns
 			
-			$product->buy_date = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
-			$product->receive_date = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
+			$product->buy_date = $this->getFormatDate($worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue());
+			$product->receive_date = $this->getFormatDate($worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue());
 			$product->supplier = conv($worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue());
 			$product->purchase_cost = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
-			$product->factory_date = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
-			$product->pack_remark = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
-			$product->order_date = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
+			$product->factory_date = $this->getFormatDate($worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue());
+			$product->pack_remark = conv($worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue());
+			$product->order_date = $this->getFormatDate($worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue());
 			$product->progress = conv($worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue());
-			$product->receive_model_date = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
+			$product->receive_model_date = $this->getFormatDate($worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue());
 			$product->person_in_charge = conv($worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue());
 			$product->state = conv($worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue());
-			$product->ship_date = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
+			$product->ship_date = $this->getFormatDate($worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue());
 			$product->market_research_price = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
 			$product->yahoo_produce = conv($worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue());
 			
@@ -84,12 +101,35 @@ class ImportProductForm extends CFormModel {
 			return array(false, $failProducts);
 		}
 		
+		// Clear cache
+		Yii::app()->cache->delete(GlobalConstants::CACHE_MADE);
+		
+		// Truncate product table
+		$command = Yii::app()->db->createCommand();
+		$command->truncateTable('product_master');
+		
 		// Insert into DB
-		foreach ($products as $product) {
+		 foreach ($products as $product) {
 			$product->save(false);
 		}
 		
 		return array(true);
+	}
+
+	private function getFormatDate($dateValue) {
+		/* if ($dateValue != null && $dateValue != '') {
+			return PHPExcel_Shared_Date::ExcelToPHPObject($dateValue)->format('Y-m-d');
+		}
+		else {
+			return null;
+		} */
+		
+		if ($dateValue != null && $dateValue != '') {
+			return date('Y-m-d', strtotime($dateValue));
+		}
+		else {
+			return NULL;
+		}
 	}
 }
 

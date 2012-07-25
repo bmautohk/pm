@@ -16,7 +16,7 @@
 	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/css.css" /-->
 	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/style2.css" />
 
-	<title><?php echo CHtml::encode($this->pageTitle); ?></title>
+	<title><?php echo CHtml::encode(Yii::app()->name); ?></title>
 </head>
 
 <body style="position: relative;background-color:black;width:100%;background-image:url('<?php echo Yii::app()->request->baseUrl; ?>/images/bg.jpg');">

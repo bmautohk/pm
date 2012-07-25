@@ -64,11 +64,6 @@ class SiteController extends Controller
 			/* if($model->validate() && $model->login())
 				$this->redirect(Yii::app()->user->returnUrl); */
 			
-			// Set default selected made in session
-			$session=new CHttpSession;
-			$session->open();
-			$session[GlobalConstants::SESSION_SELECTED_MADE] = Yii::app()->params['DEFAULT_SELECTED_MADE'];
-			
 			$this->redirect(Yii::app()->createUrl('product'));
 			return;
 		}

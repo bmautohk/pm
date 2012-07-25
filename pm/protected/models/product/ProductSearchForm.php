@@ -51,6 +51,7 @@ class ProductSearchForm extends CFormModel {
 
 		if (!empty($this->keyword)) {
 			$criteria->compare('customer', $this->keyword, true, 'OR');
+			$criteria->compare('prod_sn', $this->keyword, true, 'OR');
 			$criteria->compare('no_jp', $this->keyword, true, 'OR');
 			$criteria->compare('factory_no', $this->keyword, true, 'OR');
 			$criteria->compare('model', $this->keyword, true, 'OR');
@@ -68,8 +69,6 @@ class ProductSearchForm extends CFormModel {
 			$criteria->compare('person_in_charge', $this->keyword, true, 'OR');
 			$criteria->compare('state', $this->keyword, true, 'OR');
 			$criteria->compare('yahoo_produce', $this->keyword, true, 'OR');
-			
-			$criteria->compare('made', $this->made);
 		}
 		else {
 			$criteria->compare('colour', $this->colour, true);

@@ -24,7 +24,7 @@ class Made extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'made';
+		return 'vw_made';
 	}
 
 	/**
@@ -35,11 +35,9 @@ class Made extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('made', 'required'),
-			array('made', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('made_id, made', 'safe', 'on'=>'search'),
+			array('made', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -60,7 +58,6 @@ class Made extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'made_id' => 'Made',
 			'made' => 'Made',
 		);
 	}
@@ -76,7 +73,6 @@ class Made extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('made_id',$this->made_id);
 		$criteria->compare('made',$this->made,true);
 
 		return new CActiveDataProvider($this, array(
@@ -87,7 +83,12 @@ class Made extends CActiveRecord
 	public static function getDropDownFromCache() {
 		$list = Yii::app()->cache->get(GlobalConstants::CACHE_MADE);
 		if($list===false) {
-			$result = self::model()->findAll(array('select'=>'made'));
+			$criteria = new CDbCriteria();
+			$criteria->order = 'made';
+			
+			$model = self::model();
+			$model->setDbCriteria($criteria);
+			$result = $model->findAll(array('select'=>'made'));
 	
 			$list = array();
 			foreach ($result as $item) {

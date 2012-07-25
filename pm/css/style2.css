@@ -91,9 +91,25 @@ input.error, select.error, textarea.error {
 }
 
 .input_label {
-	background: transparent url('input_label.png') no-repeat scroll top left;
-	padding-left: 10px;
-	padding-right: 10px;
+	background: transparent url('input_label.png') no-repeat scroll center left;
+	padding: 0px 10px 0px 10px;
+	height: 26px;
+	float: left;
+}
+
+.input_label span {
+	position: relative;
+	bottom:-3px;
+}
+
+.input_field {
+	overflow: hidden;
+	display: block;
+	padding: 0 4px 0 0;
+}
+
+.input_field input {
+	width: 100%
 }
 
 .page_header {

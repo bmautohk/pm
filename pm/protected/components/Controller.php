@@ -25,7 +25,6 @@ class Controller extends CController
 		// Match criteria to the form
 		if (isset($_REQUEST[get_class($model)])) {
 			$model->attributes = $_REQUEST[get_class($model)];
-			//$criteria = $model->createCriteria();
 		}
 		else {
 			//$criteria = new CDbCriteria;
@@ -35,6 +34,32 @@ class Controller extends CController
 		$pages = new CPagination();
 		$pages->pageSize = Yii::app()->params['pageSize'];
 		$pages->route = $url;
+	
+		// Create criteria
+		$criteria = $model->createCriteria();
+	
+		if (!isset($model->itemCount)) {
+			// 1st search
+			$dataProvider = $model->searchByCriteria($criteria, $pages);
+			$model->itemCount = $dataProvider->totalItemCount;
+		}
+		else {
+			$dataProvider = $model->searchByCriteria($criteria, $pages, $model->itemCount);
+		}
+	
+		return array(
+				'model' => $model,
+				'items' => $dataProvider->getData(),
+				'pages' => $pages
+		);
+	}
+	
+	protected function searchByAttributes($model, $url, $currPage) {
+		// Pagination configuration
+		$pages = new CPagination();
+		$pages->pageSize = Yii::app()->params['pageSize'];
+		$pages->route = $url;
+		$pages->setCurrentPage($currPage);
 	
 		// Create criteria
 		$criteria = $model->createCriteria();
