@@ -163,15 +163,21 @@ function goUpdate(id) {
 	$('#criteriaForm').submit();
 }
 
-function goToPage(url, page) {
-	$('#criteriaForm').attr('action', url);
+function goToPage(page) {
+	$('#criteriaForm').attr('action', 'searchByFilter');
 	$('#page').attr('value', page);
 	$('#criteriaForm').submit();
 }
+
+/*function goToPage(url, page) {
+	$('#criteriaForm').attr('action', url);
+	$('#page').attr('value', page);
+	$('#criteriaForm').submit();
+}*/
 	
-function goToSpecificPage(url) {
+/*function goToSpecificPage(url) {
 	if(event.keyCode==13) {
 		goToPage(url, $('#currPage').val());
 	}
-}
+}*/
 </script>
