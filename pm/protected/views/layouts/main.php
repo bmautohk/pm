@@ -1,5 +1,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<? $baseUrl = Yii::app()->request->baseUrl;
+<? 
+// Verify the user
+if (Yii::app()->user->getState('role') != 'USER') {
+	// User has not logged in yet, return to login page
+	$this->redirect(Yii::app()->homeUrl);
+}
+
+$baseUrl = Yii::app()->request->baseUrl;
 $mades =  Made::getDropDownFromCache();
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -15,10 +22,10 @@ $mades =  Made::getDropDownFromCache();
 	<title><?php echo CHtml::encode(Yii::app()->name); ?></title>
 </head>
 
-<body style="position: relative;background-color:;width:100%;">
+<body style="position: relative;width:100%;">
 	<div id="wrapper">
 		<div id="header_main"> 
-			<div id="welcome_msg">Welcome <?=Yii::app()->user->name ?></div>
+			<div id="welcome_msg">Welcome <?=Yii::app()->user->name ?> <a href="<?=$baseUrl ?>/site/logout" style="color:white; text-decoration:underline">(Logout)</a></div>
 			<div id="name_main">BM AUTO ACCESSORIES (HK) CO. LTD.</div>
 		</div>
 

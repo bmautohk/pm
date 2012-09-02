@@ -4,7 +4,8 @@ Yii::import('application.models.product.*');
 class ProductController extends Controller {
 	
 	public function actionIndex() {
-		$this->render('list', array('model'=>new ProductSearchForm()));
+		$attr = $this->requestAttrForSearch(new ProductSearchForm, 'searchByFilter');
+		$this->render('list', $attr);
 	}
 	
 // Search function
@@ -25,19 +26,21 @@ class ProductController extends Controller {
 			if ($model->save()) {
 				$successMsg = '&#29986;&#21697;S/N ['.$model->prod_sn.'] is created successfully!'; // ²£«~S/N [XXX] is created successfully!
 				$action = 'update';
+				$this->render('maint', array('action'=>$action, 'model'=>$model, 'msg'=>array('success'=>$successMsg, 'error'=>$errorMsg)));
+				return;
 			}
 			else {
 				$errorMsg = 'Fail to create product!';
 			}
 		}
 
-		$this->render('maint', array('action'=>$action, 'model'=>$model, 'msg'=>array('success'=>$successMsg, 'error'=>$errorMsg)));
+		$this->render('add', array('action'=>$action, 'model'=>$model, 'msg'=>array('success'=>$successMsg, 'error'=>$errorMsg)));
 	}
 	
 // Update function
 	public function actionUpdate() {
 		if (isset($_POST['action'])) {
-			if ($_POST['action'] == 'Update') {
+			if ($_POST['act'] == 'update') {
 				// Update product
 				$model = $this->loadProductMaster($_POST['ProductMaster']['id']);
 				$model->attributes = $_POST['ProductMaster'];
@@ -83,7 +86,7 @@ class ProductController extends Controller {
 			// Retrieve product
 			$id = $_GET['id'];
 			$model = $this->loadProductMaster($id);
-			
+
 			// Store search critiera to session
 			$session=new CHttpSession;
 			$session->open();
@@ -93,6 +96,15 @@ class ProductController extends Controller {
 		}
 		
 		$this->render('maint', array('action'=>'update', 'model'=>$model, 'msg'=>array('success'=>$successMsg, 'error'=>$errorMsg)));
+	}
+	
+	public function actionShow_image() {
+		$no_jp = $_GET['no_jp'];
+		
+		// Find product image
+		$imgDir = $imgDir = Yii::app()->params['image_dir'];
+		$images = glob($imgDir.$no_jp."_*.jpg");
+		$this->renderPartial('show_image', array('images'=>$images));
 	}
 
 // Import function
@@ -137,6 +149,5 @@ class ProductController extends Controller {
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
 	}
-	
 }
 ?>

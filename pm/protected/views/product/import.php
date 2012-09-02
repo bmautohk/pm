@@ -12,7 +12,7 @@
 		)); ?>
 			<span class="input_label"><span>File Name:</span></span><? echo $form->fileField($model, 'uplFile'); ?>
 			<? echo $form->error($model, 'uplFile');?>
-			<input type="submit" name="action" value="Upload" /><br><br>
+			<input type="submit" name="action" value="<? echo Yii::t('common_message', 'import'); ?>" /><br><br>
 		<? $this->endWidget(); ?>
 	</div>
 </div>

@@ -99,7 +99,7 @@ class ProductSearchForm extends CFormModel {
 			$criteria->compare('kaito', '<='.$this->kaitoTo);
 		}
 		
-		$criteria->order = 'no_jp, id';
+		$criteria->order = 'create_date desc, no_jp, id';
 
 		return $criteria;
 	}

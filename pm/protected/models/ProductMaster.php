@@ -77,7 +77,7 @@ class ProductMaster extends CActiveRecord
 			array('status', 'length', 'max'=>1),
 			array('no_jp', 'length', 'max'=>32),
 			array('factory_no', 'length', 'max'=>50),
-			array('id, product_desc, remark, buy_date, receive_date, factory_date, pack_remark, order_date, receive_model_date, ship_date', 'safe'),
+			array('id, product_desc, remark, buy_date, receive_date, factory_date, pack_remark, order_date, receive_model_date, ship_date, create_date', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, customer, prod_sn, status, no_jp, factory_no, made, model, model_no, year, item_group, material, product_desc, remark, photo_link, pcs, colour, colour_no, moq, molding, cost, kaito, other, buy_date, receive_date, supplier, purchase_cost, factory_date, pack_remark, order_date, progress, receive_model_date, person_in_charge, state, ship_date, market_research_price, yahoo_produce', 'safe', 'on'=>'search'),

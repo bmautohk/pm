@@ -91,9 +91,12 @@ input.error, select.error, textarea.error {
 }
 
 .input_label {
-	background: transparent url('input_label.png') no-repeat scroll center left;
+	background-color: #e6e7e9;
+	border-top: 1px solid #9a9b9d;
+	border-bottom: 1px solid #9a9b9d;
+	border-left: 1px solid #9a9b9d;
 	padding: 0px 10px 0px 10px;
-	height: 26px;
+	height: 22px;
 	float: left;
 }
 
@@ -109,7 +112,8 @@ input.error, select.error, textarea.error {
 }
 
 .input_field input {
-	width: 100%
+	width: 100%;
+	height: 18px;
 }
 
 .page_header {
@@ -141,7 +145,7 @@ input.error, select.error, textarea.error {
 .grid-c1 {
   float: left;
   width: 388px;
-  height: 25px;
+  height: 30px;
 }
 
 .grid-m2 {
@@ -153,9 +157,49 @@ input.error, select.error, textarea.error {
 .grid-c2 {
   float: left;
   width: 388px;
-  height: 25px;
+  height: 30px;
 }
 
 input.grid {
 	width: 100%;
-} 
+}
+
+
+/* --- Grid for paging --- */
+.grid_p {
+	background-color: white;
+	width:335px;
+	float: left;
+	margin: 0px 10px 10px 0px;
+	padding: 10px 0px 0px 5px;
+	border:1px solid #949599;
+}
+
+.grid_p-c1 {
+	width: 160px;
+	height: 130px;
+	float: left;
+	margin-right: 5px;
+}
+
+.grid_p-m1 {
+  float: left;
+  width: 30px;
+  height: 1px;
+}
+
+.grid_p-c1 .input_label {
+	margin-bottom:10px;
+}
+
+.grid_p .input_field {
+	margin-bottom:10px;
+}
+
+.grid_p-c1 .product_name {
+	text-align:center;
+	color:#3ab54a;
+	font-size: 20px;
+	font-weight: 900;
+	padding-bottom: 10px;
+}

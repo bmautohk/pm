@@ -100,7 +100,7 @@ return array(
 	'params'=>array(
 		// this is used in contact page
 		'dropdownCacheTime'=>3600,
-		'pageSize'=>'10',
-		'DEFAULT_SELECTED_MADE'=>'TOYOTA'
+		'pageSize'=>'8',
+		'image_dir'=>'images/product/'
 	),
 );

@@ -54,7 +54,7 @@ class Controller extends CController
 		);
 	}
 	
-	protected function searchByAttributes($model, $url, $currPage) {
+	protected function searchByAttributes($searchModel, $url, $currPage) {
 		// Pagination configuration
 		$pages = new CPagination();
 		$pages->pageSize = Yii::app()->params['pageSize'];
@@ -62,19 +62,19 @@ class Controller extends CController
 		$pages->setCurrentPage($currPage);
 	
 		// Create criteria
-		$criteria = $model->createCriteria();
+		$criteria = $searchModel->createCriteria();
 	
-		if (!isset($model->itemCount)) {
+		if (!isset($searchModel->itemCount)) {
 			// 1st search
-			$dataProvider = $model->searchByCriteria($criteria, $pages);
-			$model->itemCount = $dataProvider->totalItemCount;
+			$dataProvider = $searchModel->searchByCriteria($criteria, $pages);
+			$searchModel->itemCount = $dataProvider->totalItemCount;
 		}
 		else {
-			$dataProvider = $model->searchByCriteria($criteria, $pages, $model->itemCount);
+			$dataProvider = $searchModel->searchByCriteria($criteria, $pages, $searchModel->itemCount);
 		}
 	
 		return array(
-				'model' => $model,
+				'model' => $searchModel,
 				'items' => $dataProvider->getData(),
 				'pages' => $pages
 		);

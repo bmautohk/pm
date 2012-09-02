@@ -14,11 +14,7 @@ if (!in_array($model->made, $mades)) {
 	
 	<? echo CHtml::errorSummary($model, '', '', array('class'=>'errorMsg')); ?>
 	
-	<? if ($action == 'update') {?>
-		<div class="page_header">Product Update</div>
-	<? } else {?>
-		<div class="page_header">Product Creation</div>
-	<? }?>
+	<div class="page_header">Product Creation</div>
 	
 	<?php $form=$this->beginWidget('CActiveForm', array(
 		'id'=>'form1',
@@ -27,8 +23,7 @@ if (!in_array($model->made, $mades)) {
 		'enableAjaxValidation'=>false,
 	)); ?>
 		<? echo $form->hiddenField($model,'id'); ?>
-		<input type="hidden" name="act" value="update" />
-		<div class="grid">
+		<div style="width:400px">
 			<div class="grid-c1">
 				<span class="input_label"><? echo Yii::t('product_message', 'customer'); ?></span><span class="input_field"><? echo $form->textField($model,'customer'); ?></span>
 			</div>
@@ -176,8 +171,8 @@ if (!in_array($model->made, $mades)) {
 			
 		</div>
 		
-		<input class="searchBtn" type="submit" name="action" value="<? echo Yii::t('common_message', 'update'); ?>" />
-		<input class="searchBtn" type="submit" name="action" value="<? echo Yii::t('common_message', 'back'); ?>" />
+		<input class="searchBtn" type="submit" name="action" value="<? echo Yii::t('common_message', 'add'); ?>" />
+		<input class="searchBtn" type="button" onclick="window.location='../product'" value="<? echo Yii::t('common_message', 'back'); ?>" />
 		
 	<? $this->endWidget(); ?>
 	

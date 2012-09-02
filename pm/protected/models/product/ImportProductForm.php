@@ -38,6 +38,7 @@ class ImportProductForm extends CFormModel {
 		
 		$products = array();
 		$failProducts = array();
+		$today = date('Y-m-d');
 		$worksheet = $objPHPExcel->getActiveSheet();
 		foreach ($worksheet->getRowIterator() as $row) {
 			$rowNo = $row->getRowIndex();
@@ -88,6 +89,8 @@ class ImportProductForm extends CFormModel {
 			$product->ship_date = $this->getFormatDate($worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue());
 			$product->market_research_price = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
 			$product->yahoo_produce = conv($worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue());
+			
+			$product->create_date = $today;
 			
 			if (!$product->validate()) {
 				$failProducts[$rowNo] = $product;
