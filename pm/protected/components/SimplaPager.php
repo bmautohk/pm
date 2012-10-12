@@ -5,10 +5,13 @@ class SimplaPager extends CLinkPager {
 	const CSS_PAGE = 'pagebarUTH';
 	const CSS_HIDDEN_PAGE='hidden'; // hidden
 	const CSS_SELECTED_PAGE='this-page'; // current
+	const SHOW_EACH_SIDE = 3;
 	
 	public function run()
 	{
-		$this->firstPageLabel = NULL;
+		$this->prevPageLabel = '<';
+		$this->nextPageLabel = 'next >';
+		
 		//
 		// here we call our createPageButtons
 		//
@@ -47,23 +50,80 @@ class SimplaPager extends CLinkPager {
 		if(($page=$currentPage-1)<0)
 			$page=0;
 		$buttons[]=$this->createPageButton($this->prevPageLabel,$page,self::CSS_PREVIOUS_PAGE,$currentPage<=0,false);
-	
+		
 		// internal pages
 		//for($i=$beginPage;$i<=$endPage;++$i)
 		//	$buttons[]=$this->createPageButton($i+1,$i,self::CSS_INTERNAL_PAGE,false,$i==$currentPage);
-		if(($page=$currentPage)<0) {
+
+		$eitherside = (self::SHOW_EACH_SIDE + 1) / 2;
+		$curPage = $currentPage + 1;
+		if($curPage > $eitherside) {
+			$start = $curPage - $eitherside;
+			if ($start > $pageCount - self::SHOW_EACH_SIDE - $eitherside) {
+				$start = $pageCount - self::SHOW_EACH_SIDE - $eitherside + 1;
+				
+				if ($start <= 0) {
+					$start = 1;
+				}
+			}
+		}
+		else {
+			$start = 1;
+		}
+		
+		if($curPage + $eitherside <= $pageCount) {
+			$end = $curPage + $eitherside;
+			
+			if ($end < self::SHOW_EACH_SIDE + $eitherside) {
+				$end = self::SHOW_EACH_SIDE + $eitherside;
+				
+				if ($end > $pageCount) {
+					$end = $pageCount;
+				}
+			}
+		}
+		else {
+			$end = $pageCount;
+		}
+		
+		if ($start > 1) {
+			// first page
+			$buttons[]=$this->createPageButton('1',0,self::CSS_INTERNAL_PAGE,false,$currentPage==0);
+		}
+		
+		if ($start > 2) {
+			$buttons[] = " .... ";
+		}
+		
+		for ($i = $start; $i <= $end; $i++) {
+			$buttons[]=$this->createPageButton($i,$i-1,self::CSS_INTERNAL_PAGE,false,$i==$curPage);
+		}
+		if($end != $pageCount) {
+			if ($end < $pageCount - 1) {
+				$buttons[] = " .... ";
+			}
+			
+			// last page
+			if ($pageCount > 1) {
+				$buttons[]=$this->createPageButton($pageCount,$pageCount-1,self::CSS_INTERNAL_PAGE,false,$currentPage==$pageCount-1);
+			}
+		}
+		
+		/*if(($page=$currentPage)<0) {
 			$currPage = 1;
 		}
 		else {
 			$currPage = $page + 1;
 		}
 		$pageUrl = $this->getController()->createUrl($this->getPages()->route, array());
-		$buttons[] = "<input size='3' onkeypress='javascript:goToSpecificPage(\"".$pageUrl."\")' id='currPage' value='$currPage' /> of ".$this->pageCount;
-	
+		$buttons[] = "<input size='3' onkeypress='javascript:goToSpecificPage(\"".$pageUrl."\")' id='currPage' value='$currPage' /> of ".$this->pageCount;*/
+
 		// next page
 		if(($page=$currentPage+1)>=$pageCount-1)
 			$page=$pageCount-1;
 		$buttons[]=$this->createPageButton($this->nextPageLabel,$page,self::CSS_NEXT_PAGE,$currentPage>=$pageCount-1,false);
+		
+		$buttons[] = CHtml::hiddenField('currPage', $currentPage + 1); // Store the current page to hidden field
 	
 		// last page
 		//$buttons[]=$this->createPageButton($this->lastPageLabel,$pageCount-1,self::CSS_LAST_PAGE,$currentPage>=$pageCount-1,false);
@@ -98,9 +158,12 @@ class SimplaPager extends CLinkPager {
 	    //            'onclick'=>"goToPage('{$this->createPageUrl($this->getController(),$page)}');"));
 		
 		$pageNo = $page+1;
-		return CHtml::link($label,"javascript:goToPage('{$this->createPageUrl($this->getController(),$page)}', '$pageNo');",
+		/* return CHtml::link($label,"javascript:goToPage('{$this->createPageUrl($this->getController(),$page)}', '$pageNo');",
 							array('class'=>$class,)
-							);
+							); */
+		return CHtml::link($label,"javascript:goToPage('$pageNo');",
+		array('class'=>$class,)
+		);
 	}
 	/**
 	 * Creates the URL suitable for pagination.

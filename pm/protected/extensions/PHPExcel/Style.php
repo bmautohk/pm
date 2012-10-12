@@ -2,7 +2,7 @@
 /**
  * PHPExcel
  *
- * Copyright (c) 2006 - 2011 PHPExcel
+ * Copyright (c) 2006 - 2010 PHPExcel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category   PHPExcel
  * @package    PHPExcel_Style
- * @copyright  Copyright (c) 2006 - 2011 PHPExcel (http://www.codeplex.com/PHPExcel)
+ * @copyright  Copyright (c) 2006 - 2010 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version    1.7.6, 2011-02-27
+ * @version    1.7.4, 2010-08-26
  */
 
 
@@ -31,7 +31,7 @@
  *
  * @category   PHPExcel
  * @package    PHPExcel_Style
- * @copyright  Copyright (c) 2006 - 2011 PHPExcel (http://www.codeplex.com/PHPExcel)
+ * @copyright  Copyright (c) 2006 - 2010 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
 class PHPExcel_Style implements PHPExcel_IComparable
 {
@@ -169,12 +169,14 @@ class PHPExcel_Style implements PHPExcel_IComparable
 		$selectedCell = $this->getActiveCell(); // e.g. 'A1'
 
 		if ($activeSheet->cellExists($selectedCell)) {
-			$xfIndex = $activeSheet->getCell($selectedCell)->getXfIndex();
+			$cell = $activeSheet->getCell($selectedCell);
+			$xfIndex = $cell->getXfIndex();
 		} else {
 			$xfIndex = 0;
 		}
 
-		return $this->_parent->getCellXfByIndex($xfIndex);
+		$activeStyle = $this->_parent->getCellXfByIndex($xfIndex);
+		return $activeStyle;
 	}
 
 	/**
@@ -268,6 +270,8 @@ class PHPExcel_Style implements PHPExcel_IComparable
 				$pRange = strtoupper($pRange);
 
 				// Is it a cell range or a single cell?
+				$rangeA 	= '';
+				$rangeB 	= '';
 				if (strpos($pRange, ':') === false) {
 					$rangeA = $pRange;
 					$rangeB = $pRange;
@@ -606,7 +610,9 @@ class PHPExcel_Style implements PHPExcel_IComparable
      */
     public function setConditionalStyles($pValue = null) {
 		if (is_array($pValue)) {
-			$this->getActiveSheet()->setConditionalStyles($this->getSelectedCells(), $pValue);
+			foreach (PHPExcel_Cell::extractAllCellReferencesInRange($this->getSelectedCells()) as $cellReference) {
+				$this->getActiveSheet()->setConditionalStyles($cellReference, $pValue);
+			}
 		}
 		return $this;
     }
@@ -632,13 +638,13 @@ class PHPExcel_Style implements PHPExcel_IComparable
 		}
 
     	return md5(
-    		  $this->_fill->getHashCode()
-    		. $this->_font->getHashCode()
-    		. $this->_borders->getHashCode()
-    		. $this->_alignment->getHashCode()
-    		. $this->_numberFormat->getHashCode()
+    		  $this->getFill()->getHashCode()
+    		. $this->getFont()->getHashCode()
+    		. $this->getBorders()->getHashCode()
+    		. $this->getAlignment()->getHashCode()
+    		. $this->getNumberFormat()->getHashCode()
     		. $hashConditionals
-    		. $this->_protection->getHashCode()
+    		. $this->getProtection()->getHashCode()
     		. __CLASS__
     	);
     }

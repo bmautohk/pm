@@ -2,7 +2,7 @@
 /**
  * PHPExcel
  *
- * Copyright (c) 2006 - 2011 PHPExcel
+ * Copyright (c) 2006 - 2010 PHPExcel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category   PHPExcel
  * @package    PHPExcel_Worksheet
- * @copyright  Copyright (c) 2006 - 2011 PHPExcel (http://www.codeplex.com/PHPExcel)
+ * @copyright  Copyright (c) 2006 - 2010 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version    1.7.6, 2011-02-27
+ * @version    1.7.4, 2010-08-26
  */
 
 
@@ -31,7 +31,7 @@
  *
  * @category   PHPExcel
  * @package    PHPExcel_Worksheet
- * @copyright  Copyright (c) 2006 - 2011 PHPExcel (http://www.codeplex.com/PHPExcel)
+ * @copyright  Copyright (c) 2006 - 2010 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
 class PHPExcel_Worksheet_Protection
 {
@@ -40,125 +40,143 @@ class PHPExcel_Worksheet_Protection
 	 *
 	 * @var boolean
 	 */
-	private $_sheet					= false;
+	private $_sheet;
 
 	/**
 	 * Objects
 	 *
 	 * @var boolean
 	 */
-	private $_objects				= false;
+	private $_objects;
 
 	/**
 	 * Scenarios
 	 *
 	 * @var boolean
 	 */
-	private $_scenarios				= false;
+	private $_scenarios;
 
 	/**
 	 * Format cells
 	 *
 	 * @var boolean
 	 */
-	private $_formatCells			= false;
+	private $_formatCells;
 
 	/**
 	 * Format columns
 	 *
 	 * @var boolean
 	 */
-	private $_formatColumns			= false;
+	private $_formatColumns;
 
 	/**
 	 * Format rows
 	 *
 	 * @var boolean
 	 */
-	private $_formatRows			= false;
+	private $_formatRows;
 
 	/**
 	 * Insert columns
 	 *
 	 * @var boolean
 	 */
-	private $_insertColumns			= false;
+	private $_insertColumns;
 
 	/**
 	 * Insert rows
 	 *
 	 * @var boolean
 	 */
-	private $_insertRows			= false;
+	private $_insertRows;
 
 	/**
 	 * Insert hyperlinks
 	 *
 	 * @var boolean
 	 */
-	private $_insertHyperlinks		= false;
+	private $_insertHyperlinks;
 
 	/**
 	 * Delete columns
 	 *
 	 * @var boolean
 	 */
-	private $_deleteColumns			= false;
+	private $_deleteColumns;
 
 	/**
 	 * Delete rows
 	 *
 	 * @var boolean
 	 */
-	private $_deleteRows			= false;
+	private $_deleteRows;
 
 	/**
 	 * Select locked cells
 	 *
 	 * @var boolean
 	 */
-	private $_selectLockedCells		= false;
+	private $_selectLockedCells;
 
 	/**
 	 * Sort
 	 *
 	 * @var boolean
 	 */
-	private $_sort					= false;
+	private $_sort;
 
 	/**
 	 * AutoFilter
 	 *
 	 * @var boolean
 	 */
-	private $_autoFilter			= false;
+	private $_autoFilter;
 
 	/**
 	 * Pivot tables
 	 *
 	 * @var boolean
 	 */
-	private $_pivotTables			= false;
+	private $_pivotTables;
 
 	/**
 	 * Select unlocked cells
 	 *
 	 * @var boolean
 	 */
-	private $_selectUnlockedCells	= false;
+	private $_selectUnlockedCells;
 
 	/**
 	 * Password
 	 *
 	 * @var string
 	 */
-	private $_password				= '';
+	private $_password;
 
     /**
      * Create a new PHPExcel_Worksheet_Protection
      */
     public function __construct()
     {
+    	// Initialise values
+    	$this->_sheet					= false;
+    	$this->_objects					= false;
+    	$this->_scenarios				= false;
+    	$this->_formatCells				= false;
+    	$this->_formatColumns			= false;
+    	$this->_formatRows				= false;
+    	$this->_insertColumns			= false;
+    	$this->_insertRows				= false;
+    	$this->_insertHyperlinks		= false;
+    	$this->_deleteColumns			= false;
+    	$this->_deleteRows				= false;
+    	$this->_selectLockedCells		= false;
+    	$this->_sort					= false;
+    	$this->_autoFilter				= false;
+    	$this->_pivotTables				= false;
+    	$this->_selectUnlockedCells		= false;
+    	$this->_password				= '';
     }
 
     /**

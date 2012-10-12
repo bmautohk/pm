@@ -7,7 +7,7 @@
 // CWebApplication properties can be configured here.
 return array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
-	'name'=>'My Web Application',
+	'name'=>'BM AUTO',
 	'charset'=>'EUC-JP',
 		
 	'language' => 'en', // the language that the user is using and the application should be targeted to
@@ -89,10 +89,10 @@ return array(
 		'cache'=>array(
 				'class'=>'system.caching.CFileCache'
 		),
-			
-		/*'excel'=>array(
+		
+		'excel'=>array(
 				'class'=>'application.extensions.PHPExcel',
-		),*/
+		),
 	),
 
 	// application-level parameters that can be accessed
@@ -100,7 +100,7 @@ return array(
 	'params'=>array(
 		// this is used in contact page
 		'dropdownCacheTime'=>3600,
-		'pageSize'=>'10',
-		'DEFAULT_SELECTED_MADE'=>'TOYOTA'
+		'pageSize'=>'8',
+		'image_dir'=>'images/product/'
 	),
 );

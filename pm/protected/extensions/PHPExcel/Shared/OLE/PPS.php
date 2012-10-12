@@ -169,8 +169,10 @@ class PHPExcel_Shared_OLE_PPS
 	*/
 	public function _getPpsWk()
 	{
-		$ret = str_pad($this->Name,64,"\x00");
-
+		$ret = $this->Name;
+		for ($i = 0; $i < (64 - strlen($this->Name)); ++$i) {
+			$ret .= "\x00";
+		}
 		$ret .= pack("v", strlen($this->Name) + 2)  // 66
 			  . pack("c", $this->Type)              // 67
 			  . pack("c", 0x00) //UK                // 68
@@ -213,4 +215,4 @@ class PHPExcel_Shared_OLE_PPS
 		}
 		return $this->No;
 	}
-}
+	}

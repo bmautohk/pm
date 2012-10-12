@@ -61,18 +61,16 @@ class SiteController extends Controller
 		{
 			$model->attributes=$_POST['LoginForm'];
 			// validate user input and redirect to the previous page if valid
-			/* if($model->validate() && $model->login())
-				$this->redirect(Yii::app()->user->returnUrl); */
-			
-			// Set default selected made in session
-			$session=new CHttpSession;
-			$session->open();
-			$session[GlobalConstants::SESSION_SELECTED_MADE] = Yii::app()->params['DEFAULT_SELECTED_MADE'];
-			
-			$this->redirect(Yii::app()->createUrl('product'));
-			return;
+			if($model->validate() && $model->login()) {
+				$this->redirect(Yii::app()->createUrl('product'));
+				return;
+			}
 		}
-		// display the login form
+
+		// Clear password
+		$model->password = '';
+		
+		$this->layout = '//layouts/login';
 		$this->render('login',array('model'=>$model));
 	}
 

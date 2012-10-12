@@ -2,7 +2,7 @@
 /**
  * PHPExcel
  *
- * Copyright (c) 2006 - 2011 PHPExcel
+ * Copyright (c) 2006 - 2010 PHPExcel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,10 +19,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  * @category   PHPExcel
- * @package	PHPExcel_Shared
- * @copyright  Copyright (c) 2006 - 2011 PHPExcel (http://www.codeplex.com/PHPExcel)
- * @license	http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version	1.7.6, 2011-02-27
+ * @package    PHPExcel_Shared
+ * @copyright  Copyright (c) 2006 - 2010 PHPExcel (http://www.codeplex.com/PHPExcel)
+ * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
+ * @version    1.7.4, 2010-08-26
  */
 
 if (!defined('DATE_W3C')) {
@@ -38,13 +38,20 @@ if (!defined('DEBUGMODE_ENABLED')) {
  * PHPExcel_Shared_XMLWriter
  *
  * @category   PHPExcel
- * @package	PHPExcel_Shared
- * @copyright  Copyright (c) 2006 - 2011 PHPExcel (http://www.codeplex.com/PHPExcel)
+ * @package    PHPExcel_Shared
+ * @copyright  Copyright (c) 2006 - 2010 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
-class PHPExcel_Shared_XMLWriter extends XMLWriter {
+class PHPExcel_Shared_XMLWriter {
 	/** Temporary storage method */
 	const STORAGE_MEMORY	= 1;
 	const STORAGE_DISK		= 2;
+
+	/**
+	 * Internal XMLWriter
+	 *
+	 * @var XMLWriter
+	 */
+	private $_xmlWriter;
 
 	/**
 	 * Temporary filename
@@ -59,63 +66,83 @@ class PHPExcel_Shared_XMLWriter extends XMLWriter {
 	 * @param int		$pTemporaryStorage			Temporary storage location
 	 * @param string	$pTemporaryStorageFolder	Temporary storage folder
 	 */
-	public function __construct($pTemporaryStorage = self::STORAGE_MEMORY, $pTemporaryStorageFolder = './') {
-		// Open temporary storage
-		if ($pTemporaryStorage == self::STORAGE_MEMORY) {
-			$this->openMemory();
-		} else {
-			// Create temporary filename
-			$this->_tempFileName = @tempnam($pTemporaryStorageFolder, 'xml');
+    public function __construct($pTemporaryStorage = self::STORAGE_MEMORY, $pTemporaryStorageFolder = './') {
+    	// Create internal XMLWriter
+    	$this->_xmlWriter = new XMLWriter();
 
-			// Open storage
-			if ($this->openUri($this->_tempFileName) === false) {
-				// Fallback to memory...
-				$this->openMemory();
-			}
-		}
+    	// Open temporary storage
+    	if ($pTemporaryStorage == self::STORAGE_MEMORY) {
+    		$this->_xmlWriter->openMemory();
+    	} else {
+    		// Create temporary filename
+    		$this->_tempFileName = @tempnam($pTemporaryStorageFolder, 'xml');
 
-		// Set default values
+    		// Open storage
+    		if ($this->_xmlWriter->openUri($this->_tempFileName) === false) {
+    			// Fallback to memory...
+    			$this->_xmlWriter->openMemory();
+    		}
+    	}
+
+    	// Set default values
 		if (DEBUGMODE_ENABLED) {
-			$this->setIndent(true);
-		}
-	}
+	    	$this->_xmlWriter->setIndent(true);
+	    }
+    }
 
-	/**
-	 * Destructor
-	 */
-	public function __destruct() {
-		// Unlink temporary files
-		if ($this->_tempFileName != '') {
-			@unlink($this->_tempFileName);
-		}
-	}
+    /**
+     * Destructor
+     */
+    public function __destruct() {
+    	// Desctruct XMLWriter
+    	unset($this->_xmlWriter);
 
-	/**
-	 * Get written data
-	 *
-	 * @return $data
-	 */
-	public function getData() {
-		if ($this->_tempFileName == '') {
-			return $this->outputMemory(true);
-		} else {
-			$this->flush();
-			return file_get_contents($this->_tempFileName);
-		}
-	}
+    	// Unlink temporary files
+    	if ($this->_tempFileName != '') {
+    		@unlink($this->_tempFileName);
+    	}
+    }
 
-	/**
-	 * Fallback method for writeRaw, introduced in PHP 5.2
-	 *
-	 * @param string $text
-	 * @return string
-	 */
-	public function writeRawData($text)
-	{
-		if (method_exists($this, 'writeRaw')) {
-			return $this->writeRaw(htmlspecialchars($text));
-		}
+    /**
+     * Get written data
+     *
+     * @return $data
+     */
+    public function getData() {
+    	if ($this->_tempFileName == '') {
+    		return $this->_xmlWriter->outputMemory(true);
+    	} else {
+    		$this->_xmlWriter->flush();
+    		return file_get_contents($this->_tempFileName);
+    	}
+    }
 
-		return $this->text($text);
-	}
+    /**
+     * Catch function calls (and pass them to internal XMLWriter)
+     *
+     * @param unknown_type $function
+     * @param unknown_type $args
+     */
+    public function __call($function, $args) {
+    	try {
+    		@call_user_func_array(array($this->_xmlWriter, $function), $args);
+    	} catch (Exception $ex) {
+    		// Do nothing!
+    	}
+    }
+
+    /**
+     * Fallback method for writeRaw, introduced in PHP 5.2
+     *
+     * @param string $text
+     * @return string
+     */
+    public function writeRaw($text)
+    {
+    	if (isset($this->_xmlWriter) && is_object($this->_xmlWriter) && (method_exists($this->_xmlWriter, 'writeRaw'))) {
+            return $this->_xmlWriter->writeRaw(htmlspecialchars($text));
+    	}
+
+    	return $this->text($text);
+    }
 }

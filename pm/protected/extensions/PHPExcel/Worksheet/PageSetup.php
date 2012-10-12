@@ -2,7 +2,7 @@
 /**
  * PHPExcel
  *
- * Copyright (c) 2006 - 2011 PHPExcel
+ * Copyright (c) 2006 - 2010 PHPExcel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
  *
  * @category   PHPExcel
  * @package    PHPExcel_Worksheet
- * @copyright  Copyright (c) 2006 - 2011 PHPExcel (http://www.codeplex.com/PHPExcel)
+ * @copyright  Copyright (c) 2006 - 2010 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version    1.7.6, 2011-02-27
+ * @version    1.7.4, 2010-08-26
  */
 
 
@@ -102,7 +102,7 @@
  *
  * @category   PHPExcel
  * @package    PHPExcel_Worksheet
- * @copyright  Copyright (c) 2006 - 2011 PHPExcel (http://www.codeplex.com/PHPExcel)
+ * @copyright  Copyright (c) 2006 - 2010 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
 class PHPExcel_Worksheet_PageSetup
 {
@@ -189,14 +189,14 @@ class PHPExcel_Worksheet_PageSetup
 	 *
 	 * @var int
 	 */
-	private $_paperSize		= PHPExcel_Worksheet_PageSetup::PAPERSIZE_LETTER;
+	private $_paperSize;
 
 	/**
 	 * Orientation
 	 *
 	 * @var string
 	 */
-	private $_orientation	= PHPExcel_Worksheet_PageSetup::ORIENTATION_DEFAULT;
+	private $_orientation;
 
 	/**
 	 * Scale (Print Scale)
@@ -206,7 +206,7 @@ class PHPExcel_Worksheet_PageSetup
 	 *
 	 * @var int?
 	 */
-	private $_scale			= 100;
+	private $_scale;
 
 	/**
 	  * Fit To Page
@@ -214,7 +214,7 @@ class PHPExcel_Worksheet_PageSetup
 	  *
 	  * @var boolean
 	  */
-	private $_fitToPage		= false;
+	private $_fitToPage;
 
 	/**
 	  * Fit To Height
@@ -222,7 +222,7 @@ class PHPExcel_Worksheet_PageSetup
 	  *
 	  * @var int?
 	  */
-	private $_fitToHeight	= 1;
+	private $_fitToHeight;
 
 	/**
 	  * Fit To Width
@@ -230,7 +230,7 @@ class PHPExcel_Worksheet_PageSetup
 	  *
 	  * @var int?
 	  */
-	private $_fitToWidth	= 1;
+	private $_fitToWidth;
 
 	/**
 	 * Columns to repeat at left
@@ -279,6 +279,19 @@ class PHPExcel_Worksheet_PageSetup
      */
     public function __construct()
     {
+    	// Initialise values
+    	$this->_paperSize 				= PHPExcel_Worksheet_PageSetup::PAPERSIZE_LETTER;
+    	$this->_orientation				= PHPExcel_Worksheet_PageSetup::ORIENTATION_DEFAULT;
+    	$this->_scale					= 100;
+    	$this->_fitToPage				= false;
+    	$this->_fitToHeight				= 1;
+    	$this->_fitToWidth				= 1;
+    	$this->_columnsToRepeatAtLeft 	= array('', '');
+    	$this->_rowsToRepeatAtTop		= array(0, 0);
+    	$this->_horizontalCentered		= false;
+    	$this->_verticalCentered		= false;
+    	$this->_printArea				= null;
+    	$this->_firstPageNumber         = null;
     }
 
     /**

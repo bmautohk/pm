@@ -1,8 +1,9 @@
 <?php
+
 /**
  * PHPExcel
  *
- * Copyright (c) 2006 - 2011 PHPExcel
+ * Copyright (c) 2006 - 2010 PHPExcel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,28 +21,35 @@
  *
  * @category   PHPExcel
  * @package    PHPExcel
- * @copyright  Copyright (c) 2006 - 2011 PHPExcel (http://www.codeplex.com/PHPExcel)
+ * @copyright  Copyright (c) 2006 - 2010 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version    1.7.6, 2011-02-27
+ * @version    1.7.4, 2010-08-26
  */
 
-
+spl_autoload_unregister(array('YiiBase','autoload'));
 /** PHPExcel root directory */
 if (!defined('PHPEXCEL_ROOT')) {
 	define('PHPEXCEL_ROOT', dirname(__FILE__) . '/');
 	require(PHPEXCEL_ROOT . 'PHPExcel/Autoloader.php');
+	PHPExcel_Autoloader::Register();
+	PHPExcel_Shared_ZipStreamWrapper::register();
+	// check mbstring.func_overload
+	if (ini_get('mbstring.func_overload') & 2) {
+		throw new Exception('Multibyte function overloading in PHP must be disabled for string functions (2).');
+	}
 }
-
+spl_autoload_register(array('YiiBase','autoload'));
 
 /**
  * PHPExcel
  *
  * @category   PHPExcel
  * @package    PHPExcel
- * @copyright  Copyright (c) 2006 - 2011 PHPExcel (http://www.codeplex.com/PHPExcel)
+ * @copyright  Copyright (c) 2006 - 2010 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
-class PHPExcel
+class PHPExcel extends CApplicationComponent
 {
+
 	/**
 	 * Document properties
 	 *
@@ -103,28 +111,31 @@ class PHPExcel
 	 */
 	public function __construct()
 	{
-		// Initialise worksheet collection and add one worksheet
-		$this->_workSheetCollection = array();
-		$this->_workSheetCollection[] = new PHPExcel_Worksheet($this);
-		$this->_activeSheetIndex = 0;
+            parent::init();            
+                
+            // Initialise worksheet collection and add one worksheet
+            $this->_workSheetCollection = array();
+            $this->_workSheetCollection[] = new PHPExcel_Worksheet($this);
+            $this->_activeSheetIndex = 0;
 
-		// Create document properties
-		$this->_properties = new PHPExcel_DocumentProperties();
+            // Create document properties
+            $this->_properties = new PHPExcel_DocumentProperties();
 
-		// Create document security
-		$this->_security = new PHPExcel_DocumentSecurity();
+            // Create document security
+            $this->_security = new PHPExcel_DocumentSecurity();
 
-		// Set named ranges
-		$this->_namedRanges = array();
+            // Set named ranges
+            $this->_namedRanges = array();
 
-		// Create the cellXf supervisor
-		$this->_cellXfSupervisor = new PHPExcel_Style(true);
-		$this->_cellXfSupervisor->bindParent($this);
+            // Create the cellXf supervisor
+            $this->_cellXfSupervisor = new PHPExcel_Style(true);
+            $this->_cellXfSupervisor->bindParent($this);
 
-		// Create the default style
-		$this->addCellXf(new PHPExcel_Style);
-		$this->addCellStyleXf(new PHPExcel_Style);
-	}
+            // Create the default style
+            $this->addCellXf(new PHPExcel_Style);
+            $this->addCellStyleXf(new PHPExcel_Style);
+            
+	}        
 
 
 	public function disconnectWorksheets() {
@@ -622,7 +633,7 @@ class PHPExcel
 			// then update cellXf indexes for cells
 			foreach ($this->_workSheetCollection as $worksheet) {
 				foreach ($worksheet->getCellCollection(false) as $cellID) {
-					$cell = $worksheet->getCell($cellID);
+					$cell = $sheet->getCell($cellID);
 					$xfIndex = $cell->getXfIndex();
 					if ($xfIndex > $pIndex ) {
 						// decrease xf index by 1
@@ -792,5 +803,15 @@ class PHPExcel
 			$sheet->garbageCollect();
 		}
 	}
+
+        public function saveExcel2007($objPHPExcel,$file){
+            $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
+            $objWriter->save($file);
+        }
+
+        public function readExcel2007(){
+            $objReader = PHPExcel_IOFactory::createReader('Excel2007');
+            return $objReader;
+        }
 
 }
