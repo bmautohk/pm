@@ -90,10 +90,51 @@ input.error, select.error, textarea.error {
 	height: 30px;
 }
 
+.input_label,  .input_label_s {
+	background-color: #e6e7e9;
+	border-top: 1px solid #9a9b9d;
+	border-bottom: 1px solid #9a9b9d;
+	border-left: 1px solid #9a9b9d;
+	padding: 0px 10px 0px 10px;
+	height: 22px;
+	float: left;
+}
+
 .input_label {
-	background: transparent url('input_label.png') no-repeat scroll top left;
-	padding-left: 10px;
-	padding-right: 10px;
+	width: 119px;
+}
+
+.input_from_to_field input {
+	margin-left: 0;
+	height: 18px;
+	width: 131px;
+}
+
+.date_field input {
+	margin-left: 0;
+	width: 173px;
+	height: 18px;
+}
+
+/* For searching criteria label */
+.input_label_s {
+	width: 70px;
+}
+
+.input_label span {
+	position: relative;
+	bottom:-3px;
+}
+
+.input_field {
+	overflow: hidden;
+	display: block;
+	padding: 0 4px 0 0;
+}
+
+.input_field input {
+	width: 100%;
+	height: 18px;
 }
 
 .page_header {
@@ -105,11 +146,10 @@ input.error, select.error, textarea.error {
 }
 
 .rightmain_content {
-	margin: 0px 10px 0px 190px;
+	margin: 0px 10px 20px 10px;
 }
 
-/* --- Grid --- */
-
+/* --- Grid for add --- */
 .grid {
   width: 796px;
   height: 0px;
@@ -124,8 +164,9 @@ input.error, select.error, textarea.error {
 
 .grid-c1 {
   float: left;
-  width: 388px;
-  height: 25px;
+  width: 500px;
+  height: 30px;
+  margin-bottom: 10px;
 }
 
 .grid-m2 {
@@ -136,10 +177,173 @@ input.error, select.error, textarea.error {
 
 .grid-c2 {
   float: left;
-  width: 388px;
-  height: 25px;
+  width: 500px;
+  height: 30px;
+  margin-bottom: 10px;
 }
 
-input.grid {
-	width: 100%;
-} 
+.grid-c1 select {
+	margin-left: 0;
+	width: 100px;
+	height: 24px;
+}
+
+.grid-c1 .input_field input, .grid-c2 .input_field input {
+	width: 250px;
+	height: 18px;
+}
+
+.grid-c1 .date_field input, .grid-c2 .date_field input {
+	margin-left: 0;
+	width: 250px;
+	height: 18px;
+}
+
+/* --- Grid for update --- */
+.grid_u {
+  width: 796px;
+  height: 0px;
+  margin: auto;
+}
+
+.grid_u-m1 {
+  float: left;
+  width: 0px;
+  height: 1px;
+}
+
+.grid_u-c1 {
+  float: left;
+  width: 370px;
+  height: 30px;
+  margin-bottom: 10px;
+}
+
+.grid_u-m2 {
+  float: left;
+  width: 20px;
+  height: 1px;
+}
+
+.grid_u-c2 {
+  float: left;
+  width: 370px;
+  height: 30px;
+  margin-bottom: 10px;
+}
+
+.grid_u-c1 select {
+	margin-left: 0;
+	width: 100px;
+	height: 24px;
+}
+
+.grid_u-c1 .input_field input, .grid_u-c2 .input_field input {
+	width: 200px;
+	height: 18px;
+}
+
+.grid_u-c1 .date_field input, .grid_u-c2 .date_field input {
+	margin-left: 0;
+	width: 200px;
+	height: 18px;
+}
+
+
+/* --- Grid for seraching --- */
+.grid_s {
+  width: 796px;
+  height: 0px;
+  margin: auto;
+}
+
+.grid_s-m1 {
+  float: left;
+  width: 0px;
+  height: 1px;
+}
+
+.grid_s-c1 {
+  float: left;
+  width: 388px;
+  height: 30px;
+  margin-bottom: 10px;
+}
+
+.grid_s-m2 {
+  float: left;
+  width: 20px;
+  height: 1px;
+}
+
+.grid_s-c2 {
+  float: left;
+  width: 388px;
+  height: 30px;
+  margin-bottom: 10px;
+}
+
+.grid_s .from_to_input {
+	padding: 0 0 0 0;
+}
+
+/* --- Grid for paging --- */
+.grid_p {
+	background-color: white;
+	width:335px;
+	float: left;
+	margin: 0px 0px 30px 0px;
+	padding: 10px 0px 0px 5px;
+	border:1px solid #949599;
+}
+
+.grid_p-c1 {
+	width: 160px;
+	height: 130px;
+	float: left;
+	margin-right: 5px;
+}
+
+.grid_p-c3 {
+	float: left;
+	margin-top: 5px;
+}
+
+.grid_p-m1 {
+  float: left;
+  width: 45px;
+  height: 1px;
+}
+
+.grid_p-c1 .input_label {
+	margin-bottom:10px;
+	width: 35px;
+}
+
+.grid_p .input_field {
+	margin-bottom:10px;
+}
+
+.grid_p-c1 .product_name {
+	text-align:center;
+	color:#3ab54a;
+	font-size: 20px;
+	font-weight: 900;
+	padding-bottom: 10px;
+	height: 30px;
+}
+
+.grid_p-c3 .input_field2 input {
+	margin-bottom:10px;
+	width: 207px;
+	height: 18px;
+}
+
+.grid_p-c3 .input_label {
+	width: 95px;
+}
+
+.grid_p-c3 .link {
+	text-align:center;
+	padding-bottom: 10px;
+}
