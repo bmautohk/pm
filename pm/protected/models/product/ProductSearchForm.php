@@ -50,47 +50,62 @@ class ProductSearchForm extends CFormModel {
 		$criteria = new CDbCriteria();
 
 		if (!empty($this->keyword)) {
-			$criteria->compare('customer', $this->keyword, true, 'OR');
-			$criteria->compare('prod_sn', $this->keyword, true, 'OR');
-			$criteria->compare('no_jp', $this->keyword, true, 'OR');
-			$criteria->compare('factory_no', $this->keyword, true, 'OR');
-			$criteria->compare('model', $this->keyword, true, 'OR');
-			$criteria->compare('model_no', $this->keyword, true, 'OR');
-			$criteria->compare('year', $this->keyword, true, 'OR');
-			$criteria->compare('item_group', $this->keyword, true, 'OR');
-			$criteria->compare('material', $this->keyword, true, 'OR');
-			$criteria->compare('product_desc', $this->keyword, true, 'OR');
-			$criteria->compare('remark', $this->keyword, true, 'OR');
-			$criteria->compare('colour', $this->keyword, true, 'OR');
-			$criteria->compare('colour_no', $this->keyword, true, 'OR');
-			$criteria->compare('supplier', $this->keyword, true, 'OR');
-			$criteria->compare('pack_remark', $this->keyword, true, 'OR');
-			$criteria->compare('progress', $this->keyword, true, 'OR');
-			$criteria->compare('person_in_charge', $this->keyword, true, 'OR');
-			$criteria->compare('state', $this->keyword, true, 'OR');
-			$criteria->compare('yahoo_produce', $this->keyword, true, 'OR');
+			$keywords = explode(' ', $this->keyword);
+			
+			foreach ($keywords as $keyword) {
+				$keyword = trim($keyword);
+				if (empty($keyword)) {
+					// SKip empty keyword
+					continue;
+				}
+				
+				$criteriaTmp = new CDbCriteria();
+				$criteriaTmp->compare('customer', $keyword, true, 'OR');
+				$criteriaTmp->compare('prod_sn', $keyword, true, 'OR');
+				$criteriaTmp->compare('no_jp', $keyword, true, 'OR');
+				$criteriaTmp->compare('factory_no', $keyword, true, 'OR');
+				$criteriaTmp->compare('made', $keyword, true, 'OR');
+				$criteriaTmp->compare('model', $keyword, true, 'OR');
+				$criteriaTmp->compare('model_no', $keyword, true, 'OR');
+				$criteriaTmp->compare('year', $keyword, true, 'OR');
+				$criteriaTmp->compare('item_group', $keyword, true, 'OR');
+				$criteriaTmp->compare('material', $keyword, true, 'OR');
+				$criteriaTmp->compare('product_desc', $keyword, true, 'OR');
+				$criteriaTmp->compare('product_desc_ch', $keyword, true, 'OR');
+				$criteriaTmp->compare('product_desc_jp', $keyword, true, 'OR');
+				$criteriaTmp->compare('colour', $keyword, true, 'OR');
+				$criteriaTmp->compare('colour_no', $keyword, true, 'OR');
+				$criteriaTmp->compare('supplier', $keyword, true, 'OR');
+				$criteriaTmp->compare('pack_remark', $keyword, true, 'OR');
+				$criteriaTmp->compare('progress', $keyword, true, 'OR');
+				$criteriaTmp->compare('person_in_charge', $keyword, true, 'OR');
+				$criteriaTmp->compare('state', $keyword, true, 'OR');
+				$criteriaTmp->compare('yahoo_produce', $keyword, true, 'OR');
+				$criteriaTmp->compare('accessory_remark', $keyword, true, 'OR');
+				$criteriaTmp->compare('company_remark', $keyword, true, 'OR');
+				$criteria->mergeWith($criteriaTmp);
+			}
 		}
 		else {
-			$criteria->compare('colour', $this->colour, true);
-			$criteria->compare('colour_no', $this->colour, true, 'OR');
+			$criteria->compare('colour_no', trim($this->colour), true, 'OR');
 			
-			$criteria->compare('made', $this->made);
+			$criteria->compare('made', trim($this->made));
 			
-			$criteria->compare('customer', $this->customer, true);
-			$criteria->compare('no_jp', $this->no_jp, true);
-			$criteria->compare('factory_no', $this->factory_no, true);
-			$criteria->compare('model', $this->model, true);
-			$criteria->compare('model_no', $this->model_no, true);
+			$criteria->compare('customer', trim($this->customer), true);
+			$criteria->compare('no_jp', trim($this->no_jp), true);
+			$criteria->compare('factory_no',trim($this->factory_no), true);
+			$criteria->compare('model', trim($this->model), true);
+			$criteria->compare('model_no', trim($this->model_no), true);
 			
 			// Advance
-			$criteria->compare('year', $this->year, true);
-			$criteria->compare('item_group', $this->item_group, true);
-			$criteria->compare('material', $this->material, true);
+			$criteria->compare('year', trim($this->year), true);
+			$criteria->compare('item_group', trim($this->item_group), true);
+			$criteria->compare('material', trim($this->material), true);
 			
 			$criteria->compare('pcs', '>='.$this->pcsFrom);
 			$criteria->compare('pcs', '<='.$this->pcsTo);
 			
-			$criteria->compare('supplier', $this->supplier, true);
+			$criteria->compare('supplier', trim($this->supplier), true);
 			
 			$criteria->compare('molding', '>='.$this->moldingFrom);
 			$criteria->compare('molding', '<='.$this->moldingTo);

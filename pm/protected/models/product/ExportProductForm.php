@@ -32,30 +32,30 @@ class ExportProductForm extends CFormModel {
 			->setCellValueByColumnAndRow($i++, 1, '車型')
 			->setCellValueByColumnAndRow($i++, 1, '型號')
 			->setCellValueByColumnAndRow($i++, 1, '年份')
-			->setCellValueByColumnAndRow($i++, 1, '商品名')
+			->setCellValueByColumnAndRow($i++, 1, '商品類別')
 			->setCellValueByColumnAndRow($i++, 1, '材質')
-			->setCellValueByColumnAndRow($i++, 1, '商品説明1')
-			->setCellValueByColumnAndRow($i++, 1, '商品説明2/配件备注')
-			->setCellValueByColumnAndRow($i++, 1, '图片超链接')
+			->setCellValueByColumnAndRow($i++, 1, '商品名EN')
+			->setCellValueByColumnAndRow($i++, 1, '商品名CH')
+			->setCellValueByColumnAndRow($i++, 1, '商品名JP')
+			->setCellValueByColumnAndRow($i++, 1, '配件備忘')
+			->setCellValueByColumnAndRow($i++, 1, '公司內部備忘')
 			->setCellValueByColumnAndRow($i++, 1, 'PCS')
 			->setCellValueByColumnAndRow($i++, 1, '顏色')
 			->setCellValueByColumnAndRow($i++, 1, '顏色編號')
-			->setCellValueByColumnAndRow($i++, 1, '最低起訂量')
+			->setCellValueByColumnAndRow($i++, 1, '供應商')
 			->setCellValueByColumnAndRow($i++, 1, '模具費')
+			->setCellValueByColumnAndRow($i++, 1, '最低起訂量')
 			->setCellValueByColumnAndRow($i++, 1, '供应商報價')
-			->setCellValueByColumnAndRow($i++, 1, '海渡')
-			->setCellValueByColumnAndRow($i++, 1, '其他')
-			->setCellValueByColumnAndRow($i++, 1, '')
-			->setCellValueByColumnAndRow($i++, 1, '')
+			->setCellValueByColumnAndRow($i++, 1, '海渡價')
+			->setCellValueByColumnAndRow($i++, 1, '其它價')
+			->setCellValueByColumnAndRow($i++, 1, '原件樣品採購價')
 			->setCellValueByColumnAndRow($i++, 1, '訂原件時間')
 			->setCellValueByColumnAndRow($i++, 1, '原件收到日期')
-			->setCellValueByColumnAndRow($i++, 1, '供應商')
-			->setCellValueByColumnAndRow($i++, 1, '原件樣品採購價')
-			->setCellValueByColumnAndRow($i++, 1, '原件交付工廠日期')
+			->setCellValueByColumnAndRow($i++, 1, '原件到廠日期')
 			->setCellValueByColumnAndRow($i++, 1, '包裝备注')
 			->setCellValueByColumnAndRow($i++, 1, '下單日期')
 			->setCellValueByColumnAndRow($i++, 1, '开发進度及情况')
-			->setCellValueByColumnAndRow($i++, 1, '收到樣板~寄往對車日期')
+			->setCellValueByColumnAndRow($i++, 1, '寄往對車日期')
 			->setCellValueByColumnAndRow($i++, 1, '對車負責人')
 			->setCellValueByColumnAndRow($i++, 1, '對車情況')
 			->setCellValueByColumnAndRow($i++, 1, '出货日期')
@@ -68,47 +68,62 @@ class ExportProductForm extends CFormModel {
 			$i = 0;
 			$rowNo++;
 			
-			$sheet->setCellValueByColumnAndRow($i++, $rowNo, $this->conv($product['customer']))
-				->setCellValueByColumnAndRow($i++, $rowNo, $this->conv($product['prod_sn']))
+			$sheet->setCellValueByColumnAndRow($i++, $rowNo, $product['customer'])
+				->setCellValueByColumnAndRow($i++, $rowNo, $product['prod_sn'])
 				->setCellValueByColumnAndRow($i++, $rowNo, $product['status'] == 'A' ? 'OK' : '')
-				->setCellValueByColumnAndRow($i++, $rowNo, $this->conv($product['no_jp']))
-				->setCellValueByColumnAndRow($i++, $rowNo, $this->conv($product['factory_no']))
-				->setCellValueByColumnAndRow($i++, $rowNo, $this->conv($product['made']))
-				->setCellValueByColumnAndRow($i++, $rowNo, $this->conv($product['model']))
-				->setCellValueByColumnAndRow($i++, $rowNo, $this->conv($product['model_no']))
-				->setCellValueByColumnAndRow($i++, $rowNo, $this->conv($product['year']))
-				->setCellValueByColumnAndRow($i++, $rowNo, $this->conv($product['item_group']))
-				->setCellValueByColumnAndRow($i++, $rowNo, $this->conv($product['material']))
-				->setCellValueByColumnAndRow($i++, $rowNo, $this->conv($product['product_desc']))
-				->setCellValueByColumnAndRow($i++, $rowNo, $this->conv($product['remark']))
-				->setCellValueByColumnAndRow($i++, $rowNo, $this->conv($product['photo_link']))
+				->setCellValueByColumnAndRow($i++, $rowNo, $product['no_jp'])
+				->setCellValueByColumnAndRow($i++, $rowNo, $product['factory_no'])
+				->setCellValueByColumnAndRow($i++, $rowNo, $product['made'])
+				->setCellValueByColumnAndRow($i++, $rowNo, $product['model'])
+				->setCellValueByColumnAndRow($i++, $rowNo, $product['model_no'])
+				->setCellValueByColumnAndRow($i++, $rowNo, $product['year'])
+				->setCellValueByColumnAndRow($i++, $rowNo, $product['item_group'])
+				->setCellValueByColumnAndRow($i++, $rowNo, $product['material'])
+				->setCellValueByColumnAndRow($i++, $rowNo, $product['product_desc'])
+				->setCellValueByColumnAndRow($i++, $rowNo, $product['product_desc_ch'])
+				->setCellValueByColumnAndRow($i++, $rowNo, $product['product_desc_jp'])
+				->setCellValueByColumnAndRow($i++, $rowNo, $product['accessory_remark'])
+				->setCellValueByColumnAndRow($i++, $rowNo, $product['company_remark'])
 				->setCellValueByColumnAndRow($i++, $rowNo, $product['pcs'])
-				->setCellValueByColumnAndRow($i++, $rowNo, $this->conv($product['colour']))
-				->setCellValueByColumnAndRow($i++, $rowNo, $this->conv($product['colour_no']))
-				->setCellValueByColumnAndRow($i++, $rowNo, $product['moq'])
+				->setCellValueByColumnAndRow($i++, $rowNo, $product['colour'])
+				->setCellValueByColumnAndRow($i++, $rowNo, $product['colour_no'])
+				->setCellValueByColumnAndRow($i++, $rowNo, $product['supplier'])
 				->setCellValueByColumnAndRow($i++, $rowNo, $product['molding'])
+				->setCellValueByColumnAndRow($i++, $rowNo, $product['moq'])
 				->setCellValueByColumnAndRow($i++, $rowNo, $product['cost'])
 				->setCellValueByColumnAndRow($i++, $rowNo, $product['kaito'])
 				->setCellValueByColumnAndRow($i++, $rowNo, $product['other'])
-				->setCellValueByColumnAndRow($i++, $rowNo, '')
-				->setCellValueByColumnAndRow($i++, $rowNo, '')
-				->setCellValueByColumnAndRow($i++, $rowNo, ExportProductForm::strToExcelDate($product['buy_date']))
-				->setCellValueByColumnAndRow($i++, $rowNo, ExportProductForm::strToExcelDate($product['receive_date']))
-				->setCellValueByColumnAndRow($i++, $rowNo, $this->conv($product['supplier']))
-				->setCellValueByColumnAndRow($i++, $rowNo, $product['purchase_cost'])
-				->setCellValueByColumnAndRow($i++, $rowNo, ExportProductForm::strToExcelDate($product['factory_date']))
-				->setCellValueByColumnAndRow($i++, $rowNo, $this->conv($product['pack_remark']))
-				->setCellValueByColumnAndRow($i++, $rowNo, ExportProductForm::strToExcelDate($product['order_date']))
-				->setCellValueByColumnAndRow($i++, $rowNo, $this->conv($product['progress']))
-				->setCellValueByColumnAndRow($i++, $rowNo, ExportProductForm::strToExcelDate($product['receive_model_date']))
-				->setCellValueByColumnAndRow($i++, $rowNo, $this->conv($product['person_in_charge']))
-				->setCellValueByColumnAndRow($i++, $rowNo, $this->conv($product['state']))
-				->setCellValueByColumnAndRow($i++, $rowNo, ExportProductForm::strToExcelDate($product['ship_date']))
-				->setCellValueByColumnAndRow($i++, $rowNo, $product['market_research_price'])
-				->setCellValueByColumnAndRow($i++, $rowNo, $this->conv($product['yahoo_produce']))
-				;
+				->setCellValueByColumnAndRow($i++, $rowNo, $product['purchase_cost']);
+			
+			$sheet->getStyleByColumnAndRow($i, $rowNo)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
+			$sheet->setCellValueByColumnAndRow($i++, $rowNo, ExportProductForm::strToExcelDate($product['buy_date']));
+			
+			$sheet->getStyleByColumnAndRow($i, $rowNo)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
+			$sheet->setCellValueByColumnAndRow($i++, $rowNo, ExportProductForm::strToExcelDate($product['receive_date']));
+			
+			$sheet->getStyleByColumnAndRow($i, $rowNo)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
+			$sheet->setCellValueByColumnAndRow($i++, $rowNo, ExportProductForm::strToExcelDate($product['factory_date']));
+			
+			$sheet->setCellValueByColumnAndRow($i++, $rowNo, $product['pack_remark']);
+			
+			$sheet->getStyleByColumnAndRow($i, $rowNo)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
+			$sheet->setCellValueByColumnAndRow($i++, $rowNo, ExportProductForm::strToExcelDate($product['order_date']));
+			
+			$sheet->setCellValueByColumnAndRow($i++, $rowNo, $product['progress']);
+			
+			$sheet->getStyleByColumnAndRow($i, $rowNo)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
+			$sheet->setCellValueByColumnAndRow($i++, $rowNo, ExportProductForm::strToExcelDate($product['receive_model_date']));
+			
+			$sheet->setCellValueByColumnAndRow($i++, $rowNo, $product['person_in_charge'])
+				->setCellValueByColumnAndRow($i++, $rowNo, $product['state']);
+			
+			$sheet->getStyleByColumnAndRow($i, $rowNo)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
+			$sheet->setCellValueByColumnAndRow($i++, $rowNo, ExportProductForm::strToExcelDate($product['ship_date']));
+			
+			$sheet->setCellValueByColumnAndRow($i++, $rowNo, $product['market_research_price'])
+				->setCellValueByColumnAndRow($i++, $rowNo, $product['yahoo_produce']);
 				
-				$sheet->getStyle('Y'.$rowNo)
+				/* $sheet->getStyle('Y'.$rowNo)
 					->getNumberFormat()
 					->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
 				$sheet->getStyle('Z'.$rowNo)
@@ -125,7 +140,7 @@ class ExportProductForm extends CFormModel {
 					->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
 				$sheet->getStyle('AJ'.$rowNo)
 					->getNumberFormat()
-					->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
+					->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2); */
 		}
 		
 		header("Content-type:application/vnd.ms-excel;charset=euc");
@@ -134,10 +149,6 @@ class ExportProductForm extends CFormModel {
 		
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 		$objWriter->save('php://output');
-	}
-	
-	private function conv($str) {
-		return iconv('euc-jp', "UTF-8", $str);
 	}
 	
 	private static function strToExcelDate($dateStr) {

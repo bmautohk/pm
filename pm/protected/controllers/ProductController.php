@@ -33,6 +33,17 @@ class ProductController extends Controller {
 				$errorMsg = 'Fail to create product!';
 			}
 		}
+		else {
+			// Find next prod SN
+			$criteria = new CDbCriteria();
+			$criteria->select='MAX(prod_sn) as max_prod_sn';
+			$maxProdSN = ProductMaster::model()->find($criteria);
+			$model->prod_sn = $maxProdSN->max_prod_sn === NULL ? 391 : $maxProdSN->max_prod_sn + 1;
+			
+			if ($model->prod_sn < 391) {
+				$model->prod_sn = 391;
+			}
+		}
 
 		$this->render('add', array('action'=>$action, 'model'=>$model, 'msg'=>array('success'=>$successMsg, 'error'=>$errorMsg)));
 	}

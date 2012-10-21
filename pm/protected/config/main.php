@@ -8,7 +8,8 @@
 return array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
 	'name'=>'BM AUTO',
-	'charset'=>'EUC-JP',
+	//'charset'=>'EUC-JP',
+	'charset' => 'UTF-8',
 		
 	'language' => 'en', // the language that the user is using and the application should be targeted to
 
@@ -62,7 +63,8 @@ return array(
 			'emulatePrepare' => true,
 			'username' => 'root',
 			'password' => '',
-			//'charset' => 'ujis',
+			//'charset' => 'latin1',
+			'charset' => 'utf8',
 		),
 		
 		'errorHandler'=>array(

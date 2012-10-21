@@ -22,11 +22,7 @@ $mades =  Made::getDropDownFromCache();
 	<title><?php echo CHtml::encode(Yii::app()->name); ?></title>
 </head>
 
-<<<<<<< HEAD
 <body>
-=======
-<body style="position: relative;width:100%;">
->>>>>>> 272ace3e8abc0f011c2a4ed3ffcb581a05dc495a
 	<div id="wrapper">
 		<div id="header_main"> 
 			<div id="welcome_msg">Welcome <?=Yii::app()->user->name ?> <a href="<?=$baseUrl ?>/site/logout" style="color:white; text-decoration:underline">(Logout)</a></div>

@@ -31,64 +31,64 @@
 		)); ?>
 			<div class="page_header">Goods filter</div>
 			
-			<div class="grid">
-				<div class="grid-c1">
-					<span class="input_label"><? echo Yii::t('product_message', 'customer'); ?></span><span class="input_field"><? echo $form->textField($model, 'customer'); ?></span>
+			<div class="grid_s">
+				<div class="grid_s-c1">
+					<span class="input_label_s"><? echo Yii::t('product_message', 'customer'); ?></span><span class="input_field"><? echo $form->textField($model, 'customer'); ?></span>
 				</div>
-				<div class="grid-m2"></div>
-				<div class="grid-c2">
-					<span class="input_label"><? echo Yii::t('product_message', 'no_jp'); ?></span><span class="input_field"><? echo $form->textField($model, 'no_jp'); ?></span>
-				</div>
-				
-				<div class="grid-c1">
-					<span class="input_label"><? echo Yii::t('product_message', 'factory_no'); ?></span><span class="input_field"><? echo $form->textField($model, 'factory_no'); ?></span>
-				</div>
-				<div class="grid-m2"></div>
-				<div class="grid-c2">
-					<span class="input_label"><? echo Yii::t('product_message', 'made'); ?></span><span class="input_field"><? echo $form->textField($model, 'made'); ?></span>
+				<div class="grid_s-m2"></div>
+				<div class="grid_s-c2">
+					<span class="input_label_s"><? echo Yii::t('product_message', 'no_jp'); ?></span><span class="input_field"><? echo $form->textField($model, 'no_jp'); ?></span>
 				</div>
 				
-				<div class="grid-c1">
-					<span class="input_label"><? echo Yii::t('product_message', 'model'); ?></span><span class="input_field"><? echo $form->textField($model, 'model'); ?></span>
+				<div class="grid_s-c1">
+					<span class="input_label_s"><? echo Yii::t('product_message', 'factory_no'); ?></span><span class="input_field"><? echo $form->textField($model, 'factory_no'); ?></span>
 				</div>
-				<div class="grid-m2"></div>
-				<div class="grid-c2">
-					<span class="input_label"><? echo Yii::t('product_message', 'model_no'); ?></span><span class="input_field"><? echo $form->textField($model, 'model_no'); ?></span>
+				<div class="grid_s-m2"></div>
+				<div class="grid_s-c2">
+					<span class="input_label_s"><? echo Yii::t('product_message', 'made'); ?></span><span class="input_field"><? echo $form->textField($model, 'made'); ?></span>
+				</div>
+				
+				<div class="grid_s-c1">
+					<span class="input_label_s"><? echo Yii::t('product_message', 'model'); ?></span><span class="input_field"><? echo $form->textField($model, 'model'); ?></span>
+				</div>
+				<div class="grid_s-m2"></div>
+				<div class="grid_s-c2">
+					<span class="input_label_s"><? echo Yii::t('product_message', 'model_no'); ?></span><span class="input_field"><? echo $form->textField($model, 'model_no'); ?></span>
 				</div>
 				<br style="clear:both" />
 			</div>
 			
 			<div id="advanceFilter" class="grid" style="display:none">
-				<div class="grid-c1">
-					<span class="input_label"><? echo Yii::t('product_message', 'year'); ?></span><span class="input_field"><? echo $form->textField($model, 'year'); ?></span>
+				<div class="grid_s-c1">
+					<span class="input_label_s"><? echo Yii::t('product_message', 'year'); ?></span><span class="input_field"><? echo $form->textField($model, 'year'); ?></span>
 				</div>
-				<div class="grid-m2"></div>
-				<div class="grid-c2">
-					<span class="input_label"><? echo Yii::t('product_message', 'item_group'); ?></span><span class="input_field"><? echo $form->textField($model, 'item_group'); ?></span>
-				</div>
-				
-				<div class="grid-c1">
-					<span class="input_label"><? echo Yii::t('product_message', 'colour').'/'.Yii::t('product_message', 'colour_no'); ?></span><span class="input_field"><? echo $form->textField($model, 'colour'); ?></span>
-				</div>
-				<div class="grid-m2"></div>
-				<div class="grid-c2">
-					<span class="input_label"><? echo Yii::t('product_message', 'material'); ?></span><span class="input_field"><? echo $form->textField($model, 'material'); ?></span>
+				<div class="grid_s-m2"></div>
+				<div class="grid_s-c2">
+					<span class="input_label_s"><? echo Yii::t('product_message', 'item_group'); ?></span><span class="input_field"><? echo $form->textField($model, 'item_group'); ?></span>
 				</div>
 				
-				<div class="grid-c1">
-					<span class="input_label">PCS</span></span><? echo $form->textField($model, 'pcsFrom', array('size'=>10)); ?> To <? echo $form->textField($model, 'pcsTo', array('size'=>10)); ?>
+				<div class="grid_s-c1">
+					<span class="input_label_s"><? echo Yii::t('product_message', 'colour_no'); ?></span><span class="input_field"><? echo $form->textField($model, 'colour'); ?></span>
 				</div>
-				<div class="grid-m2"></div>
-				<div class="grid-c2">
-					<span class="input_label"><? echo Yii::t('product_message', 'supplier'); ?></span><span class="input_field"><? echo $form->textField($model, 'supplier'); ?></span>
+				<div class="grid_s-m2"></div>
+				<div class="grid_s-c2">
+					<span class="input_label_s"><? echo Yii::t('product_message', 'material'); ?></span><span class="input_field"><? echo $form->textField($model, 'material'); ?></span>
 				</div>
 				
-				<div class="grid-c1">
-					<span class="input_label"><? echo Yii::t('product_message', 'molding'); ?></span><? echo $form->textField($model, 'moldingFrom', array('size'=>10)); ?> To <? echo $form->textField($model, 'moldingTo', array('size'=>10)); ?>
+				<div class="grid_s-c1">
+					<span class="input_label_s">PCS</span><span class="input_from_to_field"><? echo $form->textField($model, 'pcsFrom', array('size'=>10)); ?> To <? echo $form->textField($model, 'pcsTo', array('size'=>10)); ?></span>
 				</div>
-				<div class="grid-m2"></div>
-				<div class="grid-c2">
-					<span class="input_label"><? echo Yii::t('product_message', 'kaito'); ?></span><? echo $form->textField($model, 'kaitoFrom', array('size'=>10)); ?> To <? echo $form->textField($model, 'kaitoTo', array('size'=>10)); ?>
+				<div class="grid_s-m2"></div>
+				<div class="grid_s-c2">
+					<span class="input_label_s"><? echo Yii::t('product_message', 'supplier'); ?></span><span class="input_field"><? echo $form->textField($model, 'supplier'); ?></span>
+				</div>
+				
+				<div class="grid_s-c1">
+					<span class="input_label_s"><? echo Yii::t('product_message', 'molding'); ?></span><span class="input_from_to_field"><? echo $form->textField($model, 'moldingFrom', array('size'=>10)); ?> To <? echo $form->textField($model, 'moldingTo', array('size'=>10)); ?></span>
+				</div>
+				<div class="grid_s-m2"></div>
+				<div class="grid_s-c2">
+					<span class="input_label_s"><? echo Yii::t('product_message', 'kaito'); ?></span><span class="input_from_to_field"><? echo $form->textField($model, 'kaitoFrom', array('size'=>10)); ?> To <? echo $form->textField($model, 'kaitoTo', array('size'=>10)); ?></span>
 				</div>				
 			</div>
 

@@ -24,17 +24,20 @@
 				</div>
 				<div class="grid_p-c1">
 					<div class="product_name">
-						<?=$product->no_jp ?>
+						<?=$product->prod_sn ?>
 					</div>
 					<span class="input_label"><? echo Yii::t('product_message', 'made'); ?></span><span class="input_field"><? echo $form->textField($product,'made'); ?></span>
 					<span class="input_label"><? echo Yii::t('product_message', 'model'); ?></span><span class="input_field"><? echo $form->textField($product,'model'); ?></span>
 					<span class="input_label"><? echo Yii::t('product_message', 'pcs'); ?></span><span class="input_field"><? echo $form->textField($product,'pcs'); ?></span>
 				</div>
-				<div style="float: left; margin-top: 5px;">
-					<span class="input_label"><? echo Yii::t('product_message', 'product_desc'); ?></span><span class="input_field"><? echo $form->textField($product,'product_desc'); ?></span>				
-					<span class="input_label"><? echo Yii::t('product_message', 'remark'); ?></span><span class="input_field"><? echo $form->textField($product,'remark'); ?></span>
+				<div class="grid_p-c3">
+					<span class="input_label"><? echo Yii::t('product_message', 'product_desc'); ?></span><span class="input_field2"><? echo $form->textField($product,'product_desc'); ?></span>				
+					<span class="input_label"><? echo Yii::t('product_message', 'product_desc_ch'); ?></span><span class="input_field2"><? echo $form->textField($product,'product_desc_ch'); ?></span>
+					<span class="input_label"><? echo Yii::t('product_message', 'accessory_remark'); ?></span><span class="input_field2"><? echo $form->textField($product,'accessory_remark'); ?></span>
 					
-					<a class='productdetail' href="javascript:goUpdate(<?=$product->id ?>)"><input type="button" value="<? echo Yii::t('common_message', 'detail'); ?>" /></a>
+					<div class="link">
+						<a class='productdetail' href="javascript:goUpdate(<?=$product->id ?>)"><input type="button" value="<? echo Yii::t('common_message', 'detail'); ?>" /></a>
+					</div>
 				</div>
 			</div>
 			
