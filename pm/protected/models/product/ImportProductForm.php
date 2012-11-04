@@ -53,7 +53,7 @@ class ImportProductForm extends CFormModel {
 			$product->customer = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
 			$product->prod_sn = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
 			$product->status = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue() == 'OK' ? 'A' : 'I';
-			$product->no_jp = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
+			$product->no_jp = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue(); if ($product->no_jp === NULL) { $product->no_jp = ''; }
 			$product->factory_no = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
 			$product->made = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
 			$product->model = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();

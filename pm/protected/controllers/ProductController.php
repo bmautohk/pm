@@ -51,46 +51,29 @@ class ProductController extends Controller {
 // Update function
 	public function actionUpdate() {
 		if (isset($_POST['action'])) {
-			if ($_POST['act'] == 'update') {
-				// Update product
-				$model = $this->loadProductMaster($_POST['ProductMaster']['id']);
-				$model->attributes = $_POST['ProductMaster'];
-				
-				if ($model->save()) {
-					$successMsg = '&#29986;&#21697;S/N ['.$model->prod_sn.'] is updated successfully!'; // 產品S/N [XXX] is updated successfully!
-				
-					// Go back the search page
-					$session=new CHttpSession;
-					$session->open();
-					$searchModel = new ProductSearchForm();
-					$searchModel->attributes = $session[GlobalConstants::SESSION_PRODUCT_SEARCH_CRITERIA];
-					$attr = $this->searchByAttributes($searchModel, 'searchByFilter', $session[GlobalConstants::SESSION_CURR_PAGE] - 1);
-				
-					// Remove session attribute
-					$session->remove(GlobalConstants::SESSION_PRODUCT_SEARCH_CRITERIA);
-					$session->remove(GlobalConstants::SESSION_CURR_PAGE);
-				
-					$this->render('list', array_merge($attr, array('msg'=>array('success'=>$successMsg))));
-					return;
-				}
-				else {
-					$errorMsg = 'Fail to update product!';
-				}
-			}
-			else {
-				// Back to search page
+			// Update product
+			$model = $this->loadProductMaster($_POST['ProductMaster']['id']);
+			$model->attributes = $_POST['ProductMaster'];
+			
+			if ($model->save()) {
+				$successMsg = '&#29986;&#21697;S/N ['.$model->prod_sn.'] is updated successfully!'; // 產品S/N [XXX] is updated successfully!
+			
+				// Go back the search page
 				$session=new CHttpSession;
 				$session->open();
 				$searchModel = new ProductSearchForm();
 				$searchModel->attributes = $session[GlobalConstants::SESSION_PRODUCT_SEARCH_CRITERIA];
 				$attr = $this->searchByAttributes($searchModel, 'searchByFilter', $session[GlobalConstants::SESSION_CURR_PAGE] - 1);
-				
+			
 				// Remove session attribute
 				$session->remove(GlobalConstants::SESSION_PRODUCT_SEARCH_CRITERIA);
 				$session->remove(GlobalConstants::SESSION_CURR_PAGE);
-				
-				$this->render('list', $attr);
+			
+				$this->render('list', array_merge($attr, array('msg'=>array('success'=>$successMsg))));
 				return;
+			}
+			else {
+				$errorMsg = 'Fail to update product!';
 			}
 		}
 		else {
@@ -107,6 +90,21 @@ class ProductController extends Controller {
 		}
 		
 		$this->render('maint', array('action'=>'update', 'model'=>$model, 'msg'=>array('success'=>$successMsg, 'error'=>$errorMsg)));
+	}
+	
+	public function actionBack() {
+		// Back to search page
+		$session=new CHttpSession;
+		$session->open();
+		$searchModel = new ProductSearchForm();
+		$searchModel->attributes = $session[GlobalConstants::SESSION_PRODUCT_SEARCH_CRITERIA];
+		$attr = $this->searchByAttributes($searchModel, 'searchByFilter', $session[GlobalConstants::SESSION_CURR_PAGE] - 1);
+		
+		// Remove session attribute
+		$session->remove(GlobalConstants::SESSION_PRODUCT_SEARCH_CRITERIA);
+		$session->remove(GlobalConstants::SESSION_CURR_PAGE);
+		
+		$this->render('list', $attr);
 	}
 	
 	public function actionShow_image() {

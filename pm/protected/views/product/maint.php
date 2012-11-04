@@ -27,7 +27,7 @@ if (!in_array($model->made, $mades)) {
 		'enableAjaxValidation'=>false,
 	)); ?>
 		<? echo $form->hiddenField($model,'id'); ?>
-		<input type="hidden" name="act" value="update" />
+		<input type="hidden" name="act" id="act" value="update" />
 		<div class="grid_u">
 			<div class="grid_u-c1">
 				<span class="input_label"><? echo Yii::t('product_message', 'customer'); ?></span><span class="input_field"><? echo $form->textField($model,'customer'); ?></span>
@@ -185,7 +185,7 @@ if (!in_array($model->made, $mades)) {
 		</div>
 		
 		<input class="searchBtn" type="submit" name="action" value="<? echo Yii::t('common_message', 'update'); ?>" />
-		<input class="searchBtn" type="submit" name="action" value="<? echo Yii::t('common_message', 'back'); ?>" />
+		<input class="searchBtn" type="button" name="action" value="<? echo Yii::t('common_message', 'back'); ?>" onclick="back()" />
 		
 	<? $this->endWidget(); ?>
 	
@@ -234,4 +234,9 @@ $(function() {
 	    onSelect   : function() { this.hide() }
 	});
 });
+
+function back() {
+	$('#form1').attr('action', 'back');
+	$('#form1').submit();
+}
 </script>

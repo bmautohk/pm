@@ -26,32 +26,50 @@ class Controller extends CController
 		if (isset($_REQUEST[get_class($model)])) {
 			$model->attributes = $_REQUEST[get_class($model)];
 		}
-		else {
-			//$criteria = new CDbCriteria;
-		}
 	
 		// Pagination configuration
 		$pages = new CPagination();
 		$pages->pageSize = Yii::app()->params['pageSize'];
 		$pages->route = $url;
 	
-		// Create criteria
-		$criteria = $model->createCriteria();
-	
-		if (!isset($model->itemCount)) {
-			// 1st search
-			$dataProvider = $model->searchByCriteria($criteria, $pages);
-			$model->itemCount = $dataProvider->totalItemCount;
+		if (!empty($model->keyword)) {
+			// Search by keyword
+			if (!isset($model->itemCount)) {
+				// 1st search
+				$pages->itemCount = $model->searchByKeywordItemCount();
+				$model->itemCount = $pages->itemCount;
+			}
+			else {
+				$pages->itemCount = $model->itemCount;
+			}
+			
+			$data = $model->searchByKeywordCrtiera($pages, $model->itemCount);
+			
+			return array(
+					'model' => $model,
+					'items' => $data,
+					'pages' => $pages
+			);
 		}
 		else {
-			$dataProvider = $model->searchByCriteria($criteria, $pages, $model->itemCount);
+			// Create criteria
+			$criteria = $model->createCriteria();
+			
+			if (!isset($model->itemCount)) {
+				// 1st search
+				$dataProvider = $model->searchByCriteria($criteria, $pages);
+				$model->itemCount = $dataProvider->totalItemCount;
+			}
+			else {
+				$dataProvider = $model->searchByCriteria($criteria, $pages, $model->itemCount);
+			}
+			
+			return array(
+					'model' => $model,
+					'items' => $dataProvider->getData(),
+					'pages' => $pages
+			);
 		}
-	
-		return array(
-				'model' => $model,
-				'items' => $dataProvider->getData(),
-				'pages' => $pages
-		);
 	}
 	
 	protected function searchByAttributes($searchModel, $url, $currPage) {
@@ -59,24 +77,45 @@ class Controller extends CController
 		$pages = new CPagination();
 		$pages->pageSize = Yii::app()->params['pageSize'];
 		$pages->route = $url;
-		$pages->setCurrentPage($currPage);
-	
-		// Create criteria
-		$criteria = $searchModel->createCriteria();
-	
-		if (!isset($searchModel->itemCount)) {
-			// 1st search
-			$dataProvider = $searchModel->searchByCriteria($criteria, $pages);
-			$searchModel->itemCount = $dataProvider->totalItemCount;
+		$pages->setCurrentPage($currPage < 0 ? 0 : $currPage);
+		
+		if (!empty($searchModel->keyword)) {
+			// Search by keyword
+			if (!isset($searchModel->itemCount)) {
+				// 1st search
+				$pages->itemCount = $searchModel->searchByKeywordItemCount();
+				$searchModel->itemCount = $pages->itemCount;
+			}
+			else {
+				$pages->itemCount = $searchModel->itemCount;
+			}
+			
+			$data = $searchModel->searchByKeywordCrtiera($pages, $searchModel->itemCount);
+			
+			return array(
+					'model' => $searchModel,
+					'items' => $data,
+					'pages' => $pages
+			);
 		}
 		else {
-			$dataProvider = $searchModel->searchByCriteria($criteria, $pages, $searchModel->itemCount);
+			// Create criteria
+			$criteria = $searchModel->createCriteria();
+			
+			if (!isset($searchModel->itemCount)) {
+				// 1st search
+				$dataProvider = $searchModel->searchByCriteria($criteria, $pages);
+				$searchModel->itemCount = $dataProvider->totalItemCount;
+			}
+			else {
+				$dataProvider = $searchModel->searchByCriteria($criteria, $pages, $searchModel->itemCount);
+			}
+			
+			return array(
+					'model' => $searchModel,
+					'items' => $dataProvider->getData(),
+					'pages' => $pages
+			);
 		}
-	
-		return array(
-				'model' => $searchModel,
-				'items' => $dataProvider->getData(),
-				'pages' => $pages
-		);
 	}
 }
