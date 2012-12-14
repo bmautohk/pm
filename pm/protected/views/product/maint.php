@@ -1,15 +1,80 @@
-<link type="text/css" rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/jscal2.css" />
-<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/jscal2.js"></script>
-<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/lang/en.js"></script>
-<? 
-/*$mades =  Made::getDropDownFromCache(); 
+<?
+$tableName = 'product_master';
+$roleMatrix = Yii::app()->user->getState('role_matrix');
 
-if (!in_array($model->made, $mades)) {
-	$mades[$model->made] = $model->made;
+
+function textField($form, $model, $attribute, $roleMatrix, $tableName, $columnName, $htmlOptions=array()) {
+echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span><span class="input_field">';
+        if (GlobalFunction::checkPrivilege($roleMatrix, $tableName, $columnName)) {
+	echo $form->textField($model, $attribute, $htmlOptions);
+	}else{
+        echo '<input type="text"/>';
+	}	
+echo '</span>';
+}
+
+/*function textField($form, $model, $attribute, $roleMatrix, $tableName, $columnName, $htmlOptions=array()) {
+        if (GlobalFunction::checkPrivilege($roleMatrix, $tableName, $columnName)) {
+                echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span><span class="input_field">'.$form->textField($model, $attribute, $htmlOptions).'</span>';
+        }
+}*/
+
+function textArea($form, $model, $attribute, $roleMatrix, $tableName, $columnName, $htmlOptions=array()) {
+	 echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span><span>';
+        if (GlobalFunction::checkPrivilege($roleMatrix, $tableName, $columnName)) {
+                echo $form->textArea($model, $attribute);
+        }else{
+	echo "<textarea></textarea>";
+	}
+	echo '</span>';
+}
+/*
+function textArea($form, $model, $attribute, $roleMatrix, $tableName, $columnName, $htmlOptions=array()) {
+	if (GlobalFunction::checkPrivilege($roleMatrix, $tableName, $columnName)) {
+		echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span><span>'.$form->textArea($model, $attribute).'</span>';
+	}
+}*/
+
+function datePicker($form, $model, $attribute, $roleMatrix, $tableName, $columnName) {
+   echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span><span class="date_field">';
+      if (GlobalFunction::checkPrivilege($roleMatrix, $tableName, $columnName)) {
+                echo $form->textField($model, $attribute);
+        }else{
+	echo '<input type="text"/>';
+	}
+echo '</span><input type="button" class="calendar_button" id="'.$attribute.'_btn" value=" " />';
+}
+/*
+function datePicker($form, $model, $attribute, $roleMatrix, $tableName, $columnName) {
+	if (GlobalFunction::checkPrivilege($roleMatrix, $tableName, $columnName)) {
+		echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span><span class="date_field">'.$form->textField($model, $attribute).'</span><input type="button" class="calendar_button" id="'.$attribute.'_btn" value=" " />';
+	}
+}*/
+
+function dropDownList($form, $model, $attribute, $options, $roleMatrix, $tableName, $columnName) {
+	echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span>';
+        if (GlobalFunction::checkPrivilege($roleMatrix, $tableName, $columnName)) {
+                echo $form->dropDownList($model, $attribute, $options);
+        }else{
+		echo '<select> </select>';
+	}
+}
+/*
+function dropDownList($form, $model, $attribute, $options, $roleMatrix, $tableName, $columnName) {
+	if (GlobalFunction::checkPrivilege($roleMatrix, $tableName, $columnName)) {
+		echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span>'.$form->dropDownList($model, $attribute, $options);
+	}
 }*/
 ?>
 
+<link type="text/css" rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/jscal2.css" />
+<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/jscal2.js"></script>
+<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/lang/en.js"></script>
+
 <div class="rightmain_content">
+
+	<? $this->widget('ProductSearchCriteria', array('searchForm'=>new ProductSearchForm())); ?>
+
 	<? $this->widget('ResultMessage', array('msg'=>$msg)); ?>
 	
 	<? echo CHtml::errorSummary($model, '', '', array('class'=>'errorMsg')); ?>
@@ -30,209 +95,233 @@ if (!in_array($model->made, $mades)) {
 		<input type="hidden" name="act" id="act" value="update" />
 		<div class="grid_u">
 			<div class="grid_u-c1">
-				<span class="input_label"><? echo Yii::t('product_message', 'customer'); ?></span><span class="input_field"><? echo $form->textField($model,'customer'); ?></span>
+				<? echo textField($form, $model, 'customer', $roleMatrix, $tableName, 'customer'); ?>
 			</div>
 			<div class="grid_u-m2"></div>
 			<div class="grid_u-c2">
-				<span class="input_label"><? echo Yii::t('product_message', 'prod_sn'); ?></span><span class="input_field"><? echo $form->textField($model,'prod_sn', array('readonly'=>true)); ?></span>
+				<? echo textField($form, $model, 'prod_sn', $roleMatrix, $tableName, 'prod_sn', array('readonly'=>true)); ?>
 			</div>
 			
 			<div class="grid_u-c1">
-				<span class="input_label"><? echo Yii::t('product_message', 'status'); ?></span><? echo $form->dropDownList($model, 'status', array('A'=>'A', 'I'=>'I')); ?>
+				<? echo dropDownList($form, $model, 'status', array('A'=>'Active', 'I'=>'Inactive'), $roleMatrix, $tableName, 'status'); ?>
 			</div>
 			<div class="grid_u-m2"></div>
 			<div class="grid_u-c2">
-				<span class="input_label"><? echo Yii::t('product_message', 'no_jp'); ?></span><span class="input_field"><? echo $form->textField($model,'no_jp'); ?></span>
+				<? echo textField($form, $model, 'no_jp', $roleMatrix, $tableName, 'no_jp'); ?>
 			</div>
 			
 			<div class="grid_u-c1">
-				<span class="input_label"><? echo Yii::t('product_message', 'factory_no'); ?></span><span class="input_field"><? echo $form->textField($model,'factory_no'); ?></span>
+				<? echo textField($form, $model, 'factory_no', $roleMatrix, $tableName, 'factory_no'); ?>
 			</div>
 			<div class="grid_u-m2"></div>
 			<div class="grid_u-c2">
-				<span class="input_label"><? echo Yii::t('product_message', 'made'); ?></span><span class="input_field"><? echo $form->textField($model,'made'); ?></span>
+				<? echo textField($form, $model, 'made', $roleMatrix, $tableName, 'made'); ?>
 			</div>
 			
 			<div class="grid_u-c1">
-				<span class="input_label"><? echo Yii::t('product_message', 'model'); ?></span><span class="input_field"><? echo $form->textField($model,'model'); ?></span>
+				<? echo textField($form, $model, 'model', $roleMatrix, $tableName, 'model'); ?>
 			</div>
 			<div class="grid_u-m2"></div>
 			<div class="grid_u-c2">
-				<span class="input_label"><? echo Yii::t('product_message', 'model_no'); ?></span><span class="input_field"><? echo $form->textField($model,'model_no'); ?></span>
+				<? echo textField($form, $model, 'model_no', $roleMatrix, $tableName, 'model_no'); ?>
 			</div>
 			
 			<div class="grid_u-c1">
-				<span class="input_label"><? echo Yii::t('product_message', 'year'); ?></span><span class="input_field"><? echo $form->textField($model,'year'); ?></span>
+				<? echo textField($form, $model, 'year', $roleMatrix, $tableName, 'year'); ?>
 			</div>
 			<div class="grid_u-m2"></div>
 			<div class="grid_u-c2">
-				<span class="input_label"><? echo Yii::t('product_message', 'item_group'); ?></span><span class="input_field"><? echo $form->textField($model,'item_group'); ?></span>
+				<? echo textField($form, $model, 'item_group', $roleMatrix, $tableName, 'item_group'); ?>
 			</div>
 			
 			<div class="grid_u-c1">
-				<span class="input_label"><? echo Yii::t('product_message', 'material'); ?></span><span class="input_field"><? echo $form->textField($model,'material'); ?></span>
+				<? echo textField($form, $model, 'material', $roleMatrix, $tableName, 'material'); ?>
 			</div>
 			<div class="grid_u-m2"></div>
 			<div class="grid_u-c2">
-				<span class="input_label"><? echo Yii::t('product_message', 'product_desc'); ?></span><span class="input_field"><? echo $form->textField($model,'product_desc'); ?></span>
+				<? echo textField($form, $model, 'product_desc', $roleMatrix, $tableName, 'product_desc'); ?>
 			</div>
 			
 			<div class="grid_u-c1">
-				<span class="input_label"><? echo Yii::t('product_message', 'product_desc_ch'); ?></span><span class="input_field"><? echo $form->textField($model,'product_desc_ch'); ?></span>
+				<? echo textField($form, $model, 'product_desc_ch', $roleMatrix, $tableName, 'product_desc_ch'); ?>
 			</div>
 			<div class="grid_u-m2"></div>
 			<div class="grid_u-c2">
-				<span class="input_label"><? echo Yii::t('product_message', 'product_desc_jp'); ?></span><span class="input_field"><? echo $form->textField($model,'product_desc_jp'); ?></span>
+				<? echo textField($form, $model, 'product_desc_jp', $roleMatrix, $tableName, 'product_desc_jp'); ?>
+			</div>
+			
+			<div class="grid_u-c1-textarea">
+				<? echo textArea($form, $model, 'accessory_remark', $roleMatrix, $tableName, 'accessory_remark'); ?>
+			</div>
+			<div class="grid_u-m2"></div>
+			<div class="grid_u-c1-textarea">
+				<? echo textArea($form, $model, 'company_remark', $roleMatrix, $tableName, 'company_remark'); ?>
 			</div>
 			
 			<div class="grid_u-c1">
-				<span class="input_label"><? echo Yii::t('product_message', 'accessory_remark'); ?></span><span class="input_field"><? echo $form->textField($model,'accessory_remark'); ?></span>
+				<? echo textField($form, $model, 'pcs', $roleMatrix, $tableName, 'pcs'); ?>
 			</div>
 			<div class="grid_u-m2"></div>
 			<div class="grid_u-c2">
-				<span class="input_label"><? echo Yii::t('product_message', 'company_remark'); ?></span><span class="input_field"><? echo $form->textField($model,'company_remark'); ?></span>
+				<? echo textField($form, $model, 'colour', $roleMatrix, $tableName, 'colour'); ?>
 			</div>
 			
 			<div class="grid_u-c1">
-				<span class="input_label"><? echo Yii::t('product_message', 'pcs'); ?></span><span class="input_field"><? echo $form->textField($model,'pcs'); ?></span>
+				<? echo textField($form, $model, 'colour_no', $roleMatrix, $tableName, 'colour_no'); ?>
 			</div>
 			<div class="grid_u-m2"></div>
 			<div class="grid_u-c2">
-				<span class="input_label"><? echo Yii::t('product_message', 'colour'); ?></span><span class="input_field"><? echo $form->textField($model,'colour'); ?></span>
+				<? echo textField($form, $model, 'supplier', $roleMatrix, $tableName, 'supplier'); ?>
 			</div>
 			
 			<div class="grid_u-c1">
-				<span class="input_label"><? echo Yii::t('product_message', 'colour_no'); ?></span><span class="input_field"><? echo $form->textField($model,'colour_no'); ?></span>
+				<? echo textField($form, $model, 'molding', $roleMatrix, $tableName, 'molding'); ?>
 			</div>
 			<div class="grid_u-m2"></div>
 			<div class="grid_u-c2">
-				<span class="input_label"><? echo Yii::t('product_message', 'supplier'); ?></span><span class="input_field"><? echo $form->textField($model,'supplier'); ?></span>
+				<? echo textField($form, $model, 'moq', $roleMatrix, $tableName, 'moq'); ?>
 			</div>
 			
 			<div class="grid_u-c1">
-				<span class="input_label"><? echo Yii::t('product_message', 'molding'); ?></span><span class="input_field"><? echo $form->textField($model,'molding'); ?></span>
+				<? echo textField($form, $model, 'cost', $roleMatrix, $tableName, 'cost'); ?>
 			</div>
 			<div class="grid_u-m2"></div>
 			<div class="grid_u-c2">
-				<span class="input_label"><? echo Yii::t('product_message', 'moq'); ?></span><span class="input_field"><? echo $form->textField($model,'moq'); ?></span>
+				<? echo textField($form, $model, 'kaito', $roleMatrix, $tableName, 'kaito'); ?>
 			</div>
 			
 			<div class="grid_u-c1">
-				<span class="input_label"><? echo Yii::t('product_message', 'cost'); ?></span><span class="input_field"><? echo $form->textField($model,'cost'); ?></span>
+				<? echo textField($form, $model, 'other', $roleMatrix, $tableName, 'other'); ?>
 			</div>
 			<div class="grid_u-m2"></div>
 			<div class="grid_u-c2">
-				<span class="input_label"><? echo Yii::t('product_message', 'kaito'); ?></span><span class="input_field"><? echo $form->textField($model,'kaito'); ?></span>
+				<? echo textField($form, $model, 'purchase_cost', $roleMatrix, $tableName, 'purchase_cost'); ?>
 			</div>
 			
 			<div class="grid_u-c1">
-				<span class="input_label"><? echo Yii::t('product_message', 'other'); ?></span><span class="input_field"><? echo $form->textField($model,'other'); ?></span>
+				<? echo datePicker($form, $model, 'buy_date', $roleMatrix, $tableName, 'buy_date'); ?>
 			</div>
 			<div class="grid_u-m2"></div>
 			<div class="grid_u-c2">
-				<span class="input_label"><? echo Yii::t('product_message', 'purchase_cost'); ?></span><span class="input_field"><? echo $form->textField($model,'purchase_cost'); ?></span>
+				<? echo datePicker($form, $model, 'receive_date', $roleMatrix, $tableName, 'receive_date'); ?>
 			</div>
 			
 			<div class="grid_u-c1">
-				<span class="input_label"><? echo Yii::t('product_message', 'buy_date'); ?></span><span class="date_field"><? echo $form->textField($model,'buy_date'); ?></span><input type="button" class="calendar_button" id="buyDateBtn" value=" " />
+				<? echo datePicker($form, $model, 'factory_date', $roleMatrix, $tableName, 'factory_date'); ?>
 			</div>
 			<div class="grid_u-m2"></div>
 			<div class="grid_u-c2">
-				<span class="input_label"><? echo Yii::t('product_message', 'receive_date'); ?></span><span class="date_field"><? echo $form->textField($model,'receive_date'); ?></span><input type="button" class="calendar_button" id="receiveDateBtn" value=" " />
+				<? echo textField($form, $model, 'pack_remark', $roleMatrix, $tableName, 'pack_remark'); ?>
 			</div>
 			
 			<div class="grid_u-c1">
-				<span class="input_label"><? echo Yii::t('product_message', 'factory_date'); ?></span><span class="date_field"><? echo $form->textField($model,'factory_date'); ?></span><input type="button" class="calendar_button" id="factoryDateBtn" value=" " />
+				<? echo datePicker($form, $model, 'order_date', $roleMatrix, $tableName, 'order_date'); ?>
 			</div>
 			<div class="grid_u-m2"></div>
 			<div class="grid_u-c2">
-				<span class="input_label"><? echo Yii::t('product_message', 'pack_remark'); ?></span><span class="input_field"><? echo $form->textField($model,'pack_remark'); ?></span>
+				<? echo textField($form, $model, 'progress', $roleMatrix, $tableName, 'progress'); ?>
 			</div>
 			
 			<div class="grid_u-c1">
-				<span class="input_label"><? echo Yii::t('product_message', 'order_date'); ?></span><span class="date_field"><? echo $form->textField($model,'order_date'); ?></span><input type="button" class="calendar_button" id="orderDateBtn" value=" " />
+				<? echo datePicker($form, $model, 'receive_model_date', $roleMatrix, $tableName, 'receive_model_date'); ?>
 			</div>
 			<div class="grid_u-m2"></div>
 			<div class="grid_u-c2">
-				<span class="input_label"><? echo Yii::t('product_message', 'progress'); ?></span><span class="input_field"><? echo $form->textField($model,'progress'); ?></span>
+				<? echo textField($form, $model, 'person_in_charge', $roleMatrix, $tableName, 'person_in_charge'); ?>
 			</div>
 			
 			<div class="grid_u-c1">
-				<span class="input_label"><? echo Yii::t('product_message', 'receive_model_date'); ?></span><span class="date_field"><? echo $form->textField($model,'receive_model_date'); ?></span><input type="button" class="calendar_button" id="receiveModelDateBtn" value=" " />
+				<? echo textField($form, $model, 'state', $roleMatrix, $tableName, 'state'); ?>
 			</div>
 			<div class="grid_u-m2"></div>
 			<div class="grid_u-c2">
-				<span class="input_label"><? echo Yii::t('product_message', 'person_in_charge'); ?></span><span class="input_field"><? echo $form->textField($model,'person_in_charge'); ?></span>
+				<? echo datePicker($form, $model, 'ship_date', $roleMatrix, $tableName, 'ship_date'); ?>
 			</div>
 			
 			<div class="grid_u-c1">
-				<span class="input_label"><? echo Yii::t('product_message', 'state'); ?></span><span class="input_field"><? echo $form->textField($model,'state'); ?></span>
+				<? echo textField($form, $model, 'market_research_price', $roleMatrix, $tableName, 'market_research_price'); ?>
 			</div>
 			<div class="grid_u-m2"></div>
 			<div class="grid_u-c2">
-				<span class="input_label"><? echo Yii::t('product_message', 'ship_date'); ?></span><span class="date_field"><? echo $form->textField($model,'ship_date'); ?></span><input type="button" class="calendar_button" id="shipDateBtn" value=" " />
+				<? echo textField($form, $model, 'yahoo_produce', $roleMatrix, $tableName, 'yahoo_produce'); ?>
 			</div>
 			
 			<div class="grid_u-c1">
-				<span class="input_label"><? echo Yii::t('product_message', 'market_research_price'); ?></span><span class="input_field"><? echo $form->textField($model,'market_research_price'); ?></span>
+				<? echo dropDownList($form, $model, 'produce_status', ProductMaster::getProduceStatusDropdown(), $roleMatrix, $tableName, 'produce_status'); ?>
 			</div>
 			<div class="grid_u-m2"></div>
 			<div class="grid_u-c2">
-				<span class="input_label"><? echo Yii::t('product_message', 'yahoo_produce'); ?></span><span class="input_field"><? echo $form->textField($model,'yahoo_produce'); ?></span>
+				
 			</div>
+			
 			<br style="clear:both" />
 			
 		</div>
 		
-		<input class="searchBtn" type="submit" name="action" value="<? echo Yii::t('common_message', 'update'); ?>" />
+		<? if (GlobalFunction::isAdmin()) {?>
+			<input class="searchBtn" type="submit" name="action" value="<? echo Yii::t('common_message', 'update'); ?>" />
+		<? } ?>
 		<input class="searchBtn" type="button" name="action" value="<? echo Yii::t('common_message', 'back'); ?>" onclick="back()" />
-		
 	<? $this->endWidget(); ?>
 	
-	<? if ($action == 'update') {?>
-		<!-- Show image -->
-		<iframe style="width:100%" src="<? echo Yii::app()->request->baseUrl; ?>/product/show_image?no_jp=<?=$model->no_jp ?>"></iframe>
-	<? }?>
+	<!-- Show image -->
+	<iframe style="width:100%; height:250px" src="<? echo Yii::app()->request->baseUrl; ?>/product/show_image?prod_sn=<?=$model->prod_sn ?>"></iframe>
+	<div style="height:30px"></div>
+	<iframe style="width:100%; height:250px" src="<? echo Yii::app()->request->baseUrl; ?>/product/show_internal_image?prod_sn=<?=$model->prod_sn ?>"></iframe>
 	
 </div>
 
+<div style="height:50px"></div>
+
 <script type="text/javascript">
 $(function() {
-	Calendar.setup({
-	    inputField : "ProductMaster_buy_date",
-	    trigger    : "buyDateBtn",
-	    onSelect   : function() { this.hide() }
-	});
+	if ($('#ProductMaster_buy_date').length > 0) {
+		Calendar.setup({
+		    inputField : "ProductMaster_buy_date",
+		    trigger    : "buy_date_btn",
+		    onSelect   : function() { this.hide() }
+		});
+	}
 
-	Calendar.setup({
-	    inputField : "ProductMaster_receive_date",
-	    trigger    : "receiveDateBtn",
-	    onSelect   : function() { this.hide() }
-	});
+	if ($('#ProductMaster_receive_date').length > 0) {
+		Calendar.setup({
+		    inputField : "ProductMaster_receive_date",
+		    trigger    : "receive_date_btn",
+		    onSelect   : function() { this.hide() }
+		});
+	}
 
-	Calendar.setup({
-	    inputField : "ProductMaster_factory_date",
-	    trigger    : "factoryDateBtn",
-	    onSelect   : function() { this.hide() }
-	});
+	if ($('#ProductMaster_factory_date').length > 0) {
+		Calendar.setup({
+		    inputField : "ProductMaster_factory_date",
+		    trigger    : "factory_date_btn",
+		    onSelect   : function() { this.hide() }
+		});
+	}
 
-	Calendar.setup({
-	    inputField : "ProductMaster_order_date",
-	    trigger    : "orderDateBtn",
-	    onSelect   : function() { this.hide() }
-	});
+	if ($('#ProductMaster_order_date').length > 0) {
+		Calendar.setup({
+		    inputField : "ProductMaster_order_date",
+		    trigger    : "order_date_btn",
+		    onSelect   : function() { this.hide() }
+		});
+	}
 
-	Calendar.setup({
-	    inputField : "ProductMaster_receive_model_date",
-	    trigger    : "receiveModelDateBtn",
-	    onSelect   : function() { this.hide() }
-	});
+	if ($('#ProductMaster_receive_model_date').length > 0) {
+		Calendar.setup({
+		    inputField : "ProductMaster_receive_model_date",
+		    trigger    : "receive_model_date_btn",
+		    onSelect   : function() { this.hide() }
+		});
+	}
 
-	Calendar.setup({
-	    inputField : "ProductMaster_ship_date",
-	    trigger    : "shipDateBtn",
-	    onSelect   : function() { this.hide() }
-	});
+	if ($('#ProductMaster_ship_date').length > 0) {
+		Calendar.setup({
+		    inputField : "ProductMaster_ship_date",
+		    trigger    : "ship_date_btn",
+		    onSelect   : function() { this.hide() }
+		});
+	}
 });
 
 function back() {

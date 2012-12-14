@@ -1,19 +1,18 @@
 <?php
 
 /**
- * This is the model class for table "Authorize".
+ * This is the model class for table "user_supplier".
  *
- * The followings are the available columns in table 'Authorize':
+ * The followings are the available columns in table 'user_supplier':
  * @property string $username
- * @property string $password
- * @property string $last_login
+ * @property string $supplier
  */
-class Authorize extends CActiveRecord
+class UserSupplier extends CActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return Authorize the static model class
+	 * @return UserSupplier the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -25,7 +24,7 @@ class Authorize extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'authorize';
+		return 'user_supplier';
 	}
 
 	/**
@@ -36,13 +35,12 @@ class Authorize extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('username, password, role', 'required'),
+			array('username, supplier', 'required'),
 			array('username', 'length', 'max'=>20),
-			array('password', 'length', 'max'=>50),
-			array('last_login', 'safe'),
+			array('supplier', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('username, password, role, last_login', 'safe', 'on'=>'search'),
+			array('username, supplier', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -54,9 +52,7 @@ class Authorize extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-            'role'=>array(self::BELONGS_TO, 'Role', 'role_code'),
-			'user_supplier'=>array(self::BELONGS_TO, 'UserSupplier', 'username'),
-        );
+		);
 	}
 
 	/**
@@ -66,9 +62,7 @@ class Authorize extends CActiveRecord
 	{
 		return array(
 			'username' => 'Username',
-			'password' => 'Password',
-			'role_code' => 'Role Code',
-			'last_login' => 'Last Login',
+			'supplier' => 'Supplier',
 		);
 	}
 
@@ -84,8 +78,7 @@ class Authorize extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('username',$this->username,true);
-		$criteria->compare('password',$this->password,true);
-		$criteria->compare('last_login',$this->last_login,true);
+		$criteria->compare('supplier',$this->supplier,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

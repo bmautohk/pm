@@ -38,5 +38,6 @@ return array (
 		'yahoo_produce' => 'YAHOO&#20986;&#21697;', // YAHOO出品
 		'accessory_remark' => '&#37197;&#20214;&#20633;&#24536;', // 配件備忘
 		'company_remark' => '&#20844;&#21496;&#20839;&#37096;&#20633;&#24536;', // 公司內部備忘
+		'produce_status' => '生產狀態',
 );
 ?>

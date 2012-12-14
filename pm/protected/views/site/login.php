@@ -1,3 +1,10 @@
+<?
+if (!Yii::app()->user->isGuest) {
+	// User has not logged in yet, return to login page
+	$this->redirect(Yii::app()->createUrl('product'));
+} 
+?>
+
 <?php $form = $this->beginWidget('CActiveForm', array(
 	'id'=>'login-form',
 	'action'=>Yii::app()->request->baseUrl.'/site/login',
@@ -14,4 +21,3 @@
 		<?php echo $form->checkBox($model,'rememberMe'); ?>Remember me
 	</div>
 <?php $this->endWidget(); ?>
-

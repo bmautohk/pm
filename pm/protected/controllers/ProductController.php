@@ -8,14 +8,76 @@ class ProductController extends Controller {
 		$this->render('list', $attr);
 	}
 	
+	public function actionChangeDisplayFormat() {
+		$currentDisplayFormat = GlobalFunction::getDisplayFormat();
+		
+		$session=new CHttpSession;
+		$session->open();
+		
+		$session[GlobalConstants::SESSION_DISPLAY_FORMAT] = $currentDisplayFormat == GlobalConstants::DISPLAY_FORMAT_EXCEL ? 
+			GlobalConstants::DISPLAY_FORMAT_GRID : GlobalConstants::DISPLAY_FORMAT_EXCEL;
+		
+		$session->close();
+		$this->actionIndex();
+	}
+	
 // Search function
 	public function actionSearchByFilter() {
 		$attr = $this->requestAttrForSearch(new ProductSearchForm, 'searchByFilter');
 		$this->render('list', $attr);
 	}
 	
+// Search Item Not Finish
+	public function actionShowNotFinishItem() {
+		$serachForm = new ProductSearchForm();
+		$serachForm->isSearchNotFinish = 'Y';
+		
+		$attr = $this->requestAttrForSearch($serachForm, 'searchByFilter');
+		$this->render('list', $attr);
+	}
+	
+	public function actionDownloadByFilter() {
+		$serachForm = new ProductSearchForm();
+		$serachForm->attributes = $_REQUEST['ProductSearchForm'];
+		
+		
+		if (!empty($serachForm->keyword)) {
+			// Search by keyword
+			$products = $serachForm->searchByKeywordCrtiera(NULL, true);
+		}
+		else {
+			// Search by filter
+			$criteria = $serachForm->createCriteria(true);
+			
+			$model = ProductMaster::model();
+			$model->setDbCriteria($criteria);
+			$products = $model->findAll();
+		}
+		
+		$exportProductForm = new ExportProductForm();
+		$exportProductForm->generateExcel($products);
+	}
+	
+	/**
+	 * Retrieve all existing models for selection
+	 */
+	public function actionGetModels() {
+		$criteria = new CDbCriteria();
+		$criteria->select = 'model';
+		$criteria->distinct = true;
+		$criteria->order = 'model';
+		$criteria->condition = "model <> '' and model is not null";
+		$items = ProductMaster::model()->findAll($criteria);
+		$this->renderPartial('listModel', array('items'=>$items));
+	}
+	
 // Add function
 	public function actionAdd() {
+		// Check authorization
+		if (!GlobalFunction::isAdmin()) {
+			$this->redirect(Yii::app()->createUrl('site/noPermission'));
+		}
+		
 		$action = 'add';
 		$model = new ProductMaster();
 		
@@ -52,6 +114,12 @@ class ProductController extends Controller {
 	public function actionUpdate() {
 		if (isset($_POST['action'])) {
 			// Update product
+			
+			// Check authorization
+			if (!GlobalFunction::isAdmin()) {
+				$this->redirect(Yii::app()->createUrl('site/noPermission'));
+			}
+			
 			$model = $this->loadProductMaster($_POST['ProductMaster']['id']);
 			$model->attributes = $_POST['ProductMaster'];
 			
@@ -108,11 +176,20 @@ class ProductController extends Controller {
 	}
 	
 	public function actionShow_image() {
-		$no_jp = $_GET['no_jp'];
+		$prod_sn = $_GET['prod_sn'];
 		
 		// Find product image
 		$imgDir = $imgDir = Yii::app()->params['image_dir'];
-		$images = glob($imgDir.$no_jp."_*.jpg");
+		$images = glob($imgDir.$prod_sn."_*.jpg");
+		$this->renderPartial('show_image', array('images'=>$images));
+	}
+	
+	public function actionShow_internal_image() {
+		$prod_sn = $_GET['prod_sn'];
+	
+		// Find internal product image
+		$imgDir = $imgDir = Yii::app()->params['internal_image_dir'];
+		$images = glob($imgDir.$prod_sn."_i_*.jpg");
 		$this->renderPartial('show_image', array('images'=>$images));
 	}
 
@@ -153,10 +230,17 @@ class ProductController extends Controller {
 	
 // Private function
 	private function loadProductMaster($id) {
-		$model = ProductMaster::model()->findByAttributes(array('id'=>$id));
+		if (GlobalFunction::isSupplier()) {
+			$model = ProductMaster::model()->findByAttributes(array('id'=>$id, 'supplier'=>GlobalFunction::getUserSupplier()));
+		}
+		else {
+			$model = ProductMaster::model()->findByAttributes(array('id'=>$id));
+		}
+		
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
 	}
+
 }
 ?>

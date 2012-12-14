@@ -88,6 +88,7 @@ class ImportProductForm extends CFormModel {
 			$product->ship_date = $this->getFormatDate($worksheet->getCellByColumnAndRow($i++, $rowNo));
 			$product->market_research_price = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
 			$product->yahoo_produce = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
+			$product->produce_status = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue(); if (empty($product->produce_status)) { $product->produce_status = GlobalConstants::PRODUCE_STATUS_PREPARE; }
 			
 			$product->create_date = $today;
 			

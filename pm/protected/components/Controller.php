@@ -26,10 +26,12 @@ class Controller extends CController
 		if (isset($_REQUEST[get_class($model)])) {
 			$model->attributes = $_REQUEST[get_class($model)];
 		}
-	
+		
+		$isExcelView = GlobalFunction::getDisplayFormat() == GlobalConstants::DISPLAY_FORMAT_GRID ? false : true;;
+
 		// Pagination configuration
 		$pages = new CPagination();
-		$pages->pageSize = Yii::app()->params['pageSize'];
+		$pages->pageSize = $isExcelView ? Yii::app()->params['excelViewPageSize'] : Yii::app()->params['pageSize'];
 		$pages->route = $url;
 	
 		if (!empty($model->keyword)) {
@@ -43,7 +45,7 @@ class Controller extends CController
 				$pages->itemCount = $model->itemCount;
 			}
 			
-			$data = $model->searchByKeywordCrtiera($pages, $model->itemCount);
+			$data = $model->searchByKeywordCrtiera($pages, $isExcelView);
 			
 			return array(
 					'model' => $model,
@@ -53,7 +55,7 @@ class Controller extends CController
 		}
 		else {
 			// Create criteria
-			$criteria = $model->createCriteria();
+			$criteria = $model->createCriteria($isExcelView);
 			
 			if (!isset($model->itemCount)) {
 				// 1st search
@@ -73,9 +75,11 @@ class Controller extends CController
 	}
 	
 	protected function searchByAttributes($searchModel, $url, $currPage) {
+		$isExcelView = GlobalFunction::getDisplayFormat() == GlobalConstants::DISPLAY_FORMAT_GRID ? false : true;;
+		
 		// Pagination configuration
 		$pages = new CPagination();
-		$pages->pageSize = Yii::app()->params['pageSize'];
+		$pages->pageSize = $isExcelView ? Yii::app()->params['excelViewPageSize'] : Yii::app()->params['pageSize'];
 		$pages->route = $url;
 		$pages->setCurrentPage($currPage < 0 ? 0 : $currPage);
 		
@@ -90,7 +94,7 @@ class Controller extends CController
 				$pages->itemCount = $searchModel->itemCount;
 			}
 			
-			$data = $searchModel->searchByKeywordCrtiera($pages, $searchModel->itemCount);
+			$data = $searchModel->searchByKeywordCrtiera($pages, $isExcelView);
 			
 			return array(
 					'model' => $searchModel,
@@ -100,7 +104,7 @@ class Controller extends CController
 		}
 		else {
 			// Create criteria
-			$criteria = $searchModel->createCriteria();
+			$criteria = $searchModel->createCriteria($isExcelView);
 			
 			if (!isset($searchModel->itemCount)) {
 				// 1st search

@@ -103,6 +103,8 @@ return array(
 		// this is used in contact page
 		'dropdownCacheTime'=>3600,
 		'pageSize'=>'8',
-		'image_dir'=>'images/product/'
+		'excelViewPageSize'=>'50',
+		'image_dir'=>'images/product/',
+		'internal_image_dir'=>'images/product_internal/'
 	),
 );

@@ -1,19 +1,18 @@
 <?php
 
 /**
- * This is the model class for table "Authorize".
+ * This is the model class for table "role".
  *
- * The followings are the available columns in table 'Authorize':
- * @property string $username
- * @property string $password
- * @property string $last_login
+ * The followings are the available columns in table 'role':
+ * @property string $role_code
+ * @property string $role
  */
-class Authorize extends CActiveRecord
+class Role extends CActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return Authorize the static model class
+	 * @return Role the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -25,7 +24,7 @@ class Authorize extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'authorize';
+		return 'role';
 	}
 
 	/**
@@ -36,13 +35,12 @@ class Authorize extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('username, password, role', 'required'),
-			array('username', 'length', 'max'=>20),
-			array('password', 'length', 'max'=>50),
-			array('last_login', 'safe'),
+			array('role_code, role', 'required'),
+			array('role_code', 'length', 'max'=>1),
+			array('role', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('username, password, role, last_login', 'safe', 'on'=>'search'),
+			array('role_code, role', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -54,9 +52,7 @@ class Authorize extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-            'role'=>array(self::BELONGS_TO, 'Role', 'role_code'),
-			'user_supplier'=>array(self::BELONGS_TO, 'UserSupplier', 'username'),
-        );
+		);
 	}
 
 	/**
@@ -65,10 +61,8 @@ class Authorize extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'username' => 'Username',
-			'password' => 'Password',
 			'role_code' => 'Role Code',
-			'last_login' => 'Last Login',
+			'role' => 'Role',
 		);
 	}
 
@@ -83,12 +77,31 @@ class Authorize extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('username',$this->username,true);
-		$criteria->compare('password',$this->password,true);
-		$criteria->compare('last_login',$this->last_login,true);
+		$criteria->compare('role_code',$this->role_code,true);
+		$criteria->compare('role',$this->role,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
+	}
+	
+	public static function getDropDownFromCache() {
+		$list = Yii::app()->cache->get(GlobalConstants::CACHE_ROLE);
+		if($list===false) {
+			$criteria = new CDbCriteria();
+			$criteria->order = 'role';
+				
+			$model = self::model();
+			$model->setDbCriteria($criteria);
+			$result = $model->findAll();
+	
+			$list = array();
+			foreach ($result as $item) {
+				$list[$item->role_code] = $item->role;
+			}
+	
+			Yii::app()->cache->set(GlobalConstants::CACHE_ROLE, $list, Yii::app()->params['dropdownCacheTime']);
+		}
+		return $list;
 	}
 }

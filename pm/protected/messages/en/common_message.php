@@ -1,13 +1,29 @@
 <?php
 return array (
-		'import_product' => '&#24478;excel&#36617;&#20837;&#29986;&#21697;&#36039;&#26009;',
-		'export_product' => '&#28377;&#20986;&#29986;&#21697;&#36039;&#26009;',
-		'add_product' => '&#26032;&#21152;&#19968;&#31558;&#29986;&#21697;&#36039;&#26009;',
-		'search' => '&#25628;&#23563;',
-		'detail' => '&#35443;&#32048;&#29986;&#21697;&#36039;&#26009;',
-		'update' => '&#26356;&#26032;&#36039;&#26009;',
-		'back' => '&#22238;&#21069;&#19968;&#38913;',
-		'add' => '&#21152;',
-		'import' => '&#36617;&#20837;',
+		'import_product' => '從excel載入產品資料',
+		'export_product' => '滙出產品資料',
+		'add_product' => '新加一筆產品資料',
+		'search' => '搜尋',
+		'product_detail' => '詳細產品資料',
+		'update' => '更新資料',
+		'back' => '回前一頁',
+		'add' => '加',
+		'import' => '載入',
+		'select' => '選擇',
+		'select_model' => '選擇車型',
+		'detail' => '詳細',
+		'delete' => '刪除',
+		'download' => '下載',
+		
+		// produce status
+		'produce_status_prepare' => '准备中',
+		'produce_status_book' => '訂原件',
+		'produce_status_modeling' => '开模中',
+		'produce_status_check' => '對車中',
+		'produce_status_edit' => '修改中',
+		'produce_status_pause' => '暂停',
+		'produce_status_cancel' => '取消',
+		'produce_status_monopoly' => '专卖',
+		'produce_status_complete' => '完成-可订货',
 );
 ?>

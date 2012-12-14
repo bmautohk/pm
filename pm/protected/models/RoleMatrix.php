@@ -1,19 +1,20 @@
 <?php
 
 /**
- * This is the model class for table "Authorize".
+ * This is the model class for table "role_matrix".
  *
- * The followings are the available columns in table 'Authorize':
- * @property string $username
- * @property string $password
- * @property string $last_login
+ * The followings are the available columns in table 'role_matrix':
+ * @property integer $id
+ * @property string $role_code
+ * @property string $table_name
+ * @property string $column_name
  */
-class Authorize extends CActiveRecord
+class RoleMatrix extends CActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return Authorize the static model class
+	 * @return RoleMatrix the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -25,7 +26,7 @@ class Authorize extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'authorize';
+		return 'role_matrix';
 	}
 
 	/**
@@ -36,13 +37,12 @@ class Authorize extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('username, password, role', 'required'),
-			array('username', 'length', 'max'=>20),
-			array('password', 'length', 'max'=>50),
-			array('last_login', 'safe'),
+			array('role_code, table_name, column_name', 'required'),
+			array('role_code', 'length', 'max'=>2),
+			array('table_name, column_name', 'length', 'max'=>20),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('username, password, role, last_login', 'safe', 'on'=>'search'),
+			array('id, role_code, table_name, column_name', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -54,9 +54,7 @@ class Authorize extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-            'role'=>array(self::BELONGS_TO, 'Role', 'role_code'),
-			'user_supplier'=>array(self::BELONGS_TO, 'UserSupplier', 'username'),
-        );
+		);
 	}
 
 	/**
@@ -65,10 +63,10 @@ class Authorize extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'username' => 'Username',
-			'password' => 'Password',
+			'id' => 'ID',
 			'role_code' => 'Role Code',
-			'last_login' => 'Last Login',
+			'table_name' => 'Table Name',
+			'column_name' => 'Column Name',
 		);
 	}
 
@@ -83,9 +81,10 @@ class Authorize extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('username',$this->username,true);
-		$criteria->compare('password',$this->password,true);
-		$criteria->compare('last_login',$this->last_login,true);
+		$criteria->compare('id',$this->id);
+		$criteria->compare('role_code',$this->role_code,true);
+		$criteria->compare('table_name',$this->table_name,true);
+		$criteria->compare('column_name',$this->column_name,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

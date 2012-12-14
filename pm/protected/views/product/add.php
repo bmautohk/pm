@@ -33,7 +33,7 @@ if (!in_array($model->made, $mades)) {
 			</div>
 			
 			<div class="grid-c1">
-				<span class="input_label"><? echo Yii::t('product_message', 'status'); ?></span><? echo $form->dropDownList($model, 'status', array('A'=>'A', 'I'=>'I')); ?>
+				<span class="input_label"><? echo Yii::t('product_message', 'status'); ?></span><? echo $form->dropDownList($model, 'status', array('A'=>'Active', 'I'=>'Inactive')); ?>
 			</div>
 			
 			<div class="grid-c1">
@@ -80,12 +80,12 @@ if (!in_array($model->made, $mades)) {
 				<span class="input_label"><? echo Yii::t('product_message', 'product_desc_jp'); ?></span><span class="input_field"><? echo $form->textField($model,'product_desc_jp'); ?></span>
 			</div>
 			
-			<div class="grid-c1">
-				<span class="input_label"><? echo Yii::t('product_message', 'accessory_remark'); ?></span><span class="input_field"><? echo $form->textField($model,'accessory_remark'); ?></span>
+			<div class="grid-c1-textarea">
+				<span class="input_label"><? echo Yii::t('product_message', 'accessory_remark'); ?></span><span><? echo $form->textArea($model,'accessory_remark'); ?></span>
 			</div>
 			
-			<div class="grid-c1">
-				<span class="input_label"><? echo Yii::t('product_message', 'company_remark'); ?></span><span class="input_field"><? echo $form->textField($model,'company_remark'); ?></span>
+			<div class="grid-c1-textarea">
+				<span class="input_label"><? echo Yii::t('product_message', 'company_remark'); ?></span><span><? echo $form->textArea($model,'company_remark'); ?></span>
 			</div>
 			
 			<div class="grid-c1">
@@ -176,6 +176,11 @@ if (!in_array($model->made, $mades)) {
 			<div class="grid-c1">
 				<span class="input_label"><? echo Yii::t('product_message', 'yahoo_produce'); ?></span><span class="input_field"><? echo $form->textField($model,'yahoo_produce'); ?></span>
 			</div>
+			
+			<div class="grid-c1">
+				<span class="input_label"><? echo Yii::t('product_message', 'produce_status'); ?></span><? echo $form->dropDownList($model, 'produce_status', ProductMaster::getProduceStatusDropdown()); ?>
+			</div>
+			
 			<br style="clear:both" />
 			
 		</div>
@@ -189,8 +194,9 @@ if (!in_array($model->made, $mades)) {
 		<!-- Show image -->
 		<iframe style="width:100%" src="<? echo Yii::app()->request->baseUrl; ?>/product/show_image?no_jp=<?=$model->no_jp ?>"></iframe>
 	<? }?>
-	
 </div>
+
+<div style="height:50px"></div>
 
 <script type="text/javascript">
 $(function() {
