@@ -192,6 +192,40 @@ class ProductController extends Controller {
 		$images = glob($imgDir.$prod_sn."_i_*.jpg");
 		$this->renderPartial('show_image', array('images'=>$images));
 	}
+	
+	public function actionSearch_made() {
+		$term = $_GET['term'];
+		
+		$criteria = new CDbCriteria();
+		$criteria->select = 'made';
+		$criteria->distinct = true;
+		$criteria->compare('made', $term, true);
+		$products = ProductMaster::model()->findAll($criteria);
+		
+		$result = array();
+		foreach($products as $product) {
+			$result[] = $product->made;
+		}
+		
+		echo json_encode($result);
+	}
+
+	public function actionSearch_model() {
+		$term = $_GET['term'];
+	
+		$criteria = new CDbCriteria();
+		$criteria->select = 'model';
+		$criteria->distinct = true;
+		$criteria->compare('model', $term, true);
+		$products = ProductMaster::model()->findAll($criteria);
+	
+		$result = array();
+		foreach($products as $product) {
+			$result[] = $product->model;
+		}
+	
+		echo json_encode($result);
+	}
 
 // Import function
 	public function actionImport() {

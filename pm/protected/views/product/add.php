@@ -1,6 +1,12 @@
+<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css" type="text/css" />
 <link type="text/css" rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/jscal2.css" />
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/jquery-ui.min.js"></script>
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/jscal2.js"></script>
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/lang/en.js"></script>
+
+<style>
+	.ui-menu .ui-menu-item a {font-size: 0.4em; }
+</style>
 <? 
 /*$mades =  Made::getDropDownFromCache(); 
 
@@ -234,6 +240,14 @@ $(function() {
 	    inputField : "ProductMaster_ship_date",
 	    trigger    : "shipDateBtn",
 	    onSelect   : function() { this.hide() }
+	});
+
+	$("#ProductMaster_made").autocomplete({
+		source: "search_made",
+	});
+
+	$("#ProductMaster_model").autocomplete({
+		source: "search_model",
 	});
 });
 </script>

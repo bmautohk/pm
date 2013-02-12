@@ -1,0 +1,47 @@
+<?php
+class MaintRoleMatrixForm extends CFormModel {
+	
+	public static $columns = array(
+		'customer',
+		'prod_sn',
+		'status',
+		'no_jp',
+		'factory_no',
+		'made',
+		'model',
+		'model_no',
+		'year',
+		'item_group',
+		'material',
+		'product_desc',
+		'product_desc_ch',
+		'product_desc_jp',
+		'accessory_remark',
+		'company_remark',
+		'pcs',
+		'colour',
+		'colour_no',
+		'supplier',
+		'molding',
+		'moq',
+		'cost',
+		'kaito',
+		'other',
+		'purchase_cost',
+		'buy_date',
+		'receive_date',
+		'factory_date',
+		'pack_remark',
+		'order_date',
+		'progress',
+		'receive_model_date',
+		'person_in_charge',
+		'state',
+		'ship_date',
+		'market_research_price',
+		'yahoo_produce',
+		'produce_status',
+	);
+	
+	public $hasRight;
+}

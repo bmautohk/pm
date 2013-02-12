@@ -1,3 +1,6 @@
+<style>
+	.ui-menu .ui-menu-item a {font-size: 0.4em; }
+</style>
 <?
 $tableName = 'product_master';
 $roleMatrix = Yii::app()->user->getState('role_matrix');
@@ -322,6 +325,14 @@ $(function() {
 		    onSelect   : function() { this.hide() }
 		});
 	}
+
+	$("#ProductMaster_made").autocomplete({
+		source: "search_made",
+	});
+
+	$("#ProductMaster_model").autocomplete({
+		source: "search_model",
+	});
 });
 
 function back() {

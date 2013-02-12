@@ -44,6 +44,7 @@ $displayFormat = GlobalFunction::getDisplayFormat();
 			<a class="menubar" href="<?=$baseUrl ?>/product/showNotFinishItem">Show Not Finish Item</a>
 			<? if (GlobalFunction::isAdmin()) { ?>
 				<a class="menubar" href="<?=$baseUrl ?>/user">User Management</a>
+				<a class="menubar" href="<?=$baseUrl ?>/roleMatrix">Role Matrix</a>
 			<? } ?>
 		</div>
 		<div id="body_right_main">

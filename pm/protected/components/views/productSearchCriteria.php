@@ -1,11 +1,11 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/jquery-ui.min.js"></script>
 <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/smoothness/jquery-ui.css" />
 
-<style>
+<!--style>
 .ui-widget-content a {
 	color:white;
 }
-</style>
+</style-->
 
 <? $model = $this->searchForm; ?>
 

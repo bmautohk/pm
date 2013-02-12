@@ -61,6 +61,7 @@ function dropDownList($form, $model, $attribute, $options, $roleMatrix, $tableNa
 }
 	$baseUrl = Yii::app()->request->baseUrl;
 	$imgDir = Yii::app()->params['image_dir'];
+	$internalImgDir = Yii::app()->params['internal_image_dir'];
 ?>
 	<? $this->widget('SimplaPager', array('pages'=>$pages)); ?>
 	
@@ -80,9 +81,15 @@ function dropDownList($form, $model, $attribute, $options, $roleMatrix, $tableNa
 					<? $images = glob($imgDir.$product->prod_sn."_*.jpg"); 
 					if (!empty($images)) {?>
 						<a class='productdetail' href="javascript:goUpdate(<?=$product->id ?>)"><? echo CHtml::image($baseUrl.'/'.$images[0], '', array('width'=>'160', 'height'=>'130')) ?></a>
+					<? } else {
+						$images = glob($internalImgDir.$product->prod_sn."_i_*.jpg");
+						if (!empty($images)) {
+					?>
+						<a class='productdetail' href="javascript:goUpdate(<?=$product->id ?>)"><? echo CHtml::image($baseUrl.'/'.$images[0], '', array('width'=>'160', 'height'=>'130')) ?></a>
 					<? } else {?>
 						<a class='productdetail' href="javascript:goUpdate(<?=$product->id ?>)"><? echo CHtml::image($baseUrl.'/images/product/no_image.png', '', array('width'=>'160', 'height'=>'130')) ?></a>
-					<? }?>
+					<? }
+					} ?>
 				</div>
 				<div class="grid_p-c1">
 					<div class="product_name">
