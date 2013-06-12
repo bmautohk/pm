@@ -43,13 +43,17 @@ $displayFormat = GlobalFunction::getDisplayFormat();
 			<? } ?>
 			<a class="menubar" href="<?=$baseUrl ?>/product/showNotFinishItem">Show Not Finish Item</a>
 			<? if (GlobalFunction::isAdmin()) { ?>
+				<a class="menubar" href="<?=$baseUrl ?>/customer">Customer Management</a>
+				<a class="menubar" href="<?=$baseUrl ?>/supplier">Supplier Management</a>
 				<a class="menubar" href="<?=$baseUrl ?>/user">User Management</a>
+				<a class="menubar" href="<?=$baseUrl ?>/role">Role Management</a>
 				<a class="menubar" href="<?=$baseUrl ?>/roleMatrix">Role Matrix</a>
 			<? } ?>
 		</div>
 		<div id="body_right_main">
 			<?php echo $content; ?>
 		</div>
+		<div style="height:100px; float:right; width: 1024px;"></div>
 	</div>
 </body>
 </html>

@@ -17,6 +17,8 @@ function fieldChecking($model,  $roleMatrix, $tableName, $columnName) {
 }
 
 	$baseUrl = Yii::app()->request->baseUrl;
+	$imgDir = Yii::app()->params['image_dir'];
+	$internalImgDir = Yii::app()->params['internal_image_dir'];
 ?>
 	<? $this->widget('SimplaPager', array('pages'=>$pages)); ?>
 
@@ -40,7 +42,20 @@ function fieldChecking($model,  $roleMatrix, $tableName, $columnName) {
 			</tr>
 		<? foreach($items as $product) { ?>
 			<tr>
-				<td><input type="button" value="<? echo Yii::t('common_message', 'product_detail'); ?>" onclick="javascript:goUpdate(<?=$product->id ?>)"/></td>
+				<td>
+					<? $images = glob($imgDir.$product->prod_sn."_*.jpg"); 
+					if (!empty($images)) {?>
+						<a class='productdetail' href="javascript:goUpdate(<?=$product->id ?>)"><? echo CHtml::image($baseUrl.'/'.$images[0], '', array('width'=>'160', 'height'=>'130')) ?></a>
+					<? } else {
+						$images = glob($internalImgDir.$product->prod_sn."_i_*.jpg");
+						if (!empty($images)) {
+					?>
+						<a class='productdetail' href="javascript:goUpdate(<?=$product->id ?>)"><? echo CHtml::image($baseUrl.'/'.$images[0], '', array('width'=>'160', 'height'=>'130')) ?></a>
+					<? } else {?>
+						<a class='productdetail' href="javascript:goUpdate(<?=$product->id ?>)"><? echo CHtml::image($baseUrl.'/images/product/no_image.png', '', array('width'=>'160', 'height'=>'130')) ?></a>
+					<? }
+					} ?>
+				</td>
 			<td><? fieldChecking($product,$roleMatrix,$tableName,'prod_sn');?></td>
 			<td><? fieldChecking($product,$roleMatrix,$tableName,'customer');?></td>
 			<td><? fieldChecking($product,$roleMatrix,$tableName,'status');?></td>

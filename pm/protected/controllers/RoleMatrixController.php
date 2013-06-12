@@ -3,6 +3,21 @@ Yii::import('application.models.roleMatrix.*');
 
 class RoleMatrixController extends Controller {
 	
+	public function filters() {
+		return array(
+				'accessControl'
+		);
+	}
+	
+	public function filterAccessControl($filterChain) {
+		if (!GlobalFunction::isAdmin()) {
+			$this->redirect(Yii::app()->createUrl('site/noPermission'));
+		}
+		else {
+			$filterChain->run();
+		}
+	}
+	
 	public function actionIndex($msg=NULL) {
 		$model = new MaintRoleMatrixForm();
 		$model->hasRight = array();

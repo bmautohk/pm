@@ -3,6 +3,21 @@ Yii::import('application.models.user.*');
 
 class UserController extends Controller {
 	
+	public function filters() {
+		return array(
+				'accessControl'
+		);
+	}
+	
+	public function filterAccessControl($filterChain) {
+		if (!GlobalFunction::isAdmin()) {
+			$this->redirect(Yii::app()->createUrl('site/noPermission'));
+		}
+		else {
+			$filterChain->run();
+		}
+	}
+	
 	public function actionIndex($msg=NULL) {
 		$users = Authorize::model()->with('role')->with('user_supplier')->findAll();
 		$this->render('list', array('users'=>$users, 'msg'=>$msg));

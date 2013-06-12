@@ -26,6 +26,36 @@ class Controller extends CController
 		if (isset($_REQUEST[get_class($model)])) {
 			$model->attributes = $_REQUEST[get_class($model)];
 		}
+
+		// Pagination configuration
+		$pages = new CPagination();
+		$pages->pageSize = Yii::app()->params['excelViewPageSize'];
+		$pages->route = $url;
+	
+		// Create criteria
+		$criteria = $model->createCriteria($isExcelView);
+			
+		if (!isset($model->itemCount)) {
+			// 1st search
+			$dataProvider = $model->searchByCriteria($criteria, $pages);
+			$model->itemCount = $dataProvider->totalItemCount;
+		}
+		else {
+			$dataProvider = $model->searchByCriteria($criteria, $pages, $model->itemCount);
+		}
+			
+		return array(
+				'model' => $model,
+				'items' => $dataProvider->getData(),
+				'pages' => $pages
+		);
+	}
+	
+	protected function requestAttrForProductSearch($model, $url) {
+		// Match criteria to the form
+		if (isset($_REQUEST[get_class($model)])) {
+			$model->attributes = $_REQUEST[get_class($model)];
+		}
 		
 		$isExcelView = GlobalFunction::getDisplayFormat() == GlobalConstants::DISPLAY_FORMAT_GRID ? false : true;;
 
@@ -75,6 +105,32 @@ class Controller extends CController
 	}
 	
 	protected function searchByAttributes($searchModel, $url, $currPage) {
+		// Pagination configuration
+		$pages = new CPagination();
+		$pages->pageSize = Yii::app()->params['excelViewPageSize'];
+		$pages->route = $url;
+		$pages->setCurrentPage($currPage < 0 ? 0 : $currPage);
+
+		// Create criteria
+		$criteria = $searchModel->createCriteria();
+			
+		if (!isset($searchModel->itemCount)) {
+			// 1st search
+			$dataProvider = $searchModel->searchByCriteria($criteria, $pages);
+			$searchModel->itemCount = $dataProvider->totalItemCount;
+		}
+		else {
+			$dataProvider = $searchModel->searchByCriteria($criteria, $pages, $searchModel->itemCount);
+		}
+			
+		return array(
+				'model' => $searchModel,
+				'items' => $dataProvider->getData(),
+				'pages' => $pages
+		);
+	}
+	
+	protected function searchProductByAttributes($searchModel, $url, $currPage) {
 		$isExcelView = GlobalFunction::getDisplayFormat() == GlobalConstants::DISPLAY_FORMAT_GRID ? false : true;;
 		
 		// Pagination configuration

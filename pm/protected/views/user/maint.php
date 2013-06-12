@@ -34,7 +34,7 @@ else {
 			</div>
 			
 			<div class="grid-c1">
-				<span class="input_label"><? echo Yii::t('user_message', 'role'); ?></span><span class="input_field"><? echo $form->dropDownList($model, 'role_code', Role::getDropDownFromCache()); ?></span>
+				<span class="input_label"><? echo Yii::t('user_message', 'role'); ?></span><span class="input_field"><? echo $form->dropDownList($model, 'role_code', array_merge(array(''=>''), Role::getDropDownFromCache())); ?></span>
 			</div>
 			
 			<div id="supplier_div" class="grid-c1" <? if ($model->role_code != GlobalConstants::ROLE_SUPPLIER) { ?>style="display:none" <? } ?>>

@@ -36,7 +36,7 @@ class Role extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('role_code, role', 'required'),
-			array('role_code', 'length', 'max'=>1),
+			array('role_code', 'length', 'max'=>2),
 			array('role', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.

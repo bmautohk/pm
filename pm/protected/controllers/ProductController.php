@@ -4,7 +4,7 @@ Yii::import('application.models.product.*');
 class ProductController extends Controller {
 	
 	public function actionIndex() {
-		$attr = $this->requestAttrForSearch(new ProductSearchForm, 'searchByFilter');
+		$attr = $this->requestAttrForProductSearch(new ProductSearchForm, 'searchByFilter');
 		$this->render('list', $attr);
 	}
 	
@@ -23,7 +23,7 @@ class ProductController extends Controller {
 	
 // Search function
 	public function actionSearchByFilter() {
-		$attr = $this->requestAttrForSearch(new ProductSearchForm, 'searchByFilter');
+		$attr = $this->requestAttrForProductSearch(new ProductSearchForm, 'searchByFilter');
 		$this->render('list', $attr);
 	}
 	
@@ -32,7 +32,7 @@ class ProductController extends Controller {
 		$serachForm = new ProductSearchForm();
 		$serachForm->isSearchNotFinish = 'Y';
 		
-		$attr = $this->requestAttrForSearch($serachForm, 'searchByFilter');
+		$attr = $this->requestAttrForProductSearch($serachForm, 'searchByFilter');
 		$this->render('list', $attr);
 	}
 	
@@ -131,7 +131,7 @@ class ProductController extends Controller {
 				$session->open();
 				$searchModel = new ProductSearchForm();
 				$searchModel->attributes = $session[GlobalConstants::SESSION_PRODUCT_SEARCH_CRITERIA];
-				$attr = $this->searchByAttributes($searchModel, 'searchByFilter', $session[GlobalConstants::SESSION_CURR_PAGE] - 1);
+				$attr = $this->searchProductByAttributes($searchModel, 'searchByFilter', $session[GlobalConstants::SESSION_CURR_PAGE] - 1);
 			
 				// Remove session attribute
 				$session->remove(GlobalConstants::SESSION_PRODUCT_SEARCH_CRITERIA);
@@ -166,7 +166,7 @@ class ProductController extends Controller {
 		$session->open();
 		$searchModel = new ProductSearchForm();
 		$searchModel->attributes = $session[GlobalConstants::SESSION_PRODUCT_SEARCH_CRITERIA];
-		$attr = $this->searchByAttributes($searchModel, 'searchByFilter', $session[GlobalConstants::SESSION_CURR_PAGE] - 1);
+		$attr = $this->searchProductByAttributes($searchModel, 'searchByFilter', $session[GlobalConstants::SESSION_CURR_PAGE] - 1);
 		
 		// Remove session attribute
 		$session->remove(GlobalConstants::SESSION_PRODUCT_SEARCH_CRITERIA);

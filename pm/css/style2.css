@@ -169,6 +169,13 @@ input.error, select.error, textarea.error {
   margin-bottom: 10px;
 }
 
+.grid-c1-textarea {
+  float: left;
+  width: 500px;
+  height: 60px;
+  margin-bottom: 10px;
+}
+
 .grid-m2 {
   float: left;
   width: 20px;
@@ -199,6 +206,16 @@ input.error, select.error, textarea.error {
 	height: 18px;
 }
 
+.grid-c1-textarea .input_label {
+	height: 60px;
+}
+
+.grid-c1-textarea textarea {
+	margin-left: 0;
+	width: 250px;
+	height: 56px;
+}
+
 /* --- Grid for update --- */
 .grid_u {
   width: 796px;
@@ -216,6 +233,13 @@ input.error, select.error, textarea.error {
   float: left;
   width: 370px;
   height: 30px;
+  margin-bottom: 10px;
+}
+
+.grid_u-c1-textarea {
+  float: left;
+  width: 370px;
+  height: 60px;
   margin-bottom: 10px;
 }
 
@@ -249,6 +273,20 @@ input.error, select.error, textarea.error {
 	height: 18px;
 }
 
+.grid_u-c1-textarea .input_label {
+	height: 60px;
+}
+
+.grid_u-c1-textarea textarea {
+	width: 200px;
+	height: 56px;
+}
+
+.show_product_image {
+	float: left;
+	margin-right: 10px;
+	padding: 5px 5px 5px 5px;
+}
 
 /* --- Grid for seraching --- */
 .grid_s {
@@ -285,6 +323,12 @@ input.error, select.error, textarea.error {
 
 .grid_s .from_to_input {
 	padding: 0 0 0 0;
+}
+
+.grid_s-c1 select {
+	margin-left: 0;
+	width: 100px;
+	height: 24px;
 }
 
 /* --- Grid for paging --- */
@@ -340,10 +384,40 @@ input.error, select.error, textarea.error {
 }
 
 .grid_p-c3 .input_label {
-	width: 95px;
+	width: 96px;
 }
 
 .grid_p-c3 .link {
 	text-align:center;
 	padding-bottom: 10px;
+}
+
+/* Excel View */
+.product-excel-style {
+	font-size: 12px;
+	text-align: left;
+	border-collapse: collapse;
+	margin: 20px;
+}
+
+.product-excel-style th {
+	font-size: 13px;
+	font-weight: normal;
+	background: #B9BDBD ;
+	border-top: 2px solid #B9BDBD;
+	border-bottom: 1px solid white;
+	color: #039;
+	padding: 8px;
+}
+
+.product-excel-style td {
+	border-bottom: 1px solid white;
+	color: #669;
+	border-top: 1px solid white;
+	background: /*#E8EDFF*/#DADDDD ;
+	padding: 8px;
+}
+
+.product-excel-style tbody tr:hover td{
+	background:#d0dafd;
 }
