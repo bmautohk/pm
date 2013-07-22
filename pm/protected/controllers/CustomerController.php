@@ -120,6 +120,7 @@ class CustomerController extends Controller {
 		$this->render('list', array_merge($attr, array('msg'=>array('success'=>$successMsg))));
 	}
 	
+// Back function
 	public function actionBack() {
 		// Back to search page
 		$session=new CHttpSession;
@@ -133,5 +134,44 @@ class CustomerController extends Controller {
 		$session->remove(SESSION_CURR_PAGE);
 		
 		$this->render('list', $attr);
+	}
+	
+// Export function
+	public function actionExport() {
+		$exportCustomerForm = new ExportCustomerForm();
+		$exportCustomerForm->export();
+	}
+	
+// Import function
+	public function actionImport() {
+		$model = new ImportCustomerForm;
+	
+		if(isset($_POST['ImportCustomerForm'])) {
+			$model->attributes = $_POST['ImportCustomerForm'];
+			$model->uplFile = CUploadedFile::getInstance($model,'uplFile');
+			
+			if ($model->validate()) {
+				$result = $model->import();
+				if ($result[0]) {
+					// Success
+					$successMsg = 'Customer list is imported successfully!';
+				}
+				else {
+					// Fail
+					foreach($result[1] as $rowNo=>$customer) {
+						foreach($customer->errors as $fieldInfo) {
+							foreach($fieldInfo as $error) {
+								$errorMsg .= 'Row['.$rowNo.']: '.$error.'<br>';
+							}
+						}
+					}
+				}
+			}
+			else {
+				$errorMsg = 'Fail to import';
+			}
+		}
+	
+		$this->render('import', array('model'=>$model, 'msg'=>array('success'=>$successMsg, 'error'=>$errorMsg)));
 	}
 }

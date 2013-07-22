@@ -45,13 +45,13 @@ class Customer extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('cust_cd, email', 'required'),
-			array('cust_cd, name, contact_person, address, email, create_by, last_update_by', 'length', 'max'=>255),
-			array('tel, fax', 'length', 'max'=>15),
-			array('create_date, last_update_date', 'safe'),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-			array('id, cust_cd, name, tel, fax, contact_person, address, email, create_date, create_by, last_update_date, last_update_by', 'safe', 'on'=>'search'),
+				array('cust_group, where_to_find, name, vip', 'required'),
+				array('id', 'numerical', 'integerOnly'=>true, 'on'=>'import'),
+				array('vip', 'numerical', 'integerOnly'=>true, 'min'=>0, 'max'=>1),
+				array('tel, tel2, fax', 'length', 'max'=>'15'),
+				array('mobile_no, mobile_no2', 'length', 'max'=>'50'),
+				array('name, where_to_find_detail, contact_person, contact_salesman, other_contact, address, address2, email, website, remark, salesman_remark', 'length', 'max'=>'255'),
+				array('id, create_date, create_by, last_update_date, last_update_by', 'safe'),
 		);
 	}
 
@@ -63,6 +63,7 @@ class Customer extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'customerCustTypes'=>array(self::HAS_MANY, 'CustomerCustType', 'customer_id'),
 		);
 	}
 

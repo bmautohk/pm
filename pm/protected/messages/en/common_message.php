@@ -4,6 +4,7 @@ return array (
 		'export_product' => '滙出產品資料',
 		'add_product' => '新加一筆產品資料',
 		'search' => '搜尋',
+		'reset' => '重置',
 		'product_detail' => '詳細產品資料',
 		'update' => '更新資料',
 		'back' => '回前一頁',

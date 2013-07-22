@@ -1,6 +1,8 @@
 <?php
 //Yii::import('application.extensions.*');
 //require_once 'protected/extensions/PHPExcel/IOFactory.php';
+//ini_set('memory_limit', '300M');
+ini_set('max_execution_time', 500);
 
 class ImportProductForm extends CFormModel {
 
@@ -27,9 +29,10 @@ class ImportProductForm extends CFormModel {
 		
 		$isValid = true;
 
-		//$objPHPExcel = new PHPExcel();
-		$objPHPExcel = Yii::app()->excel;
+		$objPHPExcel = new PHPExcel();
+		//$objPHPExcel = Yii::app()->excel;
 		$objReader = PHPExcel_IOFactory::createReader('Excel5');
+		$objReader->setReadDataOnly(true);
 		$objPHPExcel = $objReader->load($this->uplFile->tempName);
 		
 		// Once we have finished using the library, give back the

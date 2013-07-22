@@ -122,6 +122,7 @@ class ProductSearchForm extends CFormModel {
 		}
 		else {
 			$criteria->compare('produce_status', '<>'.GlobalConstants::PRODUCE_STATUS_COMPLETE);
+			$criteria->compare('produce_status', '<>'.GlobalConstants::PRODUCE_STATUS_MONOPOLY);
 		}
 		//}
 		

@@ -69,12 +69,20 @@ class ExportProductForm extends CFormModel {
 		->setCellValueByColumnAndRow($i++, 1, '生產狀態')
 		;
 		
+		$sheet->getStyle('AA')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
+		$sheet->getStyle('AB')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
+		$sheet->getStyle('AC')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
+		$sheet->getStyle('AE')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
+		$sheet->getStyle('AG')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
+		$sheet->getStyle('AJ')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
+		
+		
 		$rowNo = 1;
 		foreach($products as $product) {
 			$i = 0;
 			$rowNo++;
 				
-			$sheet->setCellValueByColumnAndRow($i++, $rowNo, $product['customer'])
+			/* $sheet->setCellValueByColumnAndRow($i++, $rowNo, $product['customer'])
 			->setCellValueByColumnAndRow($i++, $rowNo, $product['prod_sn'])
 			->setCellValueByColumnAndRow($i++, $rowNo, $product['status'] == 'A' ? 'OK' : '')
 			->setCellValueByColumnAndRow($i++, $rowNo, $product['no_jp'])
@@ -99,31 +107,60 @@ class ExportProductForm extends CFormModel {
 			->setCellValueByColumnAndRow($i++, $rowNo, $product['cost'])
 			->setCellValueByColumnAndRow($i++, $rowNo, $product['kaito'])
 			->setCellValueByColumnAndRow($i++, $rowNo, $product['other'])
-			->setCellValueByColumnAndRow($i++, $rowNo, $product['purchase_cost']);
+			->setCellValueByColumnAndRow($i++, $rowNo, $product['purchase_cost']); */
+			
+			// setCellValueByColumnAndRow(): support formula
+			// setCellValueExplicitByColumnAndRow(): not support formula (for handling the field value with prefix "=")
+			$sheet->setCellValueExplicitByColumnAndRow($i++, $rowNo, $product['customer']);
+			$sheet ->setCellValueByColumnAndRow($i++, $rowNo, $product['prod_sn']);
+			$sheet->setCellValueExplicitByColumnAndRow($i++, $rowNo, $product['status'] == 'A' ? 'OK' : '');
+			$sheet->setCellValueExplicitByColumnAndRow($i++, $rowNo, $product['no_jp']);
+			$sheet->setCellValueExplicitByColumnAndRow($i++, $rowNo, $product['factory_no']);
+			$sheet->setCellValueExplicitByColumnAndRow($i++, $rowNo, $product['made']);
+			$sheet->setCellValueExplicitByColumnAndRow($i++, $rowNo, $product['model']);
+			$sheet->setCellValueExplicitByColumnAndRow($i++, $rowNo, $product['model_no']);
+			$sheet->setCellValueExplicitByColumnAndRow($i++, $rowNo, $product['year']);
+			$sheet->setCellValueExplicitByColumnAndRow($i++, $rowNo, $product['item_group']);
+			$sheet->setCellValueExplicitByColumnAndRow($i++, $rowNo, $product['material']);
+			$sheet->setCellValueExplicitByColumnAndRow($i++, $rowNo, $product['product_desc']);
+			$sheet->setCellValueExplicitByColumnAndRow($i++, $rowNo, $product['product_desc_ch']);
+			$sheet->setCellValueExplicitByColumnAndRow($i++, $rowNo, $product['product_desc_jp']);
+			$sheet->setCellValueExplicitByColumnAndRow($i++, $rowNo, $product['accessory_remark']);
+			$sheet->setCellValueExplicitByColumnAndRow($i++, $rowNo, $product['company_remark']);
+			$sheet->setCellValueByColumnAndRow($i++, $rowNo, $product['pcs']);
+			$sheet->setCellValueExplicitByColumnAndRow($i++, $rowNo, $product['colour']);
+			$sheet->setCellValueByColumnAndRow($i++, $rowNo, $product['colour_no']);
+			$sheet->setCellValueByColumnAndRow($i++, $rowNo, $product['supplier']);
+			$sheet->setCellValueByColumnAndRow($i++, $rowNo, $product['molding']);
+			$sheet->setCellValueByColumnAndRow($i++, $rowNo, $product['moq']);
+			$sheet->setCellValueByColumnAndRow($i++, $rowNo, $product['cost']);
+			$sheet->setCellValueByColumnAndRow($i++, $rowNo, $product['kaito']);
+			$sheet->setCellValueByColumnAndRow($i++, $rowNo, $product['other']);
+			$sheet->setCellValueByColumnAndRow($i++, $rowNo, $product['purchase_cost']);
 				
-			$sheet->getStyleByColumnAndRow($i, $rowNo)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
+			//$sheet->getStyleByColumnAndRow($i, $rowNo)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
 			$sheet->setCellValueByColumnAndRow($i++, $rowNo, ExportProductForm::strToExcelDate($product['buy_date']));
 				
-			$sheet->getStyleByColumnAndRow($i, $rowNo)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
+			//$sheet->getStyleByColumnAndRow($i, $rowNo)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
 			$sheet->setCellValueByColumnAndRow($i++, $rowNo, ExportProductForm::strToExcelDate($product['receive_date']));
 				
-			$sheet->getStyleByColumnAndRow($i, $rowNo)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
+			//$sheet->getStyleByColumnAndRow($i, $rowNo)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
 			$sheet->setCellValueByColumnAndRow($i++, $rowNo, ExportProductForm::strToExcelDate($product['factory_date']));
 				
 			$sheet->setCellValueByColumnAndRow($i++, $rowNo, $product['pack_remark']);
 				
-			$sheet->getStyleByColumnAndRow($i, $rowNo)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
+			//$sheet->getStyleByColumnAndRow($i, $rowNo)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
 			$sheet->setCellValueByColumnAndRow($i++, $rowNo, ExportProductForm::strToExcelDate($product['order_date']));
 				
 			$sheet->setCellValueByColumnAndRow($i++, $rowNo, $product['progress']);
 				
-			$sheet->getStyleByColumnAndRow($i, $rowNo)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
+			//$sheet->getStyleByColumnAndRow($i, $rowNo)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
 			$sheet->setCellValueByColumnAndRow($i++, $rowNo, ExportProductForm::strToExcelDate($product['receive_model_date']));
 				
 			$sheet->setCellValueByColumnAndRow($i++, $rowNo, $product['person_in_charge'])
 			->setCellValueByColumnAndRow($i++, $rowNo, $product['state']);
 				
-			$sheet->getStyleByColumnAndRow($i, $rowNo)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
+			//$sheet->getStyleByColumnAndRow($i, $rowNo)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
 			$sheet->setCellValueByColumnAndRow($i++, $rowNo, ExportProductForm::strToExcelDate($product['ship_date']));
 				
 			$sheet->setCellValueByColumnAndRow($i++, $rowNo, $product['market_research_price'])

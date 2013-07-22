@@ -12,7 +12,7 @@
 				<th style="width:50px">&nbsp;</th>
 				<th style="width:50px">&nbsp;</th>
 				<th><? echo Yii::t('customer_message', 'name'); ?></th>
-				<th><? echo Yii::t('customer_message', 'cust_cd'); ?></th>
+				<th><? echo Yii::t('customer_message', 'id'); ?></th>
 				<th><? echo Yii::t('customer_message', 'tel'); ?></th>
 				<th><? echo Yii::t('customer_message', 'address'); ?></th>
 				<th><? echo Yii::t('customer_message', 'email'); ?></th>
@@ -22,7 +22,7 @@
 				<td><input type="button" value="<? echo Yii::t('common_message', 'detail'); ?>" onclick="javascript:goUpdate('<?=$customer->id ?>')" /></td>
 				<td><input type="button" value="<? echo Yii::t('common_message', 'delete'); ?>" onclick="javascript:goDelete('<?=$customer->id ?>')" /></td>
 				<td><?=$customer->name ?></td>
-				<td><?=$customer->cust_cd ?></td>
+				<td><?=$customer->id ?></td>
 				<td><?=$customer->tel ?></td>
 				<td><?=$customer->address ?></td>
 				<td><?=$customer->email ?></td>

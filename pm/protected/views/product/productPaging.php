@@ -93,7 +93,7 @@ function dropDownList($form, $model, $attribute, $options, $roleMatrix, $tableNa
 				</div>
 				<div class="grid_p-c1">
 					<div class="product_name">
-						<?=$product->prod_sn ?>
+						<?=$product->prod_sn ?><?if ($product->produce_status=="MO") { echo "<font color='red' >[专卖]</font>";} ?>
 					</div>
 					<? echo textField($form,$product,'made',$roleMatrix,$tableName,'made');?>
 					<? echo textField($form,$product,'model',$roleMatrix,$tableName,'model');?>
