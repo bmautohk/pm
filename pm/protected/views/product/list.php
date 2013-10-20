@@ -30,6 +30,8 @@
 				<input type="hidden" name="id" id="id" />
 				<? echo $form->hiddenField($model,'itemCount'); ?>
 				<? echo $form->hiddenField($model,'keyword'); ?>
+				<? echo $form->hiddenField($model,'no_jp2'); ?>
+				<? echo $form->hiddenField($model,'prod_sn2'); ?>
 				<? echo $form->hiddenField($model,'customer'); ?>
 				<? echo $form->hiddenField($model,'no_jp'); ?>
 				<? echo $form->hiddenField($model,'factory_no'); ?>
@@ -67,5 +69,14 @@ function goToPage(page) {
 	$('#criteriaForm').attr('action', '<? echo Yii::app()->request->baseUrl; ?>/product/searchByFilter');
 	$('#page').attr('value', page);
 	$('#criteriaForm').submit();
+}
+
+function goDelete(id, prod_sn) {
+	if (confirm("Are you sure to delete 產品S/N [" + prod_sn + "]?")) {
+		$('#criteriaForm').attr('action', '<? echo Yii::app()->request->baseUrl; ?>/product/delete');
+		$('#criteriaForm #id').val(id);
+		$('#page').val($('#currPage').val());
+		$('#criteriaForm').submit();
+	}
 }
 </script>

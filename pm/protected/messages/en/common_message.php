@@ -3,6 +3,7 @@ return array (
 		'import_product' => '從excel載入產品資料',
 		'export_product' => '滙出產品資料',
 		'add_product' => '新加一筆產品資料',
+		'delete_product' => '刪除',
 		'search' => '搜尋',
 		'reset' => '重置',
 		'product_detail' => '詳細產品資料',
@@ -15,6 +16,9 @@ return array (
 		'detail' => '詳細',
 		'delete' => '刪除',
 		'download' => '下載',
+		'add_to_cart' => 'Add to Cart',
+		'checkout_cart' => 'Checkout Cart',
+		'export_cart' => 'Export',
 		
 		// produce status
 		'produce_status_prepare' => '准备中',
@@ -23,7 +27,7 @@ return array (
 		'produce_status_check' => '對車中',
 		'produce_status_edit' => '修改中',
 		'produce_status_pause' => '暂停',
-		'produce_status_cancel' => '取消',
+		'produce_status_cancel' => '取消生產',
 		'produce_status_monopoly' => '专卖',
 		'produce_status_complete' => '完成-可订货',
 );

@@ -92,6 +92,7 @@ class ImportProductForm extends CFormModel {
 			$product->market_research_price = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
 			$product->yahoo_produce = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
 			$product->produce_status = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue(); if (empty($product->produce_status)) { $product->produce_status = GlobalConstants::PRODUCE_STATUS_PREPARE; }
+			$product->is_monopoly = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue() == 'No' ? 0 : 1;
 			
 			$product->create_date = $today;
 			

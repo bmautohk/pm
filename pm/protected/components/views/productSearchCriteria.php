@@ -20,7 +20,7 @@
 	 
 	<? 
 		$form=$this->beginWidget('CActiveForm', array(
-			'id'=>'keywordForm',
+			'id'=>'keywordForm1',
 			'action'=>Yii::app()->createUrl('product/searchByFilter'),
 			'method'=>'GET',
 			'enableAjaxValidation'=>false,
@@ -28,6 +28,28 @@
 			<? echo $form->hiddenField($model, 'made'); ?>
 		
 			<? echo $form->textField($model,'keyword', array('size'=>'100', 'placeholder'=>'Enter Keyword')); ?><input type="submit" id="search_by_keyword" value="<? echo Yii::t('common_message', 'search'); ?>">
+		<? $this->endWidget(); ?>
+		
+		<? 
+		$form=$this->beginWidget('CActiveForm', array(
+			'id'=>'keywordForm2',
+			'action'=>Yii::app()->createUrl('product/searchByFilter'),
+			'method'=>'GET',
+			'enableAjaxValidation'=>false,
+		)); ?>
+			<? echo $form->hiddenField($model, 'made'); ?>
+			<? echo $form->textField($model,'no_jp2', array('size'=>'100', 'placeholder'=>'Enter 品番')); ?><input type="submit" id="search_by_no_jp" value="<? echo Yii::t('common_message', 'search'); ?>">
+		<? $this->endWidget(); ?>
+		
+		<? 
+		$form=$this->beginWidget('CActiveForm', array(
+			'id'=>'keywordForm3',
+			'action'=>Yii::app()->createUrl('product/searchByFilter'),
+			'method'=>'GET',
+			'enableAjaxValidation'=>false,
+		)); ?>
+			<? echo $form->hiddenField($model, 'made'); ?>
+			<? echo $form->textField($model,'prod_sn2', array('size'=>'100', 'placeholder'=>'Enter 產品S/N')); ?><input type="submit" id="search_by_prod_sn" value="<? echo Yii::t('common_message', 'search'); ?>">
 		<? $this->endWidget(); ?>
 		
 		<br>
@@ -130,13 +152,33 @@
 
 <script type="text/javascript">
 	$(function() {
-		$('#keywordForm').submit(function() {
-			if ($('#ProductSearchForm_keyword').val() == '') {
+		$('#keywordForm1').submit(function() {
+			if ($('#ProductSearchForm_keyword').val() != '') {
+				return true;
+			}
+			else {
 				alert('Please fill in keyword!');
 				return false;
 			}
-			else {
+		});
+
+		$('#keywordForm2').submit(function() {
+			if ($('#ProductSearchForm_no_jp2').val() != '') {
 				return true;
+			}
+			else {
+				alert('Please fill in 品番!');
+				return false;
+			}
+		});
+
+		$('#keywordForm3').submit(function() {
+			if ($('#ProductSearchForm_prod_sn').val() != '') {
+				return true;
+			}
+			else {
+				alert('Please fill in 產品S/N!');
+				return false;
 			}
 		});
 		

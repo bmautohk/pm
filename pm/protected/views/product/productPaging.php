@@ -106,6 +106,9 @@ function dropDownList($form, $model, $attribute, $options, $roleMatrix, $tableNa
 					
 					<div class="link">
 						<input type="button" value="<? echo Yii::t('common_message', 'product_detail'); ?>" onclick="javascript:goUpdate(<?=$product->id ?>)" />
+						<? if (GlobalFunction::isAdmin()) { ?>	
+							<input type="button" onclick="javascript:goDelete(<?=$product->id ?>, <?=$product->prod_sn ?>)" value="<? echo Yii::t('common_message', 'delete_product'); ?>" />
+						<? } ?>
 					</div>
 				</div>
 			</div>
@@ -121,6 +124,8 @@ function dropDownList($form, $model, $attribute, $options, $roleMatrix, $tableNa
 			?>
 		<? }?>
 	</div>
+	<br />
+	<? $this->widget('SimplaPager', array('pages'=>$pages)); ?>
 	
 	<? $this->endWidget(); ?>
 <? } ?>

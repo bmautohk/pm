@@ -86,7 +86,7 @@ class ProductController extends Controller {
 			$model->attributes = $_POST['ProductMaster'];
 			
 			if ($model->save()) {
-				$successMsg = '&#29986;&#21697;S/N ['.$model->prod_sn.'] is created successfully!'; // ²£«~S/N [XXX] is created successfully!
+				$successMsg = '&#29986;&#21697;S/N ['.$model->prod_sn.'] is created successfully!'; // ï¿½ï¿½ï¿½~S/N [XXX] is created successfully!
 				$action = 'update';
 				$this->render('maint', array('action'=>$action, 'model'=>$model, 'msg'=>array('success'=>$successMsg, 'error'=>$errorMsg)));
 				return;
@@ -124,7 +124,7 @@ class ProductController extends Controller {
 			$model->attributes = $_POST['ProductMaster'];
 			
 			if ($model->save()) {
-				$successMsg = '&#29986;&#21697;S/N ['.$model->prod_sn.'] is updated successfully!'; // ²£«~S/N [XXX] is updated successfully!
+				$successMsg = '&#29986;&#21697;S/N ['.$model->prod_sn.'] is updated successfully!'; // ï¿½ï¿½ï¿½~S/N [XXX] is updated successfully!
 			
 				// Go back the search page
 				$session=new CHttpSession;
@@ -159,7 +159,66 @@ class ProductController extends Controller {
 		
 		$this->render('maint', array('action'=>'update', 'model'=>$model, 'msg'=>array('success'=>$successMsg, 'error'=>$errorMsg)));
 	}
+
+// Delete Function
+	public function actionDelete() {	
+		// Check authorization
+		if (!GlobalFunction::isAdmin()) {
+			$this->redirect(Yii::app()->createUrl('site/noPermission'));
+		}
+		
+		$id = $_GET['id'];
+		$model = $this->loadProductMaster($id);
+		
+		$productCartCountModel = ProductCartCount::model()->findByAttributes(array('prod_sn'=>$model->prod_sn));
+		
+		$isSuccess = false;
+		if ($model->delete()) {
+			if ($productCartCountModel != NULL) {
+				if ($productCartCountModel->delete()) {
+					$isSuccess = true;
+				}
+			} else {
+				$isSuccess = true;
+			}
+		}
+		
+		if ($isSuccess) {
+			$successMsg = '&#29986;&#21697;S/N ['.$model->prod_sn.'] is deleted successfully!';
+		} else {
+			$errorMsg = 'Fail to delete product!';
+		}
+		
+		// Go back the search page
+		$searchModel = new ProductSearchForm();
+		$searchModel->attributes = $_REQUEST['ProductSearchForm'];
+		if ($isSuccess) {
+			$searchModel->itemCount = $searchModel->itemCount - 1;
+		}
+		$attr = $this->searchProductByAttributes($searchModel, 'searchByFilter', $_REQUEST['page'] - 1);
+		
+		$this->render('list', array_merge($attr, array('msg'=>array('success'=>$successMsg, 'error'=>$errorMsg))));
+	}
 	
+	public function actionAddToCart() {
+		$form = new CartForm();
+		$form->addCart($_POST);
+		
+		echo 'ç”¢å“S/N ['.$form->message.'] is/are added to cart.';
+	}
+	
+	public function actionShowCartProduct() {
+		$form = new CartForm();
+		$products = $form->getCartProduct();
+		
+		$this->render('checkout_cart', array('items'=>$products));
+	}
+	
+	public function actionExportCart() {
+		$form = new CartForm();
+		$form->exportCart();
+	}
+
 	public function actionBack() {
 		// Back to search page
 		$session=new CHttpSession;
@@ -217,13 +276,14 @@ class ProductController extends Controller {
 		$criteria->select = 'model';
 		$criteria->distinct = true;
 		$criteria->compare('model', $term, true);
+		$criteria->order = 'model';
 		$products = ProductMaster::model()->findAll($criteria);
 	
 		$result = array();
 		foreach($products as $product) {
 			$result[] = $product->model;
 		}
-	
+		
 		echo json_encode($result);
 	}
 

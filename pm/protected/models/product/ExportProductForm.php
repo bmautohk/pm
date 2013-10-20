@@ -1,11 +1,15 @@
 <?php
+require_once 'protected/extensions/PHPExcel/CachedObjectStorageFactory.php';
+require_once 'protected/extensions/PHPExcel/Settings.php';
 class ExportProductForm extends CFormModel {
 	
 	public function export() {
 		// Find all products
 		$criteria = new CDbCriteria();
-		$criteria->order = 'id';
-			
+		$criteria->order = 'prod_sn';
+		
+		//$criteria->condition = "prod_sn = '3716'"; // testing
+		
 		$model = ProductMaster::model();
 		$model->setDbCriteria($criteria);
 		
@@ -15,6 +19,10 @@ class ExportProductForm extends CFormModel {
 	}
 	
 	public function generateExcel($products) {
+		$cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
+		$cacheSettings = array( ' memoryCacheSize ' => '8MB');
+		PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
+		
 		// Output to excel
 		// Create new PHPExcel object
 		$objPHPExcel = new PHPExcel();
@@ -67,6 +75,7 @@ class ExportProductForm extends CFormModel {
 		->setCellValueByColumnAndRow($i++, 1, '市场调查的价格')
 		->setCellValueByColumnAndRow($i++, 1, 'YAHOO出品')
 		->setCellValueByColumnAndRow($i++, 1, '生產狀態')
+		->setCellValueByColumnAndRow($i++, 1, Yii::t('product_message', 'is_monopoly'))
 		;
 		
 		$sheet->getStyle('AA')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
@@ -165,7 +174,8 @@ class ExportProductForm extends CFormModel {
 				
 			$sheet->setCellValueByColumnAndRow($i++, $rowNo, $product['market_research_price'])
 			->setCellValueByColumnAndRow($i++, $rowNo, $product['yahoo_produce'])
-			->setCellValueByColumnAndRow($i++, $rowNo, $product['produce_status']);
+			->setCellValueByColumnAndRow($i++, $rowNo, $product['produce_status'])
+			->setCellValueByColumnAndRow($i++, $rowNo, $product['is_monopoly'] == 0 ? 'No' : 'Yes');
 		
 			/* $sheet->getStyle('Y'.$rowNo)
 			 ->getNumberFormat()

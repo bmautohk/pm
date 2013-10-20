@@ -7,13 +7,13 @@ $roleMatrix = Yii::app()->user->getState('role_matrix');
 
 
 function textField($form, $model, $attribute, $roleMatrix, $tableName, $columnName, $htmlOptions=array()) {
-echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span><span class="input_field">';
-        if (GlobalFunction::checkPrivilege($roleMatrix, $tableName, $columnName)) {
-	echo $form->textField($model, $attribute, $htmlOptions);
-	}else{
-        echo '<input type="text"/>';
-	}	
-echo '</span>';
+	echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span><span class="input_field">';
+	if (GlobalFunction::checkPrivilege($roleMatrix, $tableName, $columnName)) {
+		echo $form->textField($model, $attribute, $htmlOptions);
+	} else {
+		echo '<input type="text"/>';
+	}
+	echo '</span>';
 }
 
 /*function textField($form, $model, $attribute, $roleMatrix, $tableName, $columnName, $htmlOptions=array()) {
@@ -23,11 +23,11 @@ echo '</span>';
 }*/
 
 function textArea($form, $model, $attribute, $roleMatrix, $tableName, $columnName, $htmlOptions=array()) {
-	 echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span><span>';
-        if (GlobalFunction::checkPrivilege($roleMatrix, $tableName, $columnName)) {
-                echo $form->textArea($model, $attribute);
-        }else{
-	echo "<textarea></textarea>";
+	echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span><span>';
+	if (GlobalFunction::checkPrivilege($roleMatrix, $tableName, $columnName)) {
+		echo $form->textArea($model, $attribute);
+	} else {
+		echo "<textarea></textarea>";
 	}
 	echo '</span>';
 }
@@ -39,13 +39,13 @@ function textArea($form, $model, $attribute, $roleMatrix, $tableName, $columnNam
 }*/
 
 function datePicker($form, $model, $attribute, $roleMatrix, $tableName, $columnName) {
-   echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span><span class="date_field">';
-      if (GlobalFunction::checkPrivilege($roleMatrix, $tableName, $columnName)) {
-                echo $form->textField($model, $attribute);
-        }else{
-	echo '<input type="text"/>';
+	echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span><span class="date_field">';
+	if (GlobalFunction::checkPrivilege($roleMatrix, $tableName, $columnName)) {
+		echo $form->textField($model, $attribute);
+	} else {
+		echo '<input type="text"/>';
 	}
-echo '</span><input type="button" class="calendar_button" id="'.$attribute.'_btn" value=" " />';
+	echo '</span><input type="button" class="calendar_button" id="'.$attribute.'_btn" value=" " />';
 }
 /*
 function datePicker($form, $model, $attribute, $roleMatrix, $tableName, $columnName) {
@@ -56,9 +56,9 @@ function datePicker($form, $model, $attribute, $roleMatrix, $tableName, $columnN
 
 function dropDownList($form, $model, $attribute, $options, $roleMatrix, $tableName, $columnName) {
 	echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span>';
-        if (GlobalFunction::checkPrivilege($roleMatrix, $tableName, $columnName)) {
-                echo $form->dropDownList($model, $attribute, $options);
-        }else{
+	if (GlobalFunction::checkPrivilege($roleMatrix, $tableName, $columnName)) {
+		echo $form->dropDownList($model, $attribute, $options);
+	} else {
 		echo '<select> </select>';
 	}
 }
@@ -68,6 +68,13 @@ function dropDownList($form, $model, $attribute, $options, $roleMatrix, $tableNa
 		echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span>'.$form->dropDownList($model, $attribute, $options);
 	}
 }*/
+
+function checkbox($form, $model, $attribute, $roleMatrix, $tableName, $columnName) {
+	echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span>';
+	if (GlobalFunction::checkPrivilege($roleMatrix, $tableName, $columnName)) {
+		echo $form->checkbox($model, $attribute);
+	}
+}
 ?>
 
 <link type="text/css" rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/jscal2.css" />
@@ -254,7 +261,7 @@ function dropDownList($form, $model, $attribute, $options, $roleMatrix, $tableNa
 			</div>
 			<div class="grid_u-m2"></div>
 			<div class="grid_u-c2">
-				
+				<? echo checkbox($form, $model, 'is_monopoly', $roleMatrix, $tableName, 'is_monopoly'); ?>
 			</div>
 			
 			<br style="clear:both" />

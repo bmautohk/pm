@@ -3,6 +3,10 @@ class ProductSearchForm extends CFormModel {
 	public $itemCount;
 
 	public $keyword;
+	
+	public $no_jp2;
+	public $prod_sn2;
+	
 	public $customer;
 	public $no_jp;
 	public $factory_no;
@@ -33,7 +37,7 @@ class ProductSearchForm extends CFormModel {
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-				array('keyword, customer, no_jp, factory_no, made, model, model_no, year, item_group, colour, material, pcsFrom, pcsTo, supplier, moldingFrom, moldingTo, kaitoFrom, kaitoTo, produceStatus, isSearchNotFinish, itemCount', 'safe'),
+				array('keyword, no_jp2, prod_sn2, customer, no_jp, factory_no, made, model, model_no, year, item_group, colour, material, pcsFrom, pcsTo, supplier, moldingFrom, moldingTo, kaitoFrom, kaitoTo, produceStatus, isSearchNotFinish, itemCount', 'safe'),
 		);
 	}
 	
@@ -92,6 +96,9 @@ class ProductSearchForm extends CFormModel {
 		}
 		else { */
 		if ($this->isSearchNotFinish == 'N') {
+			$criteria->compare('no_jp', trim($this->no_jp2));
+			$criteria->compare('prod_sn', trim($this->prod_sn2));
+			
 			$criteria->compare('colour_no', trim($this->colour), true, 'OR');
 			
 			$criteria->compare('made', trim($this->made));

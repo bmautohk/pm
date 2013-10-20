@@ -187,6 +187,10 @@ if (!in_array($model->made, $mades)) {
 				<span class="input_label"><? echo Yii::t('product_message', 'produce_status'); ?></span><? echo $form->dropDownList($model, 'produce_status', ProductMaster::getProduceStatusDropdown()); ?>
 			</div>
 			
+			<div class="grid-c1">
+				<span class="input_label"><? echo Yii::t('product_message', 'is_monopoly'); ?></span><? echo $form->checkbox($model, 'is_monopoly'); ?>
+			</div>
+			
 			<br style="clear:both" />
 			
 		</div>

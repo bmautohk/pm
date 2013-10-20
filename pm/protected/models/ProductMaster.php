@@ -74,7 +74,7 @@ class ProductMaster extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('prod_sn, made, status, produce_status', 'required'),
+			array('prod_sn, made, status, produce_status, is_monopoly', 'required'),
 			array('prod_sn, pcs, moq', 'numerical', 'integerOnly'=>true),
 			array('molding, cost, kaito, other, purchase_cost, market_research_price', 'numerical'),
 			array('customer, made, model, model_no, year, item_group, material, colour, colour_no, supplier, progress, person_in_charge, state, yahoo_produce', 'length', 'max'=>255),
@@ -231,6 +231,7 @@ class ProductMaster extends CActiveRecord
 	
 	public static function getProduceStatusDropdown() {
 		return array(
+				''=>'',
 				GlobalConstants::PRODUCE_STATUS_PREPARE=>Yii::t('common_message', 'produce_status_prepare'),
 				GlobalConstants::PRODUCE_STATUS_BOOK=>Yii::t('common_message', 'produce_status_book'),
 				GlobalConstants::PRODUCE_STATUS_MODELING=>Yii::t('common_message', 'produce_status_modeling'),
@@ -238,7 +239,7 @@ class ProductMaster extends CActiveRecord
 				GlobalConstants::PRODUCE_STATUS_EDIT=>Yii::t('common_message', 'produce_status_edit'),
 				GlobalConstants::PRODUCE_STATUS_PAUSE=>Yii::t('common_message', 'produce_status_pause'),
 				GlobalConstants::PRODUCE_STATUS_CANCEL=>Yii::t('common_message', 'produce_status_cancel'),
-				GlobalConstants::PRODUCE_STATUS_MONOPOLY=>Yii::t('common_message', 'produce_status_monopoly'),
+				//GlobalConstants::PRODUCE_STATUS_MONOPOLY=>Yii::t('common_message', 'produce_status_monopoly'),
 				GlobalConstants::PRODUCE_STATUS_COMPLETE=>Yii::t('common_message', 'produce_status_complete'),
 			);
 	}
