@@ -14,6 +14,7 @@ class GlobalConstants {
 	const SESSION_CART_PRODUCT = "SESSION_CART_PRODUCT";
 	
 	const ROLE_ADMIN = "AD";
+	const ROLE_SUPERADMIN = "SS";
 	const ROLE_SUPPLIER = "SU";
 	
 	const DISPLAY_FORMAT_EXCEL = "E";

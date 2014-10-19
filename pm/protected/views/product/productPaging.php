@@ -11,20 +11,24 @@ $tableName = 'product_master';
 $roleMatrix = Yii::app()->user->getState('role_matrix');
 
 function textField2($form, $model, $attribute, $roleMatrix, $tableName, $columnName, $htmlOptions=array()) {
-echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span><span class="input_field2">';
+
         if (GlobalFunction::checkPrivilege($roleMatrix, $tableName, $columnName)) {
+		echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span><span class="input_field2">';
         echo $form->textField($model, $attribute, $htmlOptions);
         }else{
+		echo '<span class="input_label"></span><span class="input_field2">';
         echo '<input type="text"/>';
         }
 echo '</span>';
 }
 
 function textField($form, $model, $attribute, $roleMatrix, $tableName, $columnName, $htmlOptions=array()) {
-echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span><span class="input_field">';
+
         if (GlobalFunction::checkPrivilege($roleMatrix, $tableName, $columnName)) {
+		echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span><span class="input_field">';
         echo $form->textField($model, $attribute, $htmlOptions);
         }else{
+		echo '<span class="input_label"></span><span class="input_field">';
         echo '<input type="text"/>';
         }
 echo '</span>';
@@ -32,10 +36,12 @@ echo '</span>';
 
 
 function textArea($form, $model, $attribute, $roleMatrix, $tableName, $columnName, $htmlOptions=array()) {
-         echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span><span>';
+        
         if (GlobalFunction::checkPrivilege($roleMatrix, $tableName, $columnName)) {
+		 echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span><span>';
                 echo $form->textArea($model, $attribute,$htmlOptions);
         }else{
+		 echo '<span class="input_label"></span><span>';
         echo "<textarea></textarea>";
         }
         echo '</span>';
@@ -93,7 +99,7 @@ function dropDownList($form, $model, $attribute, $options, $roleMatrix, $tableNa
 				</div>
 				<div class="grid_p-c1">
 					<div class="product_name">
-						<?=$product->prod_sn ?><?if ($product->produce_status=="MO") { echo "<font color='red' >[专卖]</font>";} ?>
+						<?=$product->prod_sn ?><?if ($product->is_monopoly==1) { echo "<font color='red' >[专卖]</font>";} ?>
 					</div>
 					<? echo textField($form,$product,'made',$roleMatrix,$tableName,'made');?>
 					<? echo textField($form,$product,'model',$roleMatrix,$tableName,'model');?>

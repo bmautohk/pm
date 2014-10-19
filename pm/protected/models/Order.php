@@ -1,20 +1,19 @@
 <?php
 
 /**
- * This is the model class for table "role_matrix".
+ * This is the model class for table "order".
  *
- * The followings are the available columns in table 'role_matrix':
+ * The followings are the available columns in table 'order':
  * @property integer $id
- * @property string $role_code
- * @property string $table_name
- * @property string $column_name
+ * @property integer $customer_id
+ * @property string $create_date
  */
-class RoleMatrix extends CActiveRecord
+class Order extends CActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return RoleMatrix the static model class
+	 * @return Order the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -26,7 +25,7 @@ class RoleMatrix extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'role_matrix';
+		return 'order';
 	}
 
 	/**
@@ -37,12 +36,12 @@ class RoleMatrix extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('role_code, table_name, column_name', 'required'),
-			array('role_code', 'length', 'max'=>2),
-			array('table_name, column_name', 'length', 'max'=>20),
+			array('customer_id', 'required'),
+			array('id, customer_id', 'numerical', 'integerOnly'=>true),
+			array('id create_by, create_date', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, role_code, table_name, column_name', 'safe', 'on'=>'search'),
+			array('id, customer_id, create_date', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -54,6 +53,7 @@ class RoleMatrix extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'customer'=>array(self::BELONGS_TO, 'Customer', 'customer_id')
 		);
 	}
 
@@ -64,9 +64,8 @@ class RoleMatrix extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'role_code' => 'Role Code',
-			'table_name' => 'Table Name',
-			'column_name' => 'Column Name',
+			'customer_id' => 'Customer',
+			'create_date' => 'Create Date',
 		);
 	}
 
@@ -82,9 +81,8 @@ class RoleMatrix extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('role_code',$this->role_code,true);
-		$criteria->compare('table_name',$this->table_name,true);
-		$criteria->compare('column_name',$this->column_name,true);
+		$criteria->compare('customer_id',$this->customer_id);
+		$criteria->compare('create_date',$this->create_date,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

@@ -1,4 +1,6 @@
-<? $baseUrl = Yii::app()->request->baseUrl;
+<? 
+$writePermission = GlobalFunction::checkPagePrivilege('customer_management', RolePageMatrix::PERMISSION_WRITE);
+$baseUrl = Yii::app()->request->baseUrl;
 $custGroupOptions = CustGroup::getDropDownFromCache();
 $custGroupOptions[''] = '';
 ?>
@@ -19,7 +21,7 @@ $custGroupOptions[''] = '';
 		<? $this->widget('ResultMessage', array('msg'=>$msg)); ?>
 		<br>
 		
-		<? if (GlobalFunction::isAdmin()) {?>
+		<? if ($writePermission) {?>
 	 	<div>
 	 		<input type="button" onclick="location.href='<?=Yii::app()->createUrl('customer/import') ?>'" value="<? echo Yii::t('customer_message', 'import_customer'); ?>" />
 	 		<input type="button" onclick="location.href='<?=Yii::app()->createUrl('customer/export') ?>'" value="<? echo Yii::t('customer_message', 'export_customer'); ?>" /><br />

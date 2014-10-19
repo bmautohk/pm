@@ -6,6 +6,18 @@ class CartForm extends CFormModel {
 	
 	public $message;
 	
+	public $customer_id;
+	
+	public $action;
+	
+	public function rules() {
+		// NOTE: you should only define rules for those attributes that
+		// will receive user inputs.
+		return array(
+				array('message, customer_id, action', 'safe'),
+		);
+	}
+	
 	public function addCart($post) {
 		$productSNs = $post['add_to_cart'];
 		
@@ -57,44 +69,60 @@ class CartForm extends CFormModel {
 		return $products;
 	}
 	
-	public function exportCart() {
+	public function clearCart() {
 		$session = new CHttpSession;
 		$session->open();
 		
-		$criteria = new CDbCriteria();
-		$criteria->addInCondition('prod_sn', $session[GlobalConstants::SESSION_CART_PRODUCT]);
-		$criteria->order = 'prod_sn';
-			
-		$model = ProductMaster::model();
-		$model->setDbCriteria($criteria);
-		
-		$products = $model->findAll();
-
-		$this->generateExcel($products);
-		
-		// Add count
-		foreach ($session[GlobalConstants::SESSION_CART_PRODUCT] as $productSN) {
-			$model = ProductCartCount::model()->findByAttributes(array('prod_sn'=>$productSN));
-			if ($model == NULL) {
-				// Create new record
-				$model = new ProductCartCount();
-				$model->prod_sn = $productSN;
-				$model->count = 1;
-				$model->save();
-			} else {
-				// Update existing record
-				$model->count += 1;
-				$model->save();
-			}
-		}
-
 		// Clear seesion
 		$session->remove(GlobalConstants::SESSION_CART_PRODUCT);
 		
 		$session->close();
 	}
 	
-	private function generateExcel($products) {
+	public function exportCart($generateOrder) {
+		$session = new CHttpSession;
+		$session->open();
+		
+		if (empty($session[GlobalConstants::SESSION_CART_PRODUCT])) {
+			$this->message = 'No product in cart!';
+			return false;
+		}
+		
+		// Create Order
+		if ($generateOrder) {
+			$order = new Order();
+			$order->customer_id = $this->customer_id;
+			$order->create_by = Yii::app()->user->name;
+			$order->save();
+			
+			foreach ($session[GlobalConstants::SESSION_CART_PRODUCT] as $productSN) {
+				$orderDetail = new OrderDetail();
+				$orderDetail->order_id = $order->id;
+				$orderDetail->prod_sn = $productSN;
+				$orderDetail->save();
+			}
+		} else {
+			$order = NULL;
+		}
+		
+		// Generate excel
+		$criteria = new CDbCriteria();
+		$criteria->addInCondition('prod_sn', $session[GlobalConstants::SESSION_CART_PRODUCT]);
+		$criteria->order = 'prod_sn';
+		
+		$model = ProductMaster::model();
+		$model->setDbCriteria($criteria);
+		
+		$products = $model->findAll();
+
+		$this->generateExcel($order, $products);
+
+		$session->close();
+		
+		return true;
+	}
+	
+	private function generateExcel($order, $products) {
 		$cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
 		$cacheSettings = array( ' memoryCacheSize ' => '8MB');
 		PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
@@ -126,6 +154,9 @@ class CartForm extends CFormModel {
 				'kaito',
 				'other',
 				'purchase_cost',
+				'business_price',
+				'auction_price',
+				'kaito_price',
 				'buy_date',
 				'receive_date',
 				'factory_date',
@@ -171,16 +202,30 @@ class CartForm extends CFormModel {
 		$sheet = $objPHPExcel->setActiveSheetIndex(0);
 	
 		// Header
+		$rowNo = 1;
+		
+		if ($order != NULL) {
+			// Display Order
+			$sheet->setCellValueByColumnAndRow(0, $rowNo, Yii::t('order_message', 'order_id').':');
+			$sheet->setCellValueByColumnAndRow(1, $rowNo, $order->id);
+			
+			$rowNo++;
+			$sheet->setCellValueByColumnAndRow(0, $rowNo, Yii::t('order_message', 'customer_name').':');
+			$sheet->setCellValueByColumnAndRow(1, $rowNo, $order->customer->name);
+			
+			$rowNo++;
+			$rowNo++;
+		}
+		
 		$i = 0;
 		foreach ($columnNames as $columnName) {
-			$sheet->setCellValueByColumnAndRow($i++, 1, Yii::t('product_message', $columnName));
+			$sheet->setCellValueByColumnAndRow($i++, $rowNo, Yii::t('product_message', $columnName));
 			
 			if (in_array($columnName, $dateColumnNames)) {
 				$sheet->getStyleByColumnAndRow($i-1)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
 			}
 		}
 		
-		$rowNo = 1;
 		foreach($products as $product) {
 			$i = 0;
 			$rowNo++;
@@ -198,7 +243,11 @@ class CartForm extends CFormModel {
 		}
 		
 		header("Content-type:application/vnd.ms-excel;charset=euc");
-		header('Content-Disposition: attachment;filename="product.xls"');
+		if ($order != NULL) {
+			header('Content-Disposition: attachment;filename="order_'.$order->id.'.xls"');
+		} else {
+			header('Content-Disposition: attachment;filename="product'.$order->id.'.xls"');
+		}
 		header('Cache-Control: max-age=0');
 	
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

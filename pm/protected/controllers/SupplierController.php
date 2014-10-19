@@ -13,12 +13,8 @@ class SupplierController extends Controller {
 	}
 	
 	public function filterAccessControl($filterChain) {
-		if (!GlobalFunction::isAdmin()) {
-			$this->redirect(Yii::app()->createUrl('site/noPermission'));
-		}
-		else {
-			$filterChain->run();
-		}
+		$this->checkPrivilege('supplier_management');
+		$filterChain->run();
 	}
 	
 	public function actionIndex() {
@@ -34,6 +30,8 @@ class SupplierController extends Controller {
 	
 // Add function
 	public function actionAdd() {
+		$this->checkPrivilege('supplier_management', RolePageMatrix::PERMISSION_WRITE);
+		
 		$model = new MaintSupplierForm('add');
 	
 		if ($_POST['action']) {
@@ -59,6 +57,8 @@ class SupplierController extends Controller {
 		$model = new MaintSupplierForm('update');
 
 		if ($_POST['action']) {
+			$this->checkPrivilege('supplier_management', RolePageMatrix::PERMISSION_WRITE);
+			
 			// Update Supplier
 			$model->attributes = $_POST['MaintSupplierForm'];
 			if ($model->update()) {
@@ -99,6 +99,8 @@ class SupplierController extends Controller {
 	
 // Delete function
 	public function actionDelete() {
+		$this->checkPrivilege('supplier_management', RolePageMatrix::PERMISSION_WRITE);
+		
 		$id = $_GET['id'];
 		
 		$model = new MaintSupplierForm('delete');
@@ -133,5 +135,40 @@ class SupplierController extends Controller {
 		$session->remove(SESSION_CURR_PAGE);
 		
 		$this->render('list', $attr);
+	}
+	
+// Import function
+	public function actionImport() {
+		$model = new ImportSupplierForm;
+	
+		if(isset($_POST['ImportSupplierForm'])) {
+			$model->attributes = $_POST['ImportSupplierForm'];
+			$model->uplFile = CUploadedFile::getInstance($model,'uplFile');
+				
+			$result = $model->import();
+			if ($result[0]) {
+				// Success
+				$successMsg = 'Supplier list is imported successfully!';
+			}
+			else {
+				// Fail
+				foreach($result[1] as $rowNo=>$supplier) {
+					foreach($supplier->errors as $fieldInfo) {
+						foreach($fieldInfo as $error) {
+							$errorMsg .= 'Row['.$rowNo.']: '.$error.'<br>';
+						}
+					}
+				}
+			}
+		}
+	
+		$this->render('import', array('model'=>$model, 'msg'=>array('success'=>$successMsg, 'error'=>$errorMsg)));
+	}
+	
+// Export function
+	public function actionExport() {
+		$model = new ExportSupplierForm;
+	
+		$model->export();
 	}
 }

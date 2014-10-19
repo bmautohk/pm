@@ -10,53 +10,59 @@ class RoleMatrixController extends Controller {
 	}
 	
 	public function filterAccessControl($filterChain) {
-		if (!GlobalFunction::isAdmin()) {
-			$this->redirect(Yii::app()->createUrl('site/noPermission'));
-		}
-		else {
-			$filterChain->run();
-		}
+		$this->checkPrivilege('role_matrix');
+		$filterChain->run();
 	}
 	
 	public function actionIndex($msg=NULL) {
 		$model = new MaintRoleMatrixForm();
-		$model->hasRight = array();
+		$model->initColumnMatrixAction();
 		
-		$roles = Role::model()->findAll("role_code <> 'AD' ");
-		foreach ($roles as $role) {
-			$model->hasRight[$role->role_code] = array();
-		}
-		
-		$roleMatrixes = RoleMatrix::model()->findAll();
-		foreach ($roleMatrixes as $roleMatrix) {
-			$model->hasRight[$roleMatrix->role_code][$roleMatrix->column_name] = 'Y';
-		}
-		
-		$this->render('maint', array('model'=>$model, 'roles'=>$roles, 'msg'=>$msg));
+		$this->render('role_column_matrix', array('model'=>$model, 'msg'=>$msg));
 	}
 	
-	public function actionUpdate() {
+	public function actionChangeView() {
+		$model = new MaintRoleMatrixForm();
+		$model->action = $_REQUEST['MaintRoleMatrixForm']['action'];
+
+		if  ($model->action == 'column') {
+			$model->initColumnMatrixAction();
+			$this->render('role_column_matrix', array('model'=>$model, 'msg'=>$msg));
+		} else {
+			$model->initPageMatrixAction();
+			$this->render('role_page_matrix', array('model'=>$model, 'msg'=>$msg));
+		}
+	}
+	
+	public function actionUpdateColumnMatrix() {
+		$this->checkPrivilege('role_matrix', RolePageMatrix::PERMISSION_WRITE);
+		
+		$model = new MaintRoleMatrixForm();
 		$msg = array();
 		
 		if (isset($_POST['action'])) {
-			$hasRights = $_POST['hasRight'];
-			
-			// Truncate role matrix
-			$command = Yii::app()->db->createCommand();
-			$command->truncateTable('role_matrix');
-			
-			foreach ($hasRights as $role_code=>$columns) {
-				foreach($columns as $column=>$value) {
-					$roleMatrix = new RoleMatrix();
-					$roleMatrix->role_code = $role_code;
-					$roleMatrix->table_name = 'product_master';
-					$roleMatrix->column_name = $column;
-					$roleMatrix->save();
-				}
-			}
-			
-			$msg = array('success'=>'The role matrix is updated successfully!');
+			$form = new MaintRoleMatrixForm();
+			$form->saveColumnMatrixAction($_POST);
+			$msg = array('success'=>'The role column matrix is updated successfully!');
 		}
-		$this->actionIndex($msg);
+		
+		$model->initColumnMatrixAction();
+		$this->render('role_column_matrix', array('model'=>$model, 'msg'=>$msg));
+	}
+	
+	public function actionUpdatePageMatrix() {
+		$this->checkPrivilege('role_matrix', RolePageMatrix::PERMISSION_WRITE);
+		
+		$model = new MaintRoleMatrixForm();
+		$msg = array();
+		
+		if (isset($_POST['action'])) {
+			$form = new MaintRoleMatrixForm();
+			$form->savePageMatrixAction($_POST);
+			$msg = array('success'=>'The role page matrix is updated successfully!');
+		}
+		
+		$model->initPageMatrixAction();
+		$this->render('role_page_matrix', array('model'=>$model, 'msg'=>$msg));
 	}
 }

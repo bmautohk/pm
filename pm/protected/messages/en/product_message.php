@@ -22,6 +22,9 @@ return array (
 		'cost' => ' 供应商報價', // 供应商報價
 		'kaito' => '海渡價', // 海渡價
 		'other' => '其它價', // 其它價
+		'business_price' => '營業值段',
+		'auction_price' => 'Auction值段',
+		'kaito_price' => '海渡定價',
 		'buy_date' => '訂原件時間', // 訂原件時間
 		'receive_date' => '原件收到日期', // 原件收到日期
 		'supplier' => '供應商', // 供應商
@@ -40,5 +43,6 @@ return array (
 		'company_remark' => '公司內部備忘', // 公司內部備忘
 		'produce_status' => '生產狀態',
 		'is_monopoly' => '专卖?',
+		'order_id' => 'Order ID',
 );
 ?>

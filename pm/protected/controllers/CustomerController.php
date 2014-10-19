@@ -13,12 +13,8 @@ class CustomerController extends Controller {
 	}
 	
 	public function filterAccessControl($filterChain) {
-		if (!GlobalFunction::isAdmin()) {
-			$this->redirect(Yii::app()->createUrl('site/noPermission'));
-		}
-		else {
-			$filterChain->run();
-		}
+		$this->checkPrivilege('customer_management');
+		$filterChain->run();
 	}
 	
 	public function actionIndex() {
@@ -34,6 +30,8 @@ class CustomerController extends Controller {
 	
 // Add function
 	public function actionAdd() {
+		$this->checkPrivilege('customer_management', RolePageMatrix::PERMISSION_WRITE);
+		
 		$model = new MaintCustomerForm('add');
 	
 		if ($_POST['action']) {
@@ -59,6 +57,8 @@ class CustomerController extends Controller {
 		$model = new MaintCustomerForm('update');
 
 		if ($_POST['action']) {
+			$this->checkPrivilege('customer_management', RolePageMatrix::PERMISSION_WRITE);
+			
 			// Update customer
 			$model->attributes = $_POST['MaintCustomerForm'];
 			if ($model->update()) {
@@ -99,6 +99,8 @@ class CustomerController extends Controller {
 	
 // Delete function
 	public function actionDelete() {
+		$this->checkPrivilege('customer_management', RolePageMatrix::PERMISSION_WRITE);
+		
 		$id = $_GET['id'];
 		
 		$model = new MaintCustomerForm('delete');
@@ -144,6 +146,8 @@ class CustomerController extends Controller {
 	
 // Import function
 	public function actionImport() {
+		$this->checkPrivilege('customer_management', RolePageMatrix::PERMISSION_WRITE);
+		
 		$model = new ImportCustomerForm;
 	
 		if(isset($_POST['ImportCustomerForm'])) {

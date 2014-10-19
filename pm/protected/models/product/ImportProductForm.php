@@ -41,6 +41,7 @@ class ImportProductForm extends CFormModel {
 		
 		$products = array();
 		$failProducts = array();
+		$no_jp_array = array();
 		$today = date('Y-m-d');
 		$worksheet = $objPHPExcel->getActiveSheet();
 		foreach ($worksheet->getRowIterator() as $row) {
@@ -79,6 +80,9 @@ class ImportProductForm extends CFormModel {
 			$product->kaito = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
 			$product->other = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
 			$product->purchase_cost = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
+			$product->business_price = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
+			$product->auction_price = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
+			$product->kaito_price = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
 			$product->buy_date = $this->getFormatDate($worksheet->getCellByColumnAndRow($i++, $rowNo));
 			$product->receive_date = $this->getFormatDate($worksheet->getCellByColumnAndRow($i++, $rowNo));
 			$product->factory_date = $this->getFormatDate($worksheet->getCellByColumnAndRow($i++, $rowNo));
@@ -99,6 +103,12 @@ class ImportProductForm extends CFormModel {
 			if (!$product->validate()) {
 				$failProducts[$rowNo] = $product;
 				$isValid = false;
+			}  else if (array_key_exists($product->no_jp, $no_jp_array)) {
+				$failProducts[$rowNo] = $product;
+				$product->addError('no_jp', '品番 "'.$product->no_jp.'" has already been taken.');
+				$isValid = false;
+			} else {
+				$no_jp_array[$product->no_jp] = '';
 			}
 
 			$products[] = $product;

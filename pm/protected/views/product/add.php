@@ -132,7 +132,18 @@ if (!in_array($model->made, $mades)) {
 			
 			<div class="grid-c1">
 				<span class="input_label"><? echo Yii::t('product_message', 'purchase_cost'); ?></span><span class="input_field"><? echo $form->textField($model,'purchase_cost'); ?></span>
-				
+			</div>
+			
+			<div class="grid-c1">
+				<span class="input_label"><? echo Yii::t('product_message', 'business_price'); ?></span><span class="input_field"><? echo $form->textField($model,'business_price'); ?></span>
+			</div>
+			
+			<div class="grid-c1">
+				<span class="input_label"><? echo Yii::t('product_message', 'auction_price'); ?></span><span class="input_field"><? echo $form->textField($model,'auction_price'); ?></span>
+			</div>
+			
+			<div class="grid-c1">
+				<span class="input_label"><? echo Yii::t('product_message', 'kaito_price'); ?></span><span class="input_field"><? echo $form->textField($model,'kaito_price'); ?></span>
 			</div>
 			
 			<div class="grid-c1">

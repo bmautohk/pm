@@ -10,6 +10,8 @@ $baseUrl = Yii::app()->request->baseUrl;
 $mades =  Made::getDropDownFromCache();
 
 $displayFormat = GlobalFunction::getDisplayFormat();
+
+$roleMatrix = Yii::app()->user->getState('role_matrix');
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
@@ -33,22 +35,51 @@ $displayFormat = GlobalFunction::getDisplayFormat();
 
 		<div id="body_left_main">
 			<div id="logo_main"><a href="<?=$baseUrl ?>/product"><img src="<?php echo Yii::app()->request->baseUrl; ?>/images/logo.png"/></a></div>
-			<? if ($displayFormat == GlobalConstants::DISPLAY_FORMAT_EXCEL) {?>
-				<a class="menubar" href="<?=$baseUrl ?>/product/changeDisplayFormat">Show Grid Format</a>
-			<? } else {?>
-				<a class="menubar" href="<?=$baseUrl ?>/product/changeDisplayFormat">Show Excel Format</a>
+			
+			<? if (GlobalFunction::checkPagePrivilege('product_management')) {
+				if ($displayFormat == GlobalConstants::DISPLAY_FORMAT_EXCEL) {?>
+					<a class="menubar" href="<?=$baseUrl ?>/product/changeDisplayFormat">Show Grid Format</a>
+				<? } else {?>
+					<a class="menubar" href="<?=$baseUrl ?>/product/changeDisplayFormat">Show Excel Format</a>
+				<? } ?>
+				<? foreach ($mades as $made) {?>
+					<a class="menubar" href="<?=$baseUrl ?>/product/searchByFilter?ProductSearchForm%5Bmade%5D=<?=$made ?>"><?=$made ?></a>
+				<? } ?>
+				<a class="menubar" href="<?=$baseUrl ?>/product/showNotFinishItem">Show Not Finish Item</a>
 			<? } ?>
-			<? foreach ($mades as $made) {?>
-				<a class="menubar" href="<?=$baseUrl ?>/product/searchByFilter?ProductSearchForm%5Bmade%5D=<?=$made ?>"><?=$made ?></a>
-			<? } ?>
-			<a class="menubar" href="<?=$baseUrl ?>/product/showNotFinishItem">Show Not Finish Item</a>
-			<? if (GlobalFunction::isAdmin()) { ?>
+			
+			<? if (GlobalFunction::checkPagePrivilege('customer_management')) { ?>
 				<a class="menubar" href="<?=$baseUrl ?>/customer">Customer Management</a>
+			<? } ?>
+			
+			<? if (GlobalFunction::checkPagePrivilege('supplier_management')) { ?>
 				<a class="menubar" href="<?=$baseUrl ?>/supplier">Supplier Management</a>
+			<? } ?>
+			
+			<? if (GlobalFunction::checkPagePrivilege('order_management')) { ?>
+				<a class="menubar" href="<?=$baseUrl ?>/order">Order Management</a>
+			<? } ?>
+			
+			<? if (GlobalFunction::checkPagePrivilege('user_management')) { ?>
 				<a class="menubar" href="<?=$baseUrl ?>/user">User Management</a>
+			<? } ?>
+			
+			<? if (GlobalFunction::checkPagePrivilege('role_management')) { ?>
 				<a class="menubar" href="<?=$baseUrl ?>/role">Role Management</a>
+			<? } ?>
+			
+			<? if (GlobalFunction::checkPagePrivilege('role_matrix')) { ?>
 				<a class="menubar" href="<?=$baseUrl ?>/roleMatrix">Role Matrix</a>
 			<? } ?>
+			
+			<? if (GlobalFunction::checkPagePrivilege('product_change_log')) { ?>
+				<a class="menubar" href="<?=$baseUrl ?>/productChangeLog">Product Change Log</a>
+			<? } ?>
+			
+			<? if (GlobalFunction::checkPagePrivilege('email_management')) { ?>
+				<a class="menubar" href="<?=$baseUrl ?>/email/list">Email Management</a>
+			<? } ?>
+			
 		</div>
 		<div id="body_right_main">
 			<?php echo $content; ?>

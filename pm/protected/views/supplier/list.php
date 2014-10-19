@@ -1,11 +1,22 @@
-<? $baseUrl = Yii::app()->request->baseUrl; ?>
+<?
+$baseUrl = Yii::app()->request->baseUrl;
+$writePermission = GlobalFunction::checkPagePrivilege('supplier_management', RolePageMatrix::PERMISSION_WRITE);
+?>
 <div id="rightmain">
 	<div class="rightmain_content">
 		<? $this->widget('ResultMessage', array('msg'=>$msg)); ?>
 		<br>
-	 	<div>
-	 		<input type="button" onclick="location.href='<?=Yii::app()->createUrl('supplier/add') ?>'" value="<? echo Yii::t('supplier_message', 'add_supplier'); ?>" />
-	 	</div>
+		
+		<? if ($writePermission) { ?>
+			<div>
+	 			<input type="button" onclick="location.href='<?=Yii::app()->createUrl('supplier/import') ?>'" value="<? echo Yii::t('supplier_message', 'import_excel'); ?>" />
+	 			<input type="button" onclick="location.href='<?=Yii::app()->createUrl('supplier/export') ?>'" value="<? echo Yii::t('supplier_message', 'export_excel'); ?>" />
+	 		</div>
+		
+		 	<div>
+		 		<input type="button" onclick="location.href='<?=Yii::app()->createUrl('supplier/add') ?>'" value="<? echo Yii::t('supplier_message', 'add_supplier'); ?>" />
+		 	</div>
+	 	<? } ?>
 	 	
 	 	<!-- Serach Criteria -->
 		<?php $form=$this->beginWidget('CActiveForm', array(
@@ -22,7 +33,7 @@
 				</div>
 				<div class="grid_s-m2"></div>
 				<div class="grid_s-c2">
-					<span class="input_label_s"><? echo Yii::t('supplier_message', 'supplier_cd'); ?></span><span class="input_field"><? echo $form->textField($model, 'supplier_cd'); ?></span>
+					<span class="input_label_s"><? echo Yii::t('supplier_message', 'supplier_id'); ?></span><span class="input_field"><? echo $form->textField($model, 'supplier_id'); ?></span>
 				</div>
 				
 				<div class="grid_s-c1">
@@ -46,7 +57,7 @@
 				</div>
 				<div class="grid_s-m2"></div>
 				<div class="grid_s-c2">
-					<span class="input_label_s"><? echo Yii::t('supplier_message', 'remark'); ?></span><span class="input_field"><? echo $form->textField($model, 'remark'); ?></span>
+					<span class="input_label_s"><? echo Yii::t('supplier_message', 'notice'); ?></span><span class="input_field"><? echo $form->textField($model, 'notice'); ?></span>
 				</div>
 				
 				<div class="grid_s-c1">
@@ -106,6 +117,7 @@
 			<input type="hidden" name="id" id="id" />
 			<?
 			echo $form->hiddenField($model,'name');
+			echo $form->hiddenField($model,'supplier_id');
 			echo $form->hiddenField($model,'supplier_cd');
 			echo $form->hiddenField($model,'tel');
 			echo $form->hiddenField($model,'email');
@@ -114,7 +126,7 @@
 			echo $form->hiddenField($model,'mobile');
 			echo $form->hiddenField($model,'qq');
 			echo $form->hiddenField($model,'other_contact');
-			echo $form->hiddenField($model,'remark');
+			echo $form->hiddenField($model,'notice');
 			echo $form->hiddenField($model,'bank');
 			echo $form->hiddenField($model,'open_account');
 			echo $form->hiddenField($model,'account_owner');

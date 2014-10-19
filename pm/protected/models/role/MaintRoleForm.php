@@ -68,7 +68,8 @@ class MaintRoleForm extends CFormModel {
 			Authorize::model()->updateAll(array('role_code'=>''), $criteria);
 			
 			// Delete role matrix
-			RoleMatrix::model()->deleteAll($criteria);
+			RoleColumnMatrix::model()->deleteAll($criteria);
+			RolePageMatrix::model()->deleteAll($criteria);
 			
 			// Delete role
 			$model = Role::model()->findByPk($this->role_code);

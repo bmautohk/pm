@@ -1,3 +1,4 @@
+<? $writePermission = GlobalFunction::checkPagePrivilege('supplier_management', RolePageMatrix::PERMISSION_WRITE); ?>
 <div class="rightmain_content">
 	<? $this->widget('ResultMessage', array('msg'=>$msg)); ?>
 	
@@ -20,9 +21,13 @@
 		<div style="width:400px">
 			<? if ($action != 'add') {?>
 				<div class="grid-c1">
-					<span class="input_label"><? echo Yii::t('supplier_message', 'supplier_cd'); ?></span><span class="input_field"><? echo $form->textField($model, 'supplier_cd', array('readonly'=>true)); ?></span>
+					<span class="input_label"><? echo Yii::t('supplier_message', 'supplier_id'); ?></span><span class="input_field"><? echo $form->textField($model, 'id', array('readonly'=>true)); ?></span>
 				</div>
 			<? }?>
+			
+			<div class="grid-c1">
+				<span class="input_label"><? echo Yii::t('supplier_message', 'supplier_cd'); ?></span><span class="input_field"><? echo $form->textField($model, 'supplier_cd'); ?></span>
+			</div>
 		
 			<div class="grid-c1">
 				<span class="input_label"><? echo Yii::t('supplier_message', 'name'); ?></span><span class="input_field"><? echo $form->textField($model, 'name'); ?></span>
@@ -49,7 +54,7 @@
 			</div>
 			
 			<div class="grid-c1">
-				<span class="input_label"><? echo Yii::t('supplier_message', 'remark'); ?></span><span class="input_field"><? echo $form->textField($model, 'remark'); ?></span>
+				<span class="input_label"><? echo Yii::t('supplier_message', 'notice'); ?></span><span class="input_field"><? echo $form->textField($model, 'notice'); ?></span>
 			</div>
 			
 			<div class="grid-c1">
@@ -80,14 +85,20 @@
 				<span class="input_label"><? echo Yii::t('supplier_message', 'email'); ?></span><span class="input_field"><? echo $form->textField($model, 'email'); ?></span>
 			</div>
 			
+			<div class="grid-c1">
+				<span class="input_label"><? echo Yii::t('supplier_message', 'remark'); ?></span><span class="input_field"><? echo $form->textField($model, 'remark'); ?></span>
+			</div>
+			
 			<br style="clear:both" />
 		</div>
 		
-		<? if ($action == 'add') {?>
-			<input class="searchBtn" type="submit" name="action" value="<? echo Yii::t('common_message', 'add'); ?>" />
-		<? } else {?>
-			<input class="searchBtn" type="submit" name="action" value="<? echo Yii::t('common_message', 'update'); ?>" />
-		<? } ?>
+		<? if ($writePermission) {
+			if ($action == 'add') {?>
+				<input class="searchBtn" type="submit" name="action" value="<? echo Yii::t('common_message', 'add'); ?>" />
+			<? } else {?>
+				<input class="searchBtn" type="submit" name="action" value="<? echo Yii::t('common_message', 'update'); ?>" />
+		<? }
+		} ?>
 		<input class="searchBtn" type="button" onclick="back()" value="<? echo Yii::t('common_message', 'back'); ?>" />
 		
 	<? $this->endWidget(); ?>

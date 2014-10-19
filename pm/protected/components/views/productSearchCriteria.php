@@ -1,22 +1,26 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/jquery-ui.min.js"></script>
 <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/smoothness/jquery-ui.css" />
 
-<!--style>
-.ui-widget-content a {
-	color:white;
-}
-</style-->
-
-<? $model = $this->searchForm; ?>
+<?
+$model = $this->searchForm;
+$roleMatrix = Yii::app()->user->getState('role_matrix');
+?>
 
 	<br>
-	<? if (GlobalFunction::isAdmin()) {?>
+	
  	<div>
- 		<input type="button" onclick="location.href='<?=Yii::app()->createUrl('product/import') ?>'" value="<? echo Yii::t('common_message', 'import_product'); ?>" />
- 		<input type="button" onclick="location.href='<?=Yii::app()->createUrl('product/export') ?>'" value="<? echo Yii::t('common_message', 'export_product'); ?>" /><br>
-		<input type="button" onclick="location.href='<?=Yii::app()->createUrl('product/add') ?>'" value="<? echo Yii::t('common_message', 'add_product'); ?>" /><br><br>
+ 		<? if (GlobalFunction::isAdmin()) {?>
+ 			<input type="button" onclick="location.href='<?=Yii::app()->createUrl('product/import') ?>'" value="<? echo Yii::t('common_message', 'import_product'); ?>" />
+ 		<? } ?>
+ 		
+ 		<? if (GlobalFunction::checkPagePrivilege('export_excel')) { ?>
+ 			<input type="button" onclick="location.href='<?=Yii::app()->createUrl('product/export') ?>'" value="<? echo Yii::t('common_message', 'export_product'); ?>" /><br>
+ 		<? } ?>
+ 		
+ 		<? if (GlobalFunction::checkPagePrivilege('product_management_add_product', RolePageMatrix::PERMISSION_WRITE)) {?>
+			<input type="button" onclick="location.href='<?=Yii::app()->createUrl('product/add') ?>'" value="<? echo Yii::t('common_message', 'add_product'); ?>" /><br><br>
+		<? } ?>
 	</div>
-	<? } ?>
 	 
 	<? 
 		$form=$this->beginWidget('CActiveForm', array(

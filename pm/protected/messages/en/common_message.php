@@ -18,7 +18,9 @@ return array (
 		'download' => '下載',
 		'add_to_cart' => 'Add to Cart',
 		'checkout_cart' => 'Checkout Cart',
-		'export_cart' => 'Export',
+		'generate_order' => 'Generate Order',
+		'export_excel' => 'Export Excel',
+		'clear_cart' => 'Clear Cart',
 		
 		// produce status
 		'produce_status_prepare' => '准备中',

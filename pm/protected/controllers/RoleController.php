@@ -10,12 +10,8 @@ class RoleController extends Controller {
 	}
 	
 	public function filterAccessControl($filterChain) {
-		if (!GlobalFunction::isAdmin()) {
-			$this->redirect(Yii::app()->createUrl('site/noPermission'));
-		}
-		else {
-			$filterChain->run();
-		}
+		$this->checkPrivilege('role_management');
+		$filterChain->run();
 	}
 	
 	public function actionIndex($msg=NULL) {
@@ -24,6 +20,8 @@ class RoleController extends Controller {
 	}
 	
 	public function actionAdd() {
+		$this->checkPrivilege('role_management', RolePageMatrix::PERMISSION_WRITE);
+		
 		$model = new MaintRoleForm('add');
 		
 		if ($_POST['action']) {
@@ -44,9 +42,12 @@ class RoleController extends Controller {
 	}
 	
 	public function actionUpdate() {
+		
 		$model = new MaintRoleForm('update');
 		
 		if ($_POST['action']) {
+			$this->checkPrivilege('role_management', RolePageMatrix::PERMISSION_WRITE);
+			
 			// Update role
 			$model->attributes = $_POST['MaintRoleForm'];
 			if ($model->update()) {
@@ -68,6 +69,8 @@ class RoleController extends Controller {
 	}
 	
 	public function actionDelete() {
+		$this->checkPrivilege('role_management', RolePageMatrix::PERMISSION_WRITE);
+		
 		$model = new MaintRoleForm('delete');
 		$model->attributes = $_POST['MaintRoleForm'];
 		

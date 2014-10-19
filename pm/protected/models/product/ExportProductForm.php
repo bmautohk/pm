@@ -18,7 +18,121 @@ class ExportProductForm extends CFormModel {
 		$this->generateExcel($products);
 	}
 	
-	public function generateExcel($products) {
+	private function generateExcel($products) {
+		$cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
+		$cacheSettings = array( ' memoryCacheSize ' => '8MB');
+		PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
+	
+		$columnNames = array(
+				'customer',
+				'prod_sn',
+				'status',
+				'no_jp',
+				'factory_no',
+				'made',
+				'model',
+				'model_no',
+				'year',
+				'item_group',
+				'material',
+				'product_desc',
+				'product_desc_ch',
+				'product_desc_jp',
+				'accessory_remark',
+				'company_remark',
+				'pcs',
+				'colour',
+				'colour_no',
+				'supplier',
+				'molding',
+				'moq',
+				'cost',
+				'kaito',
+				'other',
+				'purchase_cost',
+				'business_price',
+				'auction_price',
+				'kaito_price',
+				'buy_date',
+				'receive_date',
+				'factory_date',
+				'pack_remark',
+				'order_date',
+				'progress',
+				'receive_model_date',
+				'person_in_charge',
+				'state',
+				'ship_date',
+				'market_research_price',
+				'yahoo_produce',
+				'produce_status',
+				'is_monopoly'
+		);
+	
+		$dateColumnNames = array(
+				'buy_date',
+				'receive_date',
+				'factory_date',
+				'order_date',
+				'receive_model_date',
+				'ship_date'
+		);
+	
+		$roleMatrix = Yii::app()->user->getState('role_matrix');
+		foreach ($columnNames as $idx=>$columnName) {
+			if (!GlobalFunction::checkPrivilege($roleMatrix, 'product_master', $columnName)) {
+				unset($columnNames[$idx]);
+			}
+		}
+	
+		// Output to excel
+		// Create new PHPExcel object
+		$objPHPExcel = new PHPExcel();
+	
+		// Set properties
+		$objPHPExcel->getProperties()->setCreator("BM AUTO")
+		->setLastModifiedBy("BM AUTO")
+		->setTitle("Product");
+	
+		$sheet = $objPHPExcel->setActiveSheetIndex(0);
+	
+		// Header
+		$rowNo = 1;
+
+		$i = 0;
+		foreach ($columnNames as $columnName) {
+			$sheet->setCellValueByColumnAndRow($i++, $rowNo, Yii::t('product_message', $columnName));
+				
+			if (in_array($columnName, $dateColumnNames)) {
+				$sheet->getStyleByColumnAndRow($i-1)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
+			}
+		}
+	
+		foreach($products as $product) {
+			$i = 0;
+			$rowNo++;
+			foreach ($columnNames as $columnName) {
+				if ($columnName == 'status') {
+					$sheet->setCellValueExplicitByColumnAndRow($i++, $rowNo, $product['status'] == 'A' ? 'OK' : '');
+				} else if ($columnName == 'is_monopoly') {
+					$sheet->setCellValueExplicitByColumnAndRow($i++, $rowNo, $product['is_monopoly'] == 0 ? 'No' : 'Yes');
+				} else if (in_array($columnName, $dateColumnNames)) {
+					$sheet->setCellValueByColumnAndRow($i++, $rowNo, ExportProductForm::strToExcelDate($product[$columnName]));
+				} else {
+					$sheet->setCellValueExplicitByColumnAndRow($i++, $rowNo, $product[$columnName]);
+				}
+			}
+		}
+	
+		header("Content-type:application/vnd.ms-excel;charset=utf8");
+		header('Content-Disposition: attachment;filename="product.xls"');
+		header('Cache-Control: max-age=0');
+	
+		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+		$objWriter->save('php://output');
+	}
+	
+	public function generateExcel_bak($products) {
 		$cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
 		$cacheSettings = array( ' memoryCacheSize ' => '8MB');
 		PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
@@ -62,6 +176,9 @@ class ExportProductForm extends CFormModel {
 		->setCellValueByColumnAndRow($i++, 1, '海渡價')
 		->setCellValueByColumnAndRow($i++, 1, '其它價')
 		->setCellValueByColumnAndRow($i++, 1, '原件樣品採購價')
+		->setCellValueByColumnAndRow($i++, 1, Yii::t('product_message', business_price))
+		->setCellValueByColumnAndRow($i++, 1, Yii::t('product_message', auction_price))
+		->setCellValueByColumnAndRow($i++, 1, Yii::t('product_message', kaito_price))
 		->setCellValueByColumnAndRow($i++, 1, '訂原件時間')
 		->setCellValueByColumnAndRow($i++, 1, '原件收到日期')
 		->setCellValueByColumnAndRow($i++, 1, '原件到廠日期')
@@ -78,12 +195,12 @@ class ExportProductForm extends CFormModel {
 		->setCellValueByColumnAndRow($i++, 1, Yii::t('product_message', 'is_monopoly'))
 		;
 		
-		$sheet->getStyle('AA')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
-		$sheet->getStyle('AB')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
-		$sheet->getStyle('AC')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
+		$sheet->getStyle('AD')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
 		$sheet->getStyle('AE')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
-		$sheet->getStyle('AG')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
+		$sheet->getStyle('AF')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
+		$sheet->getStyle('AH')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
 		$sheet->getStyle('AJ')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
+		$sheet->getStyle('AM')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
 		
 		
 		$rowNo = 1;
@@ -146,6 +263,9 @@ class ExportProductForm extends CFormModel {
 			$sheet->setCellValueByColumnAndRow($i++, $rowNo, $product['kaito']);
 			$sheet->setCellValueByColumnAndRow($i++, $rowNo, $product['other']);
 			$sheet->setCellValueByColumnAndRow($i++, $rowNo, $product['purchase_cost']);
+			$sheet->setCellValueByColumnAndRow($i++, $rowNo, $product['business_price']);
+			$sheet->setCellValueByColumnAndRow($i++, $rowNo, $product['auction_price']);
+			$sheet->setCellValueByColumnAndRow($i++, $rowNo, $product['kaito_price']);
 				
 			//$sheet->getStyleByColumnAndRow($i, $rowNo)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
 			$sheet->setCellValueByColumnAndRow($i++, $rowNo, ExportProductForm::strToExcelDate($product['buy_date']));

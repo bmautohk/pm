@@ -3,6 +3,17 @@ Yii::import('application.models.product.*');
 
 class ProductController extends Controller {
 	
+	public function filters() {
+		return array(
+				'accessControl'
+		);
+	}
+	
+	public function filterAccessControl($filterChain) {
+		$this->checkPrivilege('product_management');
+		$filterChain->run();
+	}
+	
 	public function actionIndex() {
 		$attr = $this->requestAttrForProductSearch(new ProductSearchForm, 'searchByFilter');
 		$this->render('list', $attr);
@@ -74,9 +85,10 @@ class ProductController extends Controller {
 // Add function
 	public function actionAdd() {
 		// Check authorization
-		if (!GlobalFunction::isAdmin()) {
+		$this->checkPrivilege('product_management_add_product', RolePageMatrix::PERMISSION_WRITE);
+		/* if (!GlobalFunction::isAdmin()) {
 			$this->redirect(Yii::app()->createUrl('site/noPermission'));
-		}
+		} */
 		
 		$action = 'add';
 		$model = new ProductMaster();
@@ -84,6 +96,7 @@ class ProductController extends Controller {
 		if (isset($_POST['action'])) {
 			// Create product
 			$model->attributes = $_POST['ProductMaster'];
+			$model->setScenario('save');
 			
 			if ($model->save()) {
 				$successMsg = '&#29986;&#21697;S/N ['.$model->prod_sn.'] is created successfully!'; // ���~S/N [XXX] is created successfully!
@@ -120,11 +133,32 @@ class ProductController extends Controller {
 				$this->redirect(Yii::app()->createUrl('site/noPermission'));
 			}
 			
-			$model = $this->loadProductMaster($_POST['ProductMaster']['id']);
+			$form = new ProductMaintForm();
+			if ($form->update($_POST)) {
+				// Go back the search page
+				$session=new CHttpSession;
+				$session->open();
+				$searchModel = new ProductSearchForm();
+				$searchModel->attributes = $session[GlobalConstants::SESSION_PRODUCT_SEARCH_CRITERIA];
+				$attr = $this->searchProductByAttributes($searchModel, 'searchByFilter', $session[GlobalConstants::SESSION_CURR_PAGE] - 1);
+					
+				// Remove session attribute
+				$session->remove(GlobalConstants::SESSION_PRODUCT_SEARCH_CRITERIA);
+				$session->remove(GlobalConstants::SESSION_CURR_PAGE);
+					
+				$this->render('list', array_merge($attr, array('msg'=>array('success'=>$form->message))));
+				return;
+			} else {
+				$errorMsg = $form->message;
+			}
+			
+			$model = $form->product;
+			
+			/* $model = $this->loadProductMaster($_POST['ProductMaster']['id']);
 			$model->attributes = $_POST['ProductMaster'];
 			
 			if ($model->save()) {
-				$successMsg = '&#29986;&#21697;S/N ['.$model->prod_sn.'] is updated successfully!'; // ���~S/N [XXX] is updated successfully!
+				$successMsg = '&#29986;&#21697;S/N ['.$model->prod_sn.'] is updated successfully!'; // S/N [XXX] is updated successfully!
 			
 				// Go back the search page
 				$session=new CHttpSession;
@@ -142,7 +176,7 @@ class ProductController extends Controller {
 			}
 			else {
 				$errorMsg = 'Fail to update product!';
-			}
+			} */
 		}
 		else {
 			// Retrieve product
@@ -207,16 +241,31 @@ class ProductController extends Controller {
 		echo '產品S/N ['.$form->message.'] is/are added to cart.';
 	}
 	
-	public function actionShowCartProduct() {
+	public function actionShowCartProduct($errorMsg = NULL) {
 		$form = new CartForm();
 		$products = $form->getCartProduct();
 		
-		$this->render('checkout_cart', array('items'=>$products));
+		$this->render('checkout_cart', array('model'=>$form, 'items'=>$products, 'msg'=>array('error'=>$errorMsg)));
 	}
 	
 	public function actionExportCart() {
 		$form = new CartForm();
-		$form->exportCart();
+		$form->attributes = $_REQUEST['CartForm'];
+		
+		if ($form->action == 'generate') {
+			if (!$form->exportCart(true)) {
+				$this->actionShowCartProduct($form->message);
+			}
+		} else if ($form->action == 'export') {
+			if (!$form->exportCart(false)) {
+				$this->actionShowCartProduct($form->message);
+			}
+		} else if ($form->action == 'clear') {
+			$form->clearCart();
+			$this->actionShowCartProduct();
+		} else {
+			$this->actionShowCartProduct();
+		}
 	}
 
 	public function actionBack() {

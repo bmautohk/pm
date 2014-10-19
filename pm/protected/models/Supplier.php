@@ -84,7 +84,7 @@ class Supplier extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'name' => 'Name',
-			'supplier_cd' => 'Supplier Cd',
+			'supplier_cd' => 'Supplier Code',
 			'tel' => 'Tel',
 			'email' => 'Email',
 			'address' => 'Address',

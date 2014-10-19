@@ -10,12 +10,8 @@ class UserController extends Controller {
 	}
 	
 	public function filterAccessControl($filterChain) {
-		if (!GlobalFunction::isAdmin()) {
-			$this->redirect(Yii::app()->createUrl('site/noPermission'));
-		}
-		else {
-			$filterChain->run();
-		}
+		$this->checkPrivilege('user_management');
+		$filterChain->run();
 	}
 	
 	public function actionIndex($msg=NULL) {
@@ -24,6 +20,8 @@ class UserController extends Controller {
 	}
 	
 	public function actionAdd() {
+		$this->checkPrivilege('user_management', RolePageMatrix::PERMISSION_WRITE);
+		
 		$model = new MaintUserForm('add');
 		
 		if ($_POST['action']) {
@@ -47,6 +45,8 @@ class UserController extends Controller {
 		$model = new MaintUserForm('update');
 		
 		if ($_POST['action']) {
+			$this->checkPrivilege('user_management', RolePageMatrix::PERMISSION_WRITE);
+			
 			// Update user
 			$model->attributes = $_POST['MaintUserForm'];
 			if ($model->update()) {
@@ -68,6 +68,8 @@ class UserController extends Controller {
 	}
 	
 	public function actionDelete() {
+		$this->checkPrivilege('user_management', RolePageMatrix::PERMISSION_WRITE);
+		
 		$model = new MaintUserForm();
 		$model->attributes = $_POST['MaintUserForm'];
 		

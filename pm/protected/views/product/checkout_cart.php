@@ -1,4 +1,6 @@
 <?
+$hasPermission = GlobalFunction::checkPagePrivilege('email_management');
+
 $hasPrivilege = array();
 
 $GLOBALS['hasPrivilege'] = array();
@@ -33,13 +35,25 @@ function fieldChecking($model, $columnName) {
 		<br>
  		<div class="page_header">Checkout Cart</div>
  		
+ 		<? $this->widget('ResultMessage', array('msg'=>$msg)); ?>
+ 		
  		<?php $form=$this->beginWidget('CActiveForm', array(
 			'id'=>'form1',
-			'action'=>'exportCart',
-			'method'=>'GET'
+			'action'=>'exportCart'
 			)); ?>
+			<? echo $form->hiddenField($model, 'action'); ?>
 			
-			<input type="button" onclick="javascript:exportCart()" value="<? echo Yii::t('common_message', 'export_cart'); ?>" />
+			<input type="button" onclick="javascript:generateOrder()" value="<? echo Yii::t('common_message', 'generate_order'); ?>" />
+			<? if ($hasPermission) { ?>
+				<input type="button" onclick="javascript:exportExcel()" value="<? echo Yii::t('common_message', 'export_excel'); ?>" />
+			<? } ?>
+			<input type="button" onclick="javascript:clearCart()" value="<? echo Yii::t('common_message', 'clear_cart'); ?>" />
+			
+			<br />
+			
+			<div class="grid_u-c1">
+				<span class="input_label"><?=Yii::t('product_message', 'customer') ?></span><? echo $form->dropDownList($model, 'customer_id', Customer::getDropdown()); ?>
+			</div>
 		<? $this->endWidget(); ?>
 		
 		<table id="tbl_cart_product" class="product-excel-style" width="width: 1000px;">
@@ -82,8 +96,18 @@ function fieldChecking($model, $columnName) {
 </div>
 
 <script type="text/javascript">
- 	function exportCart() {
- 	 	$('#tbl_cart_product').empty();
+ 	function generateOrder() {
+ 	 	$('#CartForm_action').val('generate');
+ 	 	$('#form1').submit();
+ 	}
+
+ 	function exportExcel() {
+ 		$('#CartForm_action').val('export');
+ 	 	$('#form1').submit();
+ 	}
+
+ 	function clearCart() {
+ 		$('#CartForm_action').val('clear');
  	 	$('#form1').submit();
  	}
 </script>

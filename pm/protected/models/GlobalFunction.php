@@ -2,7 +2,8 @@
 class GlobalFunction {
 	
 	public static function isAdmin() {
-		return Yii::app()->user->getState('role') == GlobalConstants::ROLE_ADMIN;
+		$role = Yii::app()->user->getState('role');
+		return $role == GlobalConstants::ROLE_ADMIN || $role == GlobalConstants::ROLE_SUPERADMIN;
 	}
 	
 	public static function isSupplier() {
@@ -22,14 +23,23 @@ class GlobalFunction {
 	}
 	
 	public static function checkPrivilege($roleMatrix, $tableName, $columnName) {
-		if (GlobalFunction::isAdmin()) {
-			return true;
-		}
-		else if (isset($roleMatrix[$tableName]) && in_array($columnName, $roleMatrix[$tableName])) {
+		if (isset($roleMatrix[$tableName]) && in_array($columnName, $roleMatrix[$tableName])) {
 			return true;
 		}
 		else {
 			return false;
+		}
+	}
+	
+	public static function checkPagePrivilege($page, $permission=NULL) {
+		$rolePageMatrixes = Yii::app()->user->getState('role_page_matrix');
+		
+		if (!array_key_exists($page, $rolePageMatrixes)) {
+			return false;
+		} else if ($permission != NULL && $rolePageMatrixes[$page] != $permission) {
+			return false;
+		} else {
+			return true;
 		}
 	}
 }

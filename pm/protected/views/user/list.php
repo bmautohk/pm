@@ -1,16 +1,22 @@
-<? $baseUrl = Yii::app()->request->baseUrl; ?>
+<?
+$baseUrl = Yii::app()->request->baseUrl;
+$writePermission = GlobalFunction::checkPagePrivilege('user_management', RolePageMatrix::PERMISSION_WRITE);
+?>
 <div id="rightmain">
 	<div class="rightmain_content">
 		<? $this->widget('ResultMessage', array('msg'=>$msg)); ?>
 		<br>
-	 	<div>
-	 		<input type="button" onclick="location.href='<?=Yii::app()->createUrl('user/add') ?>'" value="<? echo Yii::t('user_message', 'add_user'); ?>" />
-	 	</div>
+		
+		<? if ($writePermission) { ?>
+		 	<div>
+		 		<input type="button" onclick="location.href='<?=Yii::app()->createUrl('user/add') ?>'" value="<? echo Yii::t('user_message', 'add_user'); ?>" />
+		 	</div>
+	 	<? } ?>
 	
 		<table class="product-excel-style">
 			<tr>
 				<th>&nbsp;</th>
-				<th>&nbsp;</th>
+				<? if ($writePermission) { ?><th>&nbsp;</th><? } ?>
 				<th><? echo Yii::t('user_message', 'username'); ?></th>
 				<th><? echo Yii::t('user_message', 'role'); ?></th>
 				<th><? echo Yii::t('user_message', 'supplier'); ?></th>
@@ -19,7 +25,7 @@
 		<? foreach($users as $user) { ?>
 			<tr>
 				<td><input type="button" value="<? echo Yii::t('common_message', 'detail'); ?>" onclick="location.href='<?=Yii::app()->createUrl('user/update?username='.$user->username) ?>';" /></td>
-				<td><input type="button" value="<? echo Yii::t('common_message', 'delete'); ?>" onclick="javascript:goDelete('<?=$user->username ?>')" /></td>
+				<? if ($writePermission) { ?><td><input type="button" value="<? echo Yii::t('common_message', 'delete'); ?>" onclick="javascript:goDelete('<?=$user->username ?>')" /></td><? } ?>
 				<td><?=$user->username ?></td>
 				<td><?=$user->role->role ?></td>
 				<td><?=$user->user_supplier->supplier ?></td>

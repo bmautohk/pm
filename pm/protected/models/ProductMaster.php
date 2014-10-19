@@ -48,6 +48,9 @@ class ProductMaster extends CActiveRecord
 {
 	public $max_prod_sn;
 	
+	const IS_MONOPOLY_NO = 0;
+	const IS_MONOPOLY_YES = 1;
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -76,7 +79,8 @@ class ProductMaster extends CActiveRecord
 		return array(
 			array('prod_sn, made, status, produce_status, is_monopoly', 'required'),
 			array('prod_sn, pcs, moq', 'numerical', 'integerOnly'=>true),
-			array('molding, cost, kaito, other, purchase_cost, market_research_price', 'numerical'),
+			array('no_jp', 'unique', 'on'=>'save'),
+			array('molding, cost, kaito, other, purchase_cost, market_research_price, business_price, auction_price, kaito_price', 'numerical'),
 			array('customer, made, model, model_no, year, item_group, material, colour, colour_no, supplier, progress, person_in_charge, state, yahoo_produce', 'length', 'max'=>255),
 			array('status', 'length', 'max'=>1),
 			array('no_jp', 'length', 'max'=>32),
@@ -105,45 +109,48 @@ class ProductMaster extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'customer' => '&#23458;&#25142;', // 客戶 
-			'prod_sn' => '&#29986;&#21697;S/N', // 產品S/N
-			'status' => 'STATUS',
-			'no_jp' => '&#21697;&#30058;', // 品番
-			'factory_no' => '&#24037;&#24288;&#32232;&#34399;', // 工廠編號 
-			'made' => '&#36554;&#31278;', // 車種
-			'model' => '&#36554;&#22411;', // 車型
-			'model_no' => '&#22411;&#34399;', // 型號
-			'year' => '&#24180;&#20221;', // 年份
-			'item_group' => '&#21830;&#21697;&#39006;&#21029;', // 商品類別 
-			'material' => '&#26448;&#36074;', // 材質
-			'product_desc' => '&#21830;&#21697;&#21517;EN', // 商品名EN
-			'product_desc_ch' => '&#21830;&#21697;&#21517;CH', // 商品名CH
-			'product_desc_jp' => '&#21830;&#21697;&#21517;JP', // 商品名JP
-			'pcs' => 'PCS',
-			'colour' => '&#38991;&#33394;', // 顏色 
-			'colour_no' => '&#38991;&#33394;&#32232;&#34399;', // 顏色編號
-			'moq' => '&#26368;&#20302;&#36215;&#35330;&#37327;', // 最低起訂量
-			'molding' => '&#27169;&#20855;&#36027;', // 模具費
-			'cost' => '&#20379;&#24212;&#21830;&#22577;&#20729;', // 供应商報價
-			'kaito' => '&#28023;&#28193;&#20729;&#10;', // 海渡價
-			'other' => '&#20854;&#23427;&#20729;&#10;', // 其它價
-			'buy_date' => '&#35330;&#21407;&#20214;&#26178;&#38291;', // 訂原件時間
-			'receive_date' => '&#21407;&#20214;&#25910;&#21040;&#26085;&#26399;', // 原件收到日期
-			'supplier' => '&#20379;&#25033;&#21830;', // 供應商
-			'purchase_cost' => '&#21407;&#20214;&#27171;&#21697;&#25505;&#36092;&#20729;', // 原件樣品採購價
-			'factory_date' => '&#21407;&#20214;&#21040;&#24288;&#26085;&#26399;', // 原件到廠日期
-			'pack_remark' => '&#21253;&#35037;&#22791;&#27880;', // 包裝备注
-			'order_date' => '&#19979;&#21934;&#26085;&#26399;', // 下單日期
-			'progress' => '&#24320;&#21457;&#36914;&#24230;&#21450;&#24773;&#20917;', // 开发進度及情况 
-			'receive_model_date' => '&#23492;&#24448;&#23565;&#36554;&#26085;&#26399;', // 寄往對車日期
-			'person_in_charge' => '&#23565;&#36554;&#36000;&#36012;&#20154;', // 對車負責人
-			'state' => '&#23565;&#36554;&#24773;&#27841;', // 對車情況
-			'ship_date' => '&#20986;&#36135;&#26085;&#26399;', // 出货日期
-			'market_research_price' => '&#24066;&#22330;&#35843;&#26597;&#30340;&#20215;&#26684;', // 市场调查的价格
-			'yahoo_produce' => 'YAHOO&#20986;&#21697;', // YAHOO出品
-			'accessory_remark' => '&#37197;&#20214;&#20633;&#24536;', // 配件備忘
-			'company_remark' => '&#20844;&#21496;&#20839;&#37096;&#20633;&#24536;', // 公司內部備忘
+			'id' => Yii::t('product_message', 'id'),
+			'customer' => Yii::t('product_message', 'customer'),
+			'prod_sn' => Yii::t('product_message', 'prod_sn'),
+			'status' => Yii::t('product_message', 'status'),
+			'no_jp' => Yii::t('product_message', 'no_jp'),
+			'factory_no' => Yii::t('product_message', 'factory_no'),
+			'made' => Yii::t('product_message', 'made'),
+			'model' => Yii::t('product_message', 'model'),
+			'model_no' => Yii::t('product_message', 'model_no'),
+			'year' => Yii::t('product_message', 'year'),
+			'item_group' => Yii::t('product_message', 'item_group'),
+			'material' => Yii::t('product_message', 'material'),
+			'product_desc' => Yii::t('product_message', 'product_desc'),
+			'product_desc_ch' => Yii::t('product_message', 'product_desc_ch'),
+			'product_desc_jp' => Yii::t('product_message', 'product_desc_jp'),
+			'pcs' => Yii::t('product_message', 'pcs'),
+			'colour' => Yii::t('product_message', 'colour'),
+			'colour_no' => Yii::t('product_message', 'colour_no'),
+			'moq' => Yii::t('product_message', 'moq'),
+			'molding' => Yii::t('product_message', 'molding'),
+			'cost' => Yii::t('product_message', 'cost'),
+			'kaito' => Yii::t('product_message', 'kaito'),
+			'other' => Yii::t('product_message', 'other'),
+			'business_price' => Yii::t('product_message', 'business_price'),
+			'auction_price' => Yii::t('product_message', 'auction_price'),
+			'kaito_price' =>  Yii::t('product_message', 'kaito_price'),
+			'buy_date' => Yii::t('product_message', 'buy_date'),
+			'receive_date' => Yii::t('product_message', 'receive_date'),
+			'supplier' => Yii::t('product_message', 'supplier'),
+			'purchase_cost' => Yii::t('product_message', 'purchase_cost'),
+			'factory_date' => Yii::t('product_message', 'factory_date'),
+			'pack_remark' => Yii::t('product_message', 'pack_remark'),
+			'order_date' => Yii::t('product_message', 'order_date'),
+			'progress' => Yii::t('product_message', 'progress'),
+			'receive_model_date' => Yii::t('product_message', 'receive_model_date'),
+			'person_in_charge' => Yii::t('product_message', 'person_in_charge'),
+			'state' => Yii::t('product_message', 'state'),
+			'ship_date' => Yii::t('product_message', 'ship_date'),
+			'market_research_price' => Yii::t('product_message', 'market_research_price'),
+			'yahoo_produce' => Yii::t('product_message', 'yahoo_produce'),
+			'accessory_remark' => Yii::t('product_message', 'accessory_remark'),
+			'company_remark' => Yii::t('product_message', 'company_remark'),
 		);
 	}
 

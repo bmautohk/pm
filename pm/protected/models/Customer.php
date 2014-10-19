@@ -116,4 +116,26 @@ class Customer extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+	
+	public static function getDropdown($hasAll = false) {
+		$criteria = new CDbCriteria();
+		$criteria->select = array('id', 'name');
+		$criteria->order = 'name';
+
+		$model = Customer::model();
+		$model->setDbCriteria($criteria);
+		$customers = $model->findAll();
+		
+		$result = array();
+		
+		if ($hasAll) {
+			$result[''] = 'All';
+		}
+		
+		foreach ($customers as $customer) {
+			$result[$customer->id] = $customer->name;
+		}
+		
+		return $result;
+	}
 }

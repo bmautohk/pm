@@ -1,4 +1,6 @@
 <?
+$writePermission = GlobalFunction::checkPagePrivilege('customer_management', RolePageMatrix::PERMISSION_WRITE);
+
 if ($model->where_to_find == GlobalConstants::WHERE_TO_FIND_CUSTOMER_TARGET_CUSTOMER) {
 	$where_to_find_disabled = true;
 } else {
@@ -119,11 +121,13 @@ if ($model->where_to_find == GlobalConstants::WHERE_TO_FIND_CUSTOMER_TARGET_CUST
 			<br style="clear:both" />
 		</div>
 		
-		<? if ($action == 'add') {?>
-			<input class="searchBtn" type="submit" name="action" value="<? echo Yii::t('common_message', 'add'); ?>" />
-		<? } else {?>
-			<input class="searchBtn" type="submit" name="action" value="<? echo Yii::t('common_message', 'update'); ?>" />
-		<? } ?>
+		<? if ($writePermission) {
+			if ($action == 'add') {?>
+				<input class="searchBtn" type="submit" name="action" value="<? echo Yii::t('common_message', 'add'); ?>" />
+			<? } else {?>
+				<input class="searchBtn" type="submit" name="action" value="<? echo Yii::t('common_message', 'update'); ?>" />
+			<? } 
+		} ?>
 		<input class="searchBtn" type="button" onclick="back()" value="<? echo Yii::t('common_message', 'back'); ?>" />
 		
 	<? $this->endWidget(); ?>

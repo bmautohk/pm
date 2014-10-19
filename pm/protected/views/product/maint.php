@@ -7,10 +7,12 @@ $roleMatrix = Yii::app()->user->getState('role_matrix');
 
 
 function textField($form, $model, $attribute, $roleMatrix, $tableName, $columnName, $htmlOptions=array()) {
-	echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span><span class="input_field">';
+	
 	if (GlobalFunction::checkPrivilege($roleMatrix, $tableName, $columnName)) {
+	echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span><span class="input_field">';
 		echo $form->textField($model, $attribute, $htmlOptions);
 	} else {
+	echo '<span class="input_label"></span><span class="input_field">';
 		echo '<input type="text"/>';
 	}
 	echo '</span>';
@@ -23,10 +25,12 @@ function textField($form, $model, $attribute, $roleMatrix, $tableName, $columnNa
 }*/
 
 function textArea($form, $model, $attribute, $roleMatrix, $tableName, $columnName, $htmlOptions=array()) {
-	echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span><span>';
+	
 	if (GlobalFunction::checkPrivilege($roleMatrix, $tableName, $columnName)) {
+	echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span><span>';
 		echo $form->textArea($model, $attribute);
 	} else {
+	echo '<span class="input_label"></span><span>';
 		echo "<textarea></textarea>";
 	}
 	echo '</span>';
@@ -39,10 +43,12 @@ function textArea($form, $model, $attribute, $roleMatrix, $tableName, $columnNam
 }*/
 
 function datePicker($form, $model, $attribute, $roleMatrix, $tableName, $columnName) {
-	echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span><span class="date_field">';
+	
 	if (GlobalFunction::checkPrivilege($roleMatrix, $tableName, $columnName)) {
+	echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span><span class="date_field">';
 		echo $form->textField($model, $attribute);
 	} else {
+	echo '<span class="input_label"></span><span class="date_field">';
 		echo '<input type="text"/>';
 	}
 	echo '</span><input type="button" class="calendar_button" id="'.$attribute.'_btn" value=" " />';
@@ -55,10 +61,12 @@ function datePicker($form, $model, $attribute, $roleMatrix, $tableName, $columnN
 }*/
 
 function dropDownList($form, $model, $attribute, $options, $roleMatrix, $tableName, $columnName) {
-	echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span>';
+	
 	if (GlobalFunction::checkPrivilege($roleMatrix, $tableName, $columnName)) {
+	echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span>';
 		echo $form->dropDownList($model, $attribute, $options);
 	} else {
+	echo '<span class="input_label"></span>';
 		echo '<select> </select>';
 	}
 }
@@ -70,8 +78,9 @@ function dropDownList($form, $model, $attribute, $options, $roleMatrix, $tableNa
 }*/
 
 function checkbox($form, $model, $attribute, $roleMatrix, $tableName, $columnName) {
-	echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span>';
+	
 	if (GlobalFunction::checkPrivilege($roleMatrix, $tableName, $columnName)) {
+	echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span>';
 		echo $form->checkbox($model, $attribute);
 	}
 }
@@ -209,6 +218,22 @@ function checkbox($form, $model, $attribute, $roleMatrix, $tableName, $columnNam
 			</div>
 			
 			<div class="grid_u-c1">
+				<? echo textField($form, $model, 'business_price', $roleMatrix, $tableName, 'business_price'); ?>
+			</div>
+			<div class="grid_u-m2"></div>
+			<div class="grid_u-c2">
+				<? echo textField($form, $model, 'auction_price', $roleMatrix, $tableName, 'auction_price'); ?>
+			</div>
+			
+			<div class="grid_u-c1">
+				<? echo textField($form, $model, 'kaito_price', $roleMatrix, $tableName, 'kaito_price'); ?>
+			</div>
+			<div class="grid_u-m2"></div>
+			<div class="grid_u-c2">
+				
+			</div>
+			
+			<div class="grid_u-c1">
 				<? echo datePicker($form, $model, 'buy_date', $roleMatrix, $tableName, 'buy_date'); ?>
 			</div>
 			<div class="grid_u-m2"></div>
@@ -268,7 +293,7 @@ function checkbox($form, $model, $attribute, $roleMatrix, $tableName, $columnNam
 			
 		</div>
 		
-		<? if (GlobalFunction::isAdmin()) {?>
+		<? if (GlobalFunction::checkPagePrivilege('product_management', RolePageMatrix::PERMISSION_WRITE)) {?>
 			<input class="searchBtn" type="submit" name="action" value="<? echo Yii::t('common_message', 'update'); ?>" />
 		<? } ?>
 		<input class="searchBtn" type="button" name="action" value="<? echo Yii::t('common_message', 'back'); ?>" onclick="back()" />

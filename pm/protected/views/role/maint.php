@@ -1,4 +1,6 @@
 <?
+$writePermission = GlobalFunction::checkPagePrivilege('role_management', RolePageMatrix::PERMISSION_WRITE);
+
 if ($action == 'add') {
 	$roleCodeReadonly = false;
 }
@@ -36,11 +38,13 @@ else {
 			<br style="clear:both" />
 		</div>
 		
-		<? if ($action == 'add') {?>
-			<input class="searchBtn" type="submit" name="action" value="<? echo Yii::t('common_message', 'add'); ?>" />
-		<? } else {?>
-			<input class="searchBtn" type="submit" name="action" value="<? echo Yii::t('common_message', 'update'); ?>" />
-		<? } ?>
+		<? if ($writePermission) {
+			if ($action == 'add') { ?>
+				<input class="searchBtn" type="submit" name="action" value="<? echo Yii::t('common_message', 'add'); ?>" />
+			<? } else {?>
+				<input class="searchBtn" type="submit" name="action" value="<? echo Yii::t('common_message', 'update'); ?>" />
+			<? }
+		} ?>
 		<input class="searchBtn" type="button" onclick="window.location='../role'" value="<? echo Yii::t('common_message', 'back'); ?>" />
 		
 	<? $this->endWidget(); ?>

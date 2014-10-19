@@ -129,7 +129,8 @@ class ProductSearchForm extends CFormModel {
 		}
 		else {
 			$criteria->compare('produce_status', '<>'.GlobalConstants::PRODUCE_STATUS_COMPLETE);
-			$criteria->compare('produce_status', '<>'.GlobalConstants::PRODUCE_STATUS_MONOPOLY);
+			//$criteria->compare('produce_status', '<>'.GlobalConstants::PRODUCE_STATUS_MONOPOLY);
+			$criteria->compare('is_monopoly', '<> '.ProductMaster::IS_MONOPOLY_YES);
 		}
 		//}
 		
@@ -225,6 +226,7 @@ class ProductSearchForm extends CFormModel {
 			$product->accessory_remark = $row['accessory_remark'];
 			$product->company_remark = $row['company_remark'];
 			$product->produce_status = $row['produce_status'];
+			$product->is_monopoly = $row['is_monopoly'];
 			$data[] = $product;
 		}
 		
@@ -287,7 +289,7 @@ class ProductSearchForm extends CFormModel {
 				$isAddUnion = true;
 			}
 				
-			$sql .= "SELECT id,customer,prod_sn,status,no_jp,factory_no,made,model,model_no,year,item_group,material,product_desc,product_desc_ch,product_desc_jp,pcs,colour,colour_no,moq,molding,cost,kaito,other,buy_date,receive_date,supplier,purchase_cost,factory_date,pack_remark,order_date,progress,receive_model_date,person_in_charge,state,ship_date,market_research_price,yahoo_produce,accessory_remark,company_remark,produce_status,create_date
+			$sql .= "SELECT id,customer,prod_sn,status,no_jp,factory_no,made,model,model_no,year,item_group,material,product_desc,product_desc_ch,product_desc_jp,pcs,colour,colour_no,moq,molding,cost,kaito,other,buy_date,receive_date,supplier,purchase_cost,factory_date,pack_remark,order_date,progress,receive_model_date,person_in_charge,state,ship_date,market_research_price,yahoo_produce,accessory_remark,company_remark,produce_status,is_monopoly,create_date
 			FROM product_master 
 			WHERE customer like :keyword_$i
 			OR prod_sn like :keyword_$i

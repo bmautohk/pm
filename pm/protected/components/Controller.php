@@ -21,6 +21,25 @@ class Controller extends CController
 	 */
 	public $breadcrumbs=array();
 	
+	protected function checkPrivilege($page, $permission=NULL) {
+		if (Yii::app()->user->isGuest) {
+			$this->redirect(Yii::app()->createUrl('site/login'));
+			return;
+		}
+		
+		$rolePageMatrixes = Yii::app()->user->getState('role_page_matrix');
+		if ($rolePageMatrixes == NULL) {
+			$this->redirect(Yii::app()->createUrl('site/login'));
+			return;
+		}
+		
+		if (!array_key_exists($page, $rolePageMatrixes)) {
+			$this->redirect(Yii::app()->createUrl('site/noPermission'));
+		} else if ($permission != NULL && $rolePageMatrixes[$page] != $permission) {
+			$this->redirect(Yii::app()->createUrl('site/noPermission'));
+		}
+	}
+	
 	protected function requestAttrForSearch($model, $url) {
 		// Match criteria to the form
 		if (isset($_REQUEST[get_class($model)])) {

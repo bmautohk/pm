@@ -29,7 +29,20 @@ function fieldChecking($model, $roleMatrix, $tableName, $columnName) {
 		}
 	}
 }
-
+function fieldLabelChecking( $roleMatrix, $tableName, $columnName) {
+	global $hasPrivilege;
+	
+	if (isset($hasPrivilege[$columnName])) {
+		if ($hasPrivilege[$columnName]) {
+			echo Yii::t('product_message', $columnName);
+		 }
+	} else {
+		if (GlobalFunction::checkPrivilege($roleMatrix, $tableName, $columnName)) {
+			$hasPrivilege[$columnName] = true;
+			echo Yii::t('product_message', $columnName);
+		} 
+	}
+}
 	$baseUrl = Yii::app()->request->baseUrl;
 	$imgDir = Yii::app()->params['image_dir'];
 	$internalImgDir = Yii::app()->params['internal_image_dir'];
@@ -48,20 +61,20 @@ function fieldChecking($model, $roleMatrix, $tableName, $columnName) {
 			<tr>
 				<th></th>
 				<th>&nbsp;</th>
-				<th width="30"><? echo Yii::t('product_message', 'prod_sn'); ?></th>
-				<th><? echo Yii::t('product_message', 'customer'); ?></th>
-				<th><? echo Yii::t('product_message', 'status'); ?></th>
-				<th><? echo Yii::t('product_message', 'no_jp'); ?></th>
-				<th><? echo Yii::t('product_message', 'factory_no'); ?></th>
-				<th><? echo Yii::t('product_message', 'model'); ?></th>
-				<th><? echo Yii::t('product_message', 'model_no'); ?></th>
-				<th><? echo Yii::t('product_message', 'year'); ?></th>
-				<th><? echo Yii::t('product_message', 'material'); ?></th>
-				<th><? echo Yii::t('product_message', 'product_desc'); ?></th>
-				<th width="100"><? echo Yii::t('product_message', 'accessory_remark'); ?></th>
-				<th width="100"><? echo Yii::t('product_message', 'company_remark'); ?></th>
-				<th><? echo Yii::t('product_message', 'pcs'); ?></th>
-				<th><? echo Yii::t('product_message', 'colour'); ?></th>
+				<th width="30"><? fieldLabelChecking($roleMatrix,$tableName,'prod_sn');?></th>
+				<th><? fieldLabelChecking($roleMatrix,$tableName,'customer'); ?></th>
+				<th><? fieldLabelChecking($roleMatrix,$tableName,'status'); ?></th>
+				<th><? fieldLabelChecking($roleMatrix,$tableName,'no_jp'); ?></th>
+				<th><? fieldLabelChecking($roleMatrix,$tableName,'factory_no'); ?></th>
+				<th><? fieldLabelChecking($roleMatrix,$tableName,'model'); ?></th>
+				<th><? fieldLabelChecking($roleMatrix,$tableName,'model_no'); ?></th>
+				<th><? fieldLabelChecking($roleMatrix,$tableName,'year'); ?></th>
+				<th><? fieldLabelChecking($roleMatrix,$tableName,'material'); ?></th>
+				<th><? fieldLabelChecking($roleMatrix,$tableName,'product_desc'); ?></th>
+				<th width="100"><? fieldLabelChecking($roleMatrix,$tableName,'accessory_remark'); ?></th>
+				<th width="100"><? fieldLabelChecking($roleMatrix,$tableName,'company_remark'); ?></th>
+				<th><? fieldLabelChecking($roleMatrix,$tableName,'pcs'); ?></th>
+				<th><? fieldLabelChecking($roleMatrix,$tableName,'colour'); ?></th>
 				<? if (GlobalFunction::isAdmin()) { ?><th></th><? } ?>
 			</tr>
 		<? foreach($items as $product) { ?>

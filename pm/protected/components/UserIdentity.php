@@ -34,29 +34,35 @@ class UserIdentity extends CUserIdentity
 			// Store the role in a session:
 			$this->setState('role', $user->role_code);
 			
-			if ($user->role_code != GlobalConstants::ROLE_ADMIN) {
-				// Retrieve role matrix
-				$tempRoleMatrix = RoleMatrix::model()->findAllByAttributes(array('role_code'=>$user->role_code));
-				
-				$prevTableName = '';
-				$roleMatrix = array();
-				foreach ($tempRoleMatrix as $item) {
-					if ($item->table_name != $prevTableName) {
-						$roleMatrix[$item->table_name] = array();
-						$prevTableName = $item->table_name;
-					}
-					
-					$roleMatrix[$item->table_name][] = $item->column_name;
+			// Retrieve column permission
+			$tempRoleColumnMatrix = RoleColumnMatrix::model()->findAllByAttributes(array('role_code'=>$user->role_code));
+			
+			$prevTableName = '';
+			$roleMatrix = array();
+			foreach ($tempRoleColumnMatrix as $item) {
+				if ($item->table_name != $prevTableName) {
+					$roleMatrix[$item->table_name] = array();
+					$prevTableName = $item->table_name;
 				}
 				
-				$this->setState('role_matrix', $roleMatrix);
-				
-				// Retrieve corresponding supplier
-				if ($user->role_code == GlobalConstants::ROLE_SUPPLIER) {
-					$userSupplier = UserSupplier::model()->findByPk($this->username);
-					$this->setState('supplier', $userSupplier->supplier);
-				}
+				$roleMatrix[$item->table_name][] = $item->column_name;
 			}
+			
+			$this->setState('role_matrix', $roleMatrix);
+			
+			// Retrieve corresponding supplier
+			if ($user->role_code == GlobalConstants::ROLE_SUPPLIER) {
+				$userSupplier = UserSupplier::model()->findByPk($this->username);
+				$this->setState('supplier', $userSupplier->supplier);
+			}
+			
+			// Retrieve page permission
+			$tempRolePageMatrixes = RolePageMatrix::model()->findAllByAttributes(array('role_code'=>$user->role_code));
+			$rolePageMatrixes = array();
+			foreach ($tempRolePageMatrixes as $rolePageMatrix) {
+				$rolePageMatrixes[$rolePageMatrix->page] = $rolePageMatrix->permission;
+			}
+			$this->setState('role_page_matrix', $rolePageMatrixes);
 			
 			// Update last login date
 			$user->last_login = new CDbExpression('NOW()');
