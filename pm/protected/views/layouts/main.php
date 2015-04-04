@@ -21,7 +21,8 @@ $roleMatrix = Yii::app()->user->getState('role_matrix');
 	<link rel="stylesheet" type="text/css" href="<?=$baseUrl ?>/css/css.css" />
 	<link rel="stylesheet" type="text/css" href="<?=$baseUrl ?>/css/style2.css" />
 	
-	<? Yii::app()->clientScript->registerCoreScript('jquery');?>
+	<? Yii::app()->clientScript->registerCoreScript('jquery'); ?>
+	<? Yii::app()->clientScript->registerCoreScript('jquery-ui'); ?>
 
 	<title><?php echo CHtml::encode(Yii::app()->name); ?></title>
 </head>
