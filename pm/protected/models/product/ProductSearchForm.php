@@ -140,7 +140,8 @@ class ProductSearchForm extends CFormModel {
 		}
 		
 		if (!$isExcelView) {
-			$criteria->order = 'create_date desc, no_jp, id';
+			//$criteria->order = 'create_date desc, no_jp, id';
+			$criteria->order = 'prod_sn desc'; // PM1 & PM3 only
 		}
 		else {
 			// Excel View
