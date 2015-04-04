@@ -1,5 +1,6 @@
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/jquery-ui.min.js"></script>
-<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/smoothness/jquery-ui.css" />
+<!-- <script src="js/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="css/jquery-ui.css" />-->
+<link rel="stylesheet" type="text/css" href="<?=Yii::app()->request->baseUrl ?>/css/jquery-ui.css" />
 
 <?
 $model = $this->searchForm;
