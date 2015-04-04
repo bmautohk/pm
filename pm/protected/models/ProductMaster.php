@@ -79,7 +79,7 @@ class ProductMaster extends CActiveRecord
 		return array(
 			array('prod_sn, made, status, produce_status, is_monopoly', 'required'),
 			array('prod_sn, pcs, moq', 'numerical', 'integerOnly'=>true),
-			array('no_jp', 'unique', 'on'=>'save'),
+			//array('no_jp', 'unique', 'on'=>'save'), // Black PM no need unique checking
 			array('molding, cost, kaito, other, purchase_cost, market_research_price, business_price, auction_price, kaito_price', 'numerical'),
 			array('customer, made, model, model_no, year, item_group, material, colour, colour_no, supplier, progress, person_in_charge, state, yahoo_produce', 'length', 'max'=>255),
 			array('status', 'length', 'max'=>1),
@@ -232,6 +232,12 @@ class ProductMaster extends CActiveRecord
 		if (empty($this->ship_date)) {
 			$this->ship_date = null;
 		}
+		
+		if ($this->isNewRecord) {
+			$this->create_date = new CDbExpression('NOW()');
+		}
+		
+		$this->last_update_date = new CDbExpression('NOW()');
 	
 		return parent::beforeSave();
 	}

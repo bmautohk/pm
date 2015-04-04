@@ -103,13 +103,15 @@ class ImportProductForm extends CFormModel {
 			if (!$product->validate()) {
 				$failProducts[$rowNo] = $product;
 				$isValid = false;
-			}  else if (array_key_exists($product->no_jp, $no_jp_array)) {
+			}
+			// Black PM no need unique checking
+			/*   else if (array_key_exists($product->no_jp, $no_jp_array)) {
 				$failProducts[$rowNo] = $product;
 				$product->addError('no_jp', '品番 "'.$product->no_jp.'" has already been taken.');
 				$isValid = false;
 			} else {
 				$no_jp_array[$product->no_jp] = '';
-			}
+			} */
 
 			$products[] = $product;
 		}
