@@ -21,7 +21,7 @@ return array (
 		'molding' => '模具費', // 模具費
 		'cost' => ' 供应商報價', // 供应商報價
 		'kaito' => '海渡價', // 海渡價
-		'other' => '其它價', // 其它價
+		'other' => '批发价', // 批发价
 		'business_price' => '營業值段',
 		'auction_price' => 'Auction值段',
 		'kaito_price' => '海渡定價',

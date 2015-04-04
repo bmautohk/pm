@@ -174,7 +174,7 @@ class ExportProductForm extends CFormModel {
 		->setCellValueByColumnAndRow($i++, 1, '最低起訂量')
 		->setCellValueByColumnAndRow($i++, 1, '供应商報價')
 		->setCellValueByColumnAndRow($i++, 1, '海渡價')
-		->setCellValueByColumnAndRow($i++, 1, '其它價')
+		->setCellValueByColumnAndRow($i++, 1, '批发价')
 		->setCellValueByColumnAndRow($i++, 1, '原件樣品採購價')
 		->setCellValueByColumnAndRow($i++, 1, Yii::t('product_message', business_price))
 		->setCellValueByColumnAndRow($i++, 1, Yii::t('product_message', auction_price))
