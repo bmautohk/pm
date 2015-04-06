@@ -95,6 +95,18 @@ return array(
 		'excel'=>array(
 				'class'=>'application.extensions.PHPExcel',
 		),
+		'clientScript'=>array(
+				'packages'=>array(
+						'jquery'=>array(
+								'baseUrl'=>'js',
+								'js'=>array('jquery-1.7.2.min.js'),
+						),
+						'jquery-ui'=>array(
+								'baseUrl'=>'js',
+								'js'=>array('jquery-ui.min.js'),
+						)
+				),
+		),
 	),
 
 	// application-level parameters that can be accessed
