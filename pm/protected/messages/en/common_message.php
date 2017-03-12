@@ -2,8 +2,10 @@
 return array (
 		'import_product' => '從excel載入產品資料',
 		'export_product' => '滙出產品資料',
+		'export_product_with_volume' => '滙出產品資料(出貨量)',
 		'add_product' => '新加一筆產品資料',
 		'delete_product' => '刪除',
+		'delete' => '刪除',
 		'search' => '搜尋',
 		'reset' => '重置',
 		'product_detail' => '詳細產品資料',

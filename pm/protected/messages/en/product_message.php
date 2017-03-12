@@ -38,11 +38,26 @@ return array (
 		'state' => '對車情況', // 對車情況
 		'ship_date' => '出货日期', // 出货日期
 		'market_research_price' => '市场调查的价格', // 市场调查的价格
-		'yahoo_produce' => 'YAHOO出品', // YAHOO出品
+		'yahoo_produce' => 'YAHOO出品日期', // YAHOO出品
 		'accessory_remark' => '配件備忘', // 配件備忘
 		'company_remark' => '公司內部備忘', // 公司內部備忘
+		'shop' => '商店',
 		'produce_status' => '生產狀態',
 		'is_monopoly' => '专卖?',
+		'is_retail' => 'Retail?',
+		'is_internal' => 'Internal?',
+		'is_ship' => '出货?',
+		'is_exhibit' => '出品?',
 		'order_id' => 'Order ID',
+		'output_volume' => '總出貨量',
+		'display_S1_output_volume' => '總出貨量(S1)',
+		'display_S1CN_output_volume' => '總出貨量(CN)',
+		'category_id' => 'Category',
+		'categoryIdList' => 'Category',
+		
+		'display_S1_output_volume_1month' => '總出貨量(S1) - 1 month',
+		'display_S1_output_volume_2weeks' => '總出貨量(S1) - 2 weeks',
+		'display_S1CN_output_volume_1month' => '總出貨量(CN) - 1 month',
+		'display_S1CN_output_volume_2weeks' => '總出貨量(CN) - 2 weeks',
 );
 ?>

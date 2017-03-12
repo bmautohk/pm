@@ -6,6 +6,7 @@ return array (
 		'supplier' => '供應商',
 		'password' => '密碼',
 		'last_login' => '最後登入日期',
+		'country' => '所在地',
 		
 		// Button
 		'add_user' => '新增用戶',
