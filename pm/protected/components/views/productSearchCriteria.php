@@ -15,7 +15,8 @@ $roleMatrix = Yii::app()->user->getState('role_matrix');
  		<? } ?>
  		
  		<? if (GlobalFunction::checkPagePrivilege('export_excel')) { ?>
- 			<input type="button" onclick="location.href='<?=Yii::app()->createUrl('product/export') ?>'" value="<? echo Yii::t('common_message', 'export_product'); ?>" /><br>
+ 			<input type="button" onclick="location.href='<?=Yii::app()->createUrl('product/export') ?>'" value="<? echo Yii::t('common_message', 'export_product'); ?>" />
+ 			<input type="button" onclick="location.href='<?=Yii::app()->createUrl('product/export_with_volume') ?>'" value="<? echo Yii::t('common_message', 'export_product_with_volume'); ?>" /><br>
  		<? } ?>
  		
  		<? if (GlobalFunction::checkPagePrivilege('product_management_add_product', RolePageMatrix::PERMISSION_WRITE)) {?>

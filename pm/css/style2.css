@@ -101,7 +101,7 @@ input.error, select.error, textarea.error {
 }
 
 .input_label {
-	width: 119px;
+	width: 121px;
 }
 
 .input_from_to_field input {
@@ -343,7 +343,7 @@ input.error, select.error, textarea.error {
 
 .grid_p-c1 {
 	width: 160px;
-	height: 130px;
+	height: 150px;
 	float: left;
 	margin-right: 5px;
 }
@@ -373,7 +373,17 @@ input.error, select.error, textarea.error {
 	color:#3ab54a;
 	font-size: 20px;
 	font-weight: 900;
-	padding-bottom: 10px;
+	/*padding-bottom: 10px;*/
+	height: 30px;
+}
+
+.product_name-highlight {
+	text-align:center;
+	background-color: #F25A29;
+	color:white;
+	font-size: 20px;
+	font-weight: 900;
+	margin-bottom: 5px;
 	height: 30px;
 }
 
@@ -420,4 +430,13 @@ input.error, select.error, textarea.error {
 
 .product-excel-style tbody tr:hover td{
 	background:#d0dafd;
+}
+
+.product-highlight {
+	display: inline-block;
+	color: white;
+	background-color: #F25A29;
+	width: 50px;
+	text-align: center;
+	margin-bottom: 5px;
 }

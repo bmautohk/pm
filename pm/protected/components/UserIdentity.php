@@ -34,6 +34,13 @@ class UserIdentity extends CUserIdentity
 			// Store the role in a session:
 			$this->setState('role', $user->role_code);
 			
+			// Is retail?
+			$role = Role::model()->findByPk($user->role_code);
+			$this->setState('is_retail', $role->is_retail == Role::IS_REATIL_YES? true : false);
+			
+			// Allow to view internal product?
+			$this->setState('is_allow_internal', $role->is_allow_internal == Role::IS_ALLOW_INTERNAL_YES? true : false);
+			
 			// Retrieve column permission
 			$tempRoleColumnMatrix = RoleColumnMatrix::model()->findAllByAttributes(array('role_code'=>$user->role_code));
 			
@@ -64,11 +71,35 @@ class UserIdentity extends CUserIdentity
 			}
 			$this->setState('role_page_matrix', $rolePageMatrixes);
 			
+			// Update country
+			try {
+				$ip = $this->getIP();
+				$tags = json_decode(file_get_contents('http://getcitydetails.geobytes.com/GetCityDetails?fqcn='.$ip), true);
+				$user->country = $tags['geobytescountry'];
+				$user->ip = $ip;
+			} catch (Exception $e) {
+				Yii::log($e->getMessage(), 'error', 'pm.components.UserIdentity');
+				$user->country = '';
+				$user->ip = '';
+			}
+			
 			// Update last login date
 			$user->last_login = new CDbExpression('NOW()');
-			$user->save(true, array('last_login'));
+			$user->save(true, array('last_login', 'country', 'ip'));
 			
 			return true;
+		}
+	}
+	
+	function getIP() {
+		foreach (array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR') as $key) {
+			if (array_key_exists($key, $_SERVER) === true) {
+				foreach (explode(',', $_SERVER[$key]) as $ip) {
+					if (filter_var($ip, FILTER_VALIDATE_IP) !== false) {
+						return $ip;
+					}
+				}
+			}
 		}
 	}
 }

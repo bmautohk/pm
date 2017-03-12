@@ -46,6 +46,22 @@ class ProductController extends Controller {
 		$attr = $this->requestAttrForProductSearch($serachForm, 'searchByFilter');
 		$this->render('list', $attr);
 	}
+
+	public function actionShowNotShip() {
+		$serachForm = new ProductSearchForm();
+		$serachForm->isSearchNotShip = 'Y';
+		
+		$attr = $this->requestAttrForProductSearch($serachForm, 'searchByFilter');
+		$this->render('list', $attr);
+	}
+
+	public function actionShowNotExhibit() {
+		$serachForm = new ProductSearchForm();
+		$serachForm->isSearchNotExhibit = 'Y';
+		
+		$attr = $this->requestAttrForProductSearch($serachForm, 'searchByFilter');
+		$this->render('list', $attr);
+	}
 	
 	public function actionDownloadByFilter() {
 		$serachForm = new ProductSearchForm();
@@ -91,17 +107,16 @@ class ProductController extends Controller {
 		} */
 		
 		$action = 'add';
-		$model = new ProductMaster();
+		$form = new ProductMaintForm();
+		
 		
 		if (isset($_POST['action'])) {
 			// Create product
-			$model->attributes = $_POST['ProductMaster'];
-			$model->setScenario('save');
 			
-			if ($model->save()) {
-				$successMsg = '&#29986;&#21697;S/N ['.$model->prod_sn.'] is created successfully!'; // ���~S/N [XXX] is created successfully!
+			if ($form->add($_POST)) {
+				$successMsg = '&#29986;&#21697;S/N ['.$form->product->prod_sn.'] is created successfully!'; // ���~S/N [XXX] is created successfully!
 				$action = 'update';
-				$this->render('maint', array('action'=>$action, 'model'=>$model, 'msg'=>array('success'=>$successMsg, 'error'=>$errorMsg)));
+				$this->render('maint', array('action'=>$action, 'model'=>$form->product, 'productForm'=>$form, 'msg'=>array('success'=>$successMsg, 'error'=>$errorMsg)));
 				return;
 			}
 			else {
@@ -113,14 +128,19 @@ class ProductController extends Controller {
 			$criteria = new CDbCriteria();
 			$criteria->select='MAX(prod_sn) as max_prod_sn';
 			$maxProdSN = ProductMaster::model()->find($criteria);
+
+			$model = new ProductMaster();
 			$model->prod_sn = $maxProdSN->max_prod_sn === NULL ? 391 : $maxProdSN->max_prod_sn + 1;
 			
 			if ($model->prod_sn < 391) {
 				$model->prod_sn = 391;
 			}
+			
+			$model->is_internal = ProductMaster::IS_INTERNAL_YES;
+			$form->product = $model;
 		}
 
-		$this->render('add', array('action'=>$action, 'model'=>$model, 'msg'=>array('success'=>$successMsg, 'error'=>$errorMsg)));
+		$this->render('add', array('action'=>$action, 'model'=>$form->product, 'productForm'=>$form, 'msg'=>array('success'=>$successMsg, 'error'=>$errorMsg)));
 	}
 	
 // Update function
@@ -129,11 +149,10 @@ class ProductController extends Controller {
 			// Update product
 			
 			// Check authorization
-			if (!GlobalFunction::isAdmin()) {
-				$this->redirect(Yii::app()->createUrl('site/noPermission'));
-			}
+			$this->checkPrivilege('product_management', RolePageMatrix::PERMISSION_WRITE);
 			
 			$form = new ProductMaintForm();
+
 			if ($form->update($_POST)) {
 				// Go back the search page
 				$session=new CHttpSession;
@@ -154,35 +173,15 @@ class ProductController extends Controller {
 			
 			$model = $form->product;
 			
-			/* $model = $this->loadProductMaster($_POST['ProductMaster']['id']);
-			$model->attributes = $_POST['ProductMaster'];
-			
-			if ($model->save()) {
-				$successMsg = '&#29986;&#21697;S/N ['.$model->prod_sn.'] is updated successfully!'; // S/N [XXX] is updated successfully!
-			
-				// Go back the search page
-				$session=new CHttpSession;
-				$session->open();
-				$searchModel = new ProductSearchForm();
-				$searchModel->attributes = $session[GlobalConstants::SESSION_PRODUCT_SEARCH_CRITERIA];
-				$attr = $this->searchProductByAttributes($searchModel, 'searchByFilter', $session[GlobalConstants::SESSION_CURR_PAGE] - 1);
-			
-				// Remove session attribute
-				$session->remove(GlobalConstants::SESSION_PRODUCT_SEARCH_CRITERIA);
-				$session->remove(GlobalConstants::SESSION_CURR_PAGE);
-			
-				$this->render('list', array_merge($attr, array('msg'=>array('success'=>$successMsg))));
-				return;
-			}
-			else {
-				$errorMsg = 'Fail to update product!';
-			} */
 		}
 		else {
 			// Retrieve product
 			$id = $_GET['id'];
 			$model = $this->loadProductMaster($id);
 
+			$form = new ProductMaintForm();
+			$form->load($model);
+			
 			// Store search critiera to session
 			$session=new CHttpSession;
 			$session->open();
@@ -191,7 +190,7 @@ class ProductController extends Controller {
 			$session->close();
 		}
 		
-		$this->render('maint', array('action'=>'update', 'model'=>$model, 'msg'=>array('success'=>$successMsg, 'error'=>$errorMsg)));
+		$this->render('maint', array('action'=>'update', 'model'=>$model, 'productForm'=>$form, 'msg'=>array('success'=>$successMsg, 'error'=>$errorMsg)));
 	}
 
 // Delete Function
@@ -207,7 +206,7 @@ class ProductController extends Controller {
 		$productCartCountModel = ProductCartCount::model()->findByAttributes(array('prod_sn'=>$model->prod_sn));
 		
 		$isSuccess = false;
-		if ($model->delete()) {
+		if (ProductCategory::model()->deleteByProductId($id) && $model->delete()) {
 			if ($productCartCountModel != NULL) {
 				if ($productCartCountModel->delete()) {
 					$isSuccess = true;
@@ -371,8 +370,15 @@ class ProductController extends Controller {
 		$model->export();
 	}
 	
+	public function actionExport_with_volume() {
+		$model = new ExportProductForm;
+	
+		$model->export(true);
+	}
+	
+	
 // Private function
-	private function loadProductMaster($id) {
+	/* private function loadProductMaster($id) {
 		if (GlobalFunction::isSupplier()) {
 			$model = ProductMaster::model()->findByAttributes(array('id'=>$id, 'supplier'=>GlobalFunction::getUserSupplier()));
 		}
@@ -380,10 +386,21 @@ class ProductController extends Controller {
 			$model = ProductMaster::model()->findByAttributes(array('id'=>$id));
 		}
 		
-		if($model===null)
+		if($model===null) {
 			throw new CHttpException(404,'The requested page does not exist.');
+		} else if (GlobalFunction::isRetail() && $model->is_retail != ProductMaster::IS_RETAIL_YES) {
+			throw new CHttpException(404,'The requested page does not exist.');
+		}
 		return $model;
+	} */
+	private function loadProductMaster($id) {
+		$model = ProductMaster::getProductMaster($id);
+		
+		if ($model === null) {
+			throw new CHttpException(404,'The requested page does not exist.');
+		} else {
+			return $model;
+		}
 	}
-
 }
 ?>

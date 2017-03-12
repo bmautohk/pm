@@ -113,7 +113,9 @@ background-image: -webkit-gradient(
 );
 }
 
-.menubar { font-size:8px;color:white;
+.menubar { 
+font-size: 1em;
+color:white;
 width:180px;height:25px; float:right; background-color:#393;margin-top:10px; padding-top:5px;padding-right:5px;text-align:right;
 background-image: linear-gradient(left , rgb(76,122,3) 5%, rgb(107,159,29) 53%);
 background-image: -o-linear-gradient(left , rgb(76,122,3) 5%, rgb(107,159,29) 53%);
@@ -143,6 +145,11 @@ background: linear-gradient(left,  rgb(39,127,1) 1%,rgb(75,165,1) 100%); /* W3C 
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#277f01', endColorstr='#4ba501',GradientType=1 ); /* IE6-8 */
 
 }
+
+.menubar-orange {
+	background: url('images/orange.png')
+}
+
 body  {
 	font-family:Arial;
 	color: #000; 

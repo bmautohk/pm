@@ -29,7 +29,8 @@ class Controller extends CController
 		
 		$rolePageMatrixes = Yii::app()->user->getState('role_page_matrix');
 		if ($rolePageMatrixes == NULL) {
-			$this->redirect(Yii::app()->createUrl('site/login'));
+			//$this->redirect(Yii::app()->createUrl('site/login'));
+			$this->redirect(Yii::app()->createUrl('site/noPermission'));
 			return;
 		}
 		
@@ -39,6 +40,8 @@ class Controller extends CController
 			$this->redirect(Yii::app()->createUrl('site/noPermission'));
 		}
 	}
+
+	
 	
 	protected function requestAttrForSearch($model, $url) {
 		// Match criteria to the form
