@@ -6,14 +6,16 @@
 
 <style>
 	.ui-menu .ui-menu-item a {font-size: 0.4em; }
-</style>
-<? 
-/*$mades =  Made::getDropDownFromCache(); 
 
-if (!in_array($model->made, $mades)) {
-	$mades[$model->made] = $model->made;
-}*/
-?>
+	.shop_list {
+		background-color: #e6e7e9;
+		margin-right: 20px;
+	}
+
+	.shop_list input[type="checkbox"] {
+		height: auto;
+	}
+</style>
 
 <div class="rightmain_content">
 	<? $this->widget('ResultMessage', array('msg'=>$msg)); ?>
@@ -197,9 +199,34 @@ if (!in_array($model->made, $mades)) {
 			<div class="grid-c1">
 				<span class="input_label"><? echo Yii::t('product_message', 'produce_status'); ?></span><? echo $form->dropDownList($model, 'produce_status', ProductMaster::getProduceStatusDropdown()); ?>
 			</div>
-			
+
 			<div class="grid-c1">
 				<span class="input_label"><? echo Yii::t('product_message', 'is_monopoly'); ?></span><? echo $form->checkbox($model, 'is_monopoly'); ?>
+			</div>
+			
+			<div class="grid-c1">
+				<span class="input_label"><? echo Yii::t('product_message', 'is_internal'); ?></span><? echo $form->checkbox($model, 'is_internal'); ?>
+			</div>
+
+			<div class="grid-c1">
+				<span class="input_label"><? echo Yii::t('product_message', 'is_exhibit'); ?></span><? echo $form->checkbox($model, 'is_exhibit'); ?>
+			</div>
+
+			<div class="grid-c1">
+				<span class="input_label"><? echo Yii::t('product_message', 'is_ship'); ?></span><? echo $form->checkbox($model, 'is_ship'); ?>
+			</div>
+
+			<div class="grid-c1" style="height:150px">
+				<span class="input_label"><? echo Yii::t('product_message', 'categoryIdList'); ?></span>
+				<? echo $form->listbox($productForm, 'categoryIdList', Category::getDropDownFromCache(), array('multiple'=>'multiple', 'size'=>'8', style=>"height:150px")); ?>
+			</div>
+
+			<div class="grid-c1">
+				<?
+					echo $form->checkBoxList($productForm, 'shopList',
+					array('AUCTION'=>'AUCTION', 'SHOPPING'=>'SHOPPING','RAKUTEN'=>'RAKUTEN', 'AMAZON'=>'AMAZON', 'OWN WEB'=>'OWN WEB', 'FACEBOOK'=>'FACEBOOK', 'IG'=>'IG', 'EBAY'=>'EBAY'),
+					array('template'=>'<span class="shop_list">{label}{input}</span>', 'separator'=>''));
+				?>
 			</div>
 			
 			<br style="clear:both" />

@@ -43,9 +43,6 @@ $roleMatrix = Yii::app()->user->getState('role_matrix');
 				<? } else {?>
 					<a class="menubar" href="<?=$baseUrl ?>/product/changeDisplayFormat">Show Excel Format</a>
 				<? } ?>
-				<? foreach ($mades as $made) {?>
-					<a class="menubar" href="<?=$baseUrl ?>/product/searchByFilter?ProductSearchForm%5Bmade%5D=<?=$made ?>"><?=$made ?></a>
-				<? } ?>
 				<a class="menubar" href="<?=$baseUrl ?>/product/showNotFinishItem">Show Not Finish Item</a>
 			<? } ?>
 			
@@ -56,9 +53,17 @@ $roleMatrix = Yii::app()->user->getState('role_matrix');
 			<? if (GlobalFunction::checkPagePrivilege('supplier_management')) { ?>
 				<a class="menubar" href="<?=$baseUrl ?>/supplier">Supplier Management</a>
 			<? } ?>
+
+			<? if (GlobalFunction::checkPagePrivilege('category_management')) { ?>
+				<a class="menubar" href="<?=$baseUrl ?>/category">Category Management</a>
+			<? } ?>
 			
 			<? if (GlobalFunction::checkPagePrivilege('order_management')) { ?>
 				<a class="menubar" href="<?=$baseUrl ?>/order">Order Management</a>
+			<? } ?>
+
+			<? if (GlobalFunction::checkPagePrivilege('cash_management')) { ?>
+				<a class="menubar" href="<?=$baseUrl ?>/cash">Cash Management</a>
 			<? } ?>
 			
 			<? if (GlobalFunction::checkPagePrivilege('user_management')) { ?>
@@ -80,7 +85,12 @@ $roleMatrix = Yii::app()->user->getState('role_matrix');
 			<? if (GlobalFunction::checkPagePrivilege('email_management')) { ?>
 				<a class="menubar" href="<?=$baseUrl ?>/email/list">Email Management</a>
 			<? } ?>
-			
+
+			<? if (GlobalFunction::checkPagePrivilege('product_management')) { ?>
+				<a class="menubar menubar-orange" href="<?=$baseUrl ?>/product/showNotExhibit">未出品</a>
+				<a class="menubar menubar-orange" href="<?=$baseUrl ?>/product/showNotShip">未出货</a>
+			<? } ?>
+
 		</div>
 		<div id="body_right_main">
 			<?php echo $content; ?>

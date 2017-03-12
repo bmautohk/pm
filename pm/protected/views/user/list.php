@@ -21,6 +21,7 @@ $writePermission = GlobalFunction::checkPagePrivilege('user_management', RolePag
 				<th><? echo Yii::t('user_message', 'role'); ?></th>
 				<th><? echo Yii::t('user_message', 'supplier'); ?></th>
 				<th><? echo Yii::t('user_message', 'last_login'); ?></th>
+				<th><? echo Yii::t('user_message', 'country'); ?></th>
 			</tr>
 		<? foreach($users as $user) { ?>
 			<tr>
@@ -30,6 +31,7 @@ $writePermission = GlobalFunction::checkPagePrivilege('user_management', RolePag
 				<td><?=$user->role->role ?></td>
 				<td><?=$user->user_supplier->supplier ?></td>
 				<td><?=$user->last_login ?></td>
+				<td><?=$user->country ?></td>
 			</tr>
 		<? }?>
 		</table>

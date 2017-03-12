@@ -1,3 +1,9 @@
+<style>
+	.grid_p-c3 .input_label {
+		width:100px;
+	} 
+</style>
+
 <? if (!isset($items)) {?>
 
 <? } else if ($items == NULL || sizeOf($items) == 0) {?>
@@ -25,11 +31,11 @@ echo '</span>';
 function textField($form, $model, $attribute, $roleMatrix, $tableName, $columnName, $htmlOptions=array()) {
 
         if (GlobalFunction::checkPrivilege($roleMatrix, $tableName, $columnName)) {
-		echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span><span class="input_field">';
-        echo $form->textField($model, $attribute, $htmlOptions);
+			echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span><span class="input_field">';
+        	echo $form->textField($model, $attribute, $htmlOptions);
         }else{
-		echo '<span class="input_label"></span><span class="input_field">';
-        echo '<input type="text"/>';
+			echo '<span class="input_label"></span><span class="input_field">';
+        	echo '<input type="text"/>';
         }
 echo '</span>';
 }
@@ -81,7 +87,9 @@ function dropDownList($form, $model, $attribute, $options, $roleMatrix, $tableNa
 	<div class="scroll" id="prod_page">
 		<?
 		$i = 0; 
-		foreach($items as $product) { ?>
+		foreach($items as $product) { 
+			$isHighlight = $product->is_monopoly==1 || $product->is_exhibit==0 || $product->is_ship==0;
+		?>
 			<div class="grid_p">
 				<div class="grid_p-c1" style="border:1px solid #949599;">
 					<? $images = glob($imgDir.$product->prod_sn."_*.jpg"); 
@@ -98,8 +106,13 @@ function dropDownList($form, $model, $attribute, $options, $roleMatrix, $tableNa
 					} ?>
 				</div>
 				<div class="grid_p-c1">
-					<div class="product_name">
-						<?=$product->prod_sn ?><?if ($product->is_monopoly==1) { echo "<font color='red' >[专卖]</font>";} ?>
+					<div class="<?= $isHighlight ? 'product_name-highlight': 'product_name' ?>">
+						<?=$product->prod_sn ?>
+					</div>
+					<div>
+						<?if ($product->is_monopoly==1) { echo "<span class='product-highlight'>专卖</span>";} ?>
+						<?if ($product->is_exhibit==0) { echo "<span class='product-highlight'>未出品</span>";} ?>
+						<?if ($product->is_ship==0) { echo "<span class='product-highlight'>未出货</span>";} ?>
 					</div>
 					<? echo textField($form,$product,'made',$roleMatrix,$tableName,'made');?>
 					<? echo textField($form,$product,'model',$roleMatrix,$tableName,'model');?>
@@ -107,7 +120,10 @@ function dropDownList($form, $model, $attribute, $options, $roleMatrix, $tableNa
 				</div>
 				<div class="grid_p-c3">
 					<? echo textField($form,$product,'product_desc',$roleMatrix,$tableName,'product_desc');?>
-					<? echo textField2($form,$product,'product_desc_ch',$roleMatrix,$tableName,'product_desc_ch');?><? echo textField($form,$product,'accessory_remark',$roleMatrix,$tableName,'accessory_remark');?>
+					<? echo textField2($form,$product,'product_desc_ch',$roleMatrix,$tableName,'product_desc_ch');?>
+					<? echo textField($form,$product, 'display_S1_output_volume',$roleMatrix,$tableName,'output_volume', array('title'=>'&lt;Total&gt; / &lt;Total in 1 month&gt; / &lt;Total in 2 weeks&gt;'));?>
+					<? echo textField($form,$product, 'display_S1CN_output_volume',$roleMatrix,$tableName,'output_volume', array('title'=>'&lt;Total&gt; / &lt;Total in 1 month&gt; / &lt;Total in 2 weeks&gt;'));?>
+					<? echo textField($form,$product,'accessory_remark',$roleMatrix,$tableName,'accessory_remark');?>
 					<? echo textArea($form, $product, 'company_remark', $roleMatrix, $tableName, 'company_remark',array('style'=>'color:red','cols'=>'23','rows'=>'5')); ?>
 					
 					<div class="link">
@@ -135,3 +151,12 @@ function dropDownList($form, $model, $attribute, $options, $roleMatrix, $tableNa
 	
 	<? $this->endWidget(); ?>
 <? } ?>
+
+<script text="text/javascript">
+
+$(function() {
+	$('input[name="ProductMasterVO[display_S1_output_volume]"]').tooltip();
+	$('input[name="ProductMasterVO[display_S1CN_output_volume]"]').tooltip();
+});
+
+</script>

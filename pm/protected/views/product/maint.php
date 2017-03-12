@@ -1,5 +1,18 @@
 <style>
 	.ui-menu .ui-menu-item a {font-size: 0.4em; }
+
+	[type="checkbox"] {
+		height:24px;
+	}
+
+	.shop_list {
+		background-color: #e6e7e9;
+		margin-right: 20px;
+	}
+
+	.shop_list input[type="checkbox"] {
+		height: auto;
+	}
 </style>
 <?
 $tableName = 'product_master';
@@ -80,8 +93,24 @@ function dropDownList($form, $model, $attribute, $options, $roleMatrix, $tableNa
 function checkbox($form, $model, $attribute, $roleMatrix, $tableName, $columnName) {
 	
 	if (GlobalFunction::checkPrivilege($roleMatrix, $tableName, $columnName)) {
-	echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span>';
+		echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span>';
 		echo $form->checkbox($model, $attribute);
+	}
+}
+
+function shopCheckboxList($form, $model, $roleMatrix, $tableName, $columnName) {
+	if (GlobalFunction::checkPrivilege($roleMatrix, $tableName, $columnName)) {
+		echo $form->checkBoxList($model, 'shopList',
+				array('AUCTION'=>'AUCTION', 'SHOPPING'=>'SHOPPING','RAKUTEN'=>'RAKUTEN', 'AMAZON'=>'AMAZON', 'OWN WEB'=>'OWN WEB', 'FACEBOOK'=>'FACEBOOK', 'IG'=>'IG', 'EBAY'=>'EBAY'),
+				array('template'=>'<span class="shop_list">{label}{input}</span>', 'separator'=>''));
+	}
+}
+
+function listbox($form, $model, $attribute, $data, $options, $roleMatrix, $tableName, $columnName) {
+	
+	if (GlobalFunction::checkPrivilege($roleMatrix, $tableName, $columnName)) {
+		echo '<span class="input_label">'.Yii::t('product_message', $attribute).'</span>';
+		echo $form->listbox($model, $attribute, $data, $options);
 	}
 }
 ?>
@@ -281,14 +310,38 @@ function checkbox($form, $model, $attribute, $roleMatrix, $tableName, $columnNam
 				<? echo textField($form, $model, 'yahoo_produce', $roleMatrix, $tableName, 'yahoo_produce'); ?>
 			</div>
 			
-			<div class="grid_u-c1">
+			<div class="grid_u-c1" style="height:50px">
 				<? echo dropDownList($form, $model, 'produce_status', ProductMaster::getProduceStatusDropdown(), $roleMatrix, $tableName, 'produce_status'); ?>
 			</div>
 			<div class="grid_u-m2"></div>
+			<div class="grid_u-c2" style="height:50px">
+				<? echo shopCheckboxList($form, $productForm, $roleMatrix, $tableName, 'shop'); ?>
+			</div>
+
+			<div class="grid_u-m2"></div>
 			<div class="grid_u-c2">
-				<? echo checkbox($form, $model, 'is_monopoly', $roleMatrix, $tableName, 'is_monopoly'); ?>
+				<? echo checkbox($form, $model, 'is_retail', $roleMatrix, $tableName, 'is_retail'); ?>
 			</div>
 			
+			<div class="grid_u-m2"></div>
+			<div class="grid_u-c2">
+				
+			</div>
+
+			<div class="grid_u-m2"></div>
+			<div class="grid_u-c2" style="height:150px">
+				<? echo listbox($form, $productForm, 'categoryIdList', Category::getDropDownFromCache(), array('multiple'=>'multiple', 'size'=>'8'), $roleMatrix, $tableName, 'category_id'); ?>
+			</div>
+			
+			<div class="grid_u-m2"></div>
+			<div class="grid_u-c2" style="height:150px">
+				<? echo checkbox($form, $model, 'is_monopoly', $roleMatrix, $tableName, 'is_monopoly'); ?>
+				<br />
+				<? echo checkbox($form, $model, 'is_internal', $roleMatrix, $tableName, 'is_internal'); ?>
+				<br />
+				<? echo checkbox($form, $model, 'is_exhibit', $roleMatrix, $tableName, 'is_exhibit'); ?>
+				<br />
+				<? echo checkbox($form, $model, 'is_ship', $roleMatrix, $tableName, 'is_ship'); ?>
 			<br style="clear:both" />
 			
 		</div>

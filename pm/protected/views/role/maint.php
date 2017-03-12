@@ -35,6 +35,14 @@ else {
 				<span class="input_label"><? echo Yii::t('role_message', 'role'); ?></span><span class="input_field"><? echo $form->textField($model, 'role'); ?></span>
 			</div>
 			
+			<div class="grid-c1">
+				<span class="input_label"><? echo Yii::t('role_message', 'is_retail'); ?></span><? echo $form->checkbox($model, 'is_retail'); ?>
+			</div>
+			
+			<div class="grid-c1">
+				<span class="input_label"><? echo Yii::t('role_message', 'is_allow_internal'); ?></span><? echo $form->checkbox($model, 'is_allow_internal'); ?>
+			</div>
+			
 			<br style="clear:both" />
 		</div>
 		
