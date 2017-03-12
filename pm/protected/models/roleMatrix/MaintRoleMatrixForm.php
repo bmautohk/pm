@@ -51,7 +51,12 @@ class MaintRoleMatrixForm extends CFormModel {
 		'is_exhibit',
 		'is_ship',
 		'output_volume',
-		'category_id'
+		'category_id',
+		'packing_size_w',
+		'packing_size_h',
+		'packing_size_d',
+		'gross_weight',
+		'safe_stock',
 	);
 	
 	public static $pages = array(

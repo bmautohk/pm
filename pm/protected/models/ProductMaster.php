@@ -43,6 +43,11 @@
  * @property string $yahoo_produce
  * @property string $accessory_remark
  * @property string $company_remark
+ * @property integer $product_size
+ * @property integer $packing_size
+ * @property integer $net_weight
+ * @property integer $gross_weight
+ 
  */
 class ProductMaster extends CActiveRecord
 {
@@ -90,17 +95,17 @@ class ProductMaster extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('prod_sn, made, status, produce_status, is_monopoly, is_retail, is_internal', 'required'),
-			array('prod_sn, pcs, moq', 'numerical', 'integerOnly'=>true),
+			array('safe_stock,prod_sn, pcs, moq', 'numerical', 'integerOnly'=>true),
 			//array('no_jp', 'unique', 'on'=>'save'), // Black PM no need unique checking
-			array('molding, cost, kaito, other, purchase_cost, market_research_price, business_price, auction_price, kaito_price', 'numerical'),
-			array('customer, made, model, model_no, year, item_group, material, colour, colour_no, supplier, progress, person_in_charge, state, yahoo_produce', 'length', 'max'=>255),
+			array('packing_size_w,packing_size_h,packing_size_d,molding, cost, kaito, other, purchase_cost, market_research_price, business_price, auction_price, kaito_price', 'numerical'),
+			array('gross_weight,customer, made, model, model_no, year, item_group, material, colour, colour_no, supplier, progress, person_in_charge, state, yahoo_produce', 'length', 'max'=>255),
 			array('status', 'length', 'max'=>1),
 			array('no_jp', 'length', 'max'=>32),
 			array('factory_no', 'length', 'max'=>50),
 			array('id, product_desc, product_desc_en, product_desc_ch, product_desc_jp, buy_date, receive_date, factory_date, pack_remark, order_date, receive_model_date, ship_date, accessory_remark, company_remark, shop, is_ship, is_exhibit, create_date', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, customer, prod_sn, status, no_jp, factory_no, made, model, model_no, year, item_group, material, product_desc, product_desc_ch, product_desc_jp, pcs, colour, colour_no, moq, molding, cost, kaito, other, buy_date, receive_date, supplier, purchase_cost, factory_date, pack_remark, order_date, progress, receive_model_date, person_in_charge, state, ship_date, market_research_price, yahoo_produce', 'safe', 'on'=>'search'),
+			array('packing_size_w,packing_size_h,packing_size_d,gross_weight,id, customer, prod_sn, status, no_jp, factory_no, made, model, model_no, year, item_group, material, product_desc, product_desc_ch, product_desc_jp, pcs, colour, colour_no, moq, molding, cost, kaito, other, buy_date, receive_date, supplier, purchase_cost, factory_date, pack_remark, order_date, progress, receive_model_date, person_in_charge, state, ship_date, market_research_price, yahoo_produce', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -164,6 +169,13 @@ class ProductMaster extends CActiveRecord
 			'yahoo_produce' => Yii::t('product_message', 'yahoo_produce'),
 			'accessory_remark' => Yii::t('product_message', 'accessory_remark'),
 			'company_remark' => Yii::t('product_message', 'company_remark'),
+			//'product_size' => Yii::t('product_message', 'product_size'),
+			'packing_size_w' => Yii::t('product_message', 'packing_size_w'),
+			'packing_size_h' => Yii::t('product_message', 'packing_size_h'),
+			'packing_size_d' => Yii::t('product_message', 'packing_size_d'),
+			//'net_weight' => Yii::t('product_message', 'net_weight'),
+			'gross_weight' => Yii::t('product_message', 'gross_weight'),
+			'safe_stock' => Yii::t('product_message', 'safe_stock'),
 		);
 	}
 

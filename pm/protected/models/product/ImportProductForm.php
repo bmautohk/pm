@@ -105,6 +105,11 @@ class ImportProductForm extends CFormModel {
 			$product->ship_date = $this->getFormatDate($worksheet->getCellByColumnAndRow($i++, $rowNo));
 			$product->market_research_price = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
 			$product->yahoo_produce = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
+			$product->packing_size_d = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
+			$product->packing_size_w = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
+			$product->packing_size_h = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
+			$product->gross_weight = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
+			$product->safe_stock = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
 			$product->produce_status = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue(); if (empty($product->produce_status)) { $product->produce_status = GlobalConstants::PRODUCE_STATUS_PREPARE; }
 			$product->shop = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
 			$product->is_monopoly = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue() == 'No' ? 0 : 1;

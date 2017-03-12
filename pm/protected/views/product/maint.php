@@ -310,6 +310,32 @@ function listbox($form, $model, $attribute, $data, $options, $roleMatrix, $table
 				<? echo textField($form, $model, 'yahoo_produce', $roleMatrix, $tableName, 'yahoo_produce'); ?>
 			</div>
 			
+			<div class="grid_u-c1">
+				<? echo textField($form, $model, 'packing_size_d', $roleMatrix, $tableName, 'packing_size_d'); ?>
+			</div>
+			<div class="grid_u-m2"></div>
+			<div class="grid_u-c2">
+				<? echo textField($form, $model, 'packing_size_w', $roleMatrix, $tableName, 'packing_size_w'); ?>
+			
+			</div>
+			
+			
+			<div class="grid_u-c1">
+				<? echo textField($form, $model, 'packing_size_h', $roleMatrix, $tableName, 'packing_size_h'); ?>
+			
+			</div>
+			<div class="grid_u-m2"></div>
+			<div class="grid_u-c2">
+				<? echo textField($form, $model, 'gross_weight', $roleMatrix, $tableName, 'gross_weight'); ?>
+			</div>
+
+			<div class="grid_u-c1">
+				<? echo textField($form, $model, 'safe_stock', $roleMatrix, $tableName, 'safe_stock'); ?>
+			</div>
+			<div class="grid_u-m2"></div>
+			<div class="grid_u-c2">
+			</div>
+			
 			<div class="grid_u-c1" style="height:50px">
 				<? echo dropDownList($form, $model, 'produce_status', ProductMaster::getProduceStatusDropdown(), $roleMatrix, $tableName, 'produce_status'); ?>
 			</div>
@@ -318,17 +344,14 @@ function listbox($form, $model, $attribute, $data, $options, $roleMatrix, $table
 				<? echo shopCheckboxList($form, $productForm, $roleMatrix, $tableName, 'shop'); ?>
 			</div>
 
-			<div class="grid_u-m2"></div>
-			<div class="grid_u-c2">
+			<div class="grid_u-c1">
 				<? echo checkbox($form, $model, 'is_retail', $roleMatrix, $tableName, 'is_retail'); ?>
 			</div>
-			
 			<div class="grid_u-m2"></div>
 			<div class="grid_u-c2">
-				
 			</div>
 
-			<div class="grid_u-m2"></div>
+
 			<div class="grid_u-c2" style="height:150px">
 				<? echo listbox($form, $productForm, 'categoryIdList', Category::getDropDownFromCache(), array('multiple'=>'multiple', 'size'=>'8'), $roleMatrix, $tableName, 'category_id'); ?>
 			</div>

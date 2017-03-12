@@ -197,11 +197,32 @@
 			</div>
 			
 			<div class="grid-c1">
+				<span class="input_label"><? echo Yii::t('product_message', 'packing_size_d'); ?></span><span class="input_field"><? echo $form->textField($model,'packing_size_d'); ?></span>
+			</div>
+			<div class="grid-c1">
+				<span class="input_label"><? echo Yii::t('product_message', 'packing_size_w'); ?></span><span class="input_field"><? echo $form->textField($model,'packing_size_w'); ?></span>
+			</div>
+			 <div class="grid-c1">
+				<span class="input_label"><? echo Yii::t('product_message', 'packing_size_h'); ?></span><span class="input_field"><? echo $form->textField($model,'packing_size_h'); ?></span>
+			</div>
+			
+			<div class="grid-c1">
+				<span class="input_label"><? echo Yii::t('product_message', 'gross_weight'); ?></span><span class="input_field"><? echo $form->textField($model,'gross_weight'); ?></span>
+			</div>
+			<div class="grid-c1">
+				<span class="input_label"><? echo Yii::t('product_message', 'safe_stock'); ?></span><span class="input_field"><? echo $form->textField($model,'safe_stock'); ?></span>
+			</div>
+			
+			<div class="grid-c1">
+				<span class="input_label"><? echo Yii::t('product_message', 'is_monopoly'); ?></span><? echo $form->checkbox($model, 'is_monopoly'); ?>
+			</div>
+
+			<div class="grid-c1">
 				<span class="input_label"><? echo Yii::t('product_message', 'produce_status'); ?></span><? echo $form->dropDownList($model, 'produce_status', ProductMaster::getProduceStatusDropdown()); ?>
 			</div>
 
 			<div class="grid-c1">
-				<span class="input_label"><? echo Yii::t('product_message', 'is_monopoly'); ?></span><? echo $form->checkbox($model, 'is_monopoly'); ?>
+				<span class="input_label"><? echo Yii::t('product_message', 'is_retail'); ?></span><? echo $form->checkbox($model, 'is_retail'); ?>
 			</div>
 			
 			<div class="grid-c1">

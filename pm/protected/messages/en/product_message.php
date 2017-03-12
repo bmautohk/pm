@@ -59,5 +59,12 @@ return array (
 		'display_S1_output_volume_2weeks' => '總出貨量(S1) - 2 weeks',
 		'display_S1CN_output_volume_1month' => '總出貨量(CN) - 1 month',
 		'display_S1CN_output_volume_2weeks' => '總出貨量(CN) - 2 weeks',
+		'product_size'=>'產品尺寸(cm)',
+		'packing_size_w'=>'宽(CM)',
+		'packing_size_h'=>'高(CM)',
+		'packing_size_d'=>'長(CM)',
+		'net_weight'=>'淨重(KG)',
+		'gross_weight'=>'毛重(KG)',
+		'safe_stock'=>'安全庫存量',
 );
 ?>
