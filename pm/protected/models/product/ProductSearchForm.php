@@ -28,6 +28,8 @@ class ProductSearchForm extends CFormModel {
 	public $produceStatus;
 	
 	public $isSearchNotFinish = 'N';
+	public $isSearchNotShip = 'N';
+	public $isSearchNotExhibit = 'N';
 	
 	/**
 	 * @return array validation rules for model attributes.
@@ -37,17 +39,76 @@ class ProductSearchForm extends CFormModel {
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-				array('keyword, no_jp2, prod_sn2, customer, no_jp, factory_no, made, model, model_no, year, item_group, colour, material, pcsFrom, pcsTo, supplier, moldingFrom, moldingTo, kaitoFrom, kaitoTo, produceStatus, isSearchNotFinish, itemCount', 'safe'),
+				array('keyword, no_jp2, prod_sn2, customer, no_jp, factory_no, made, model, model_no, year, item_group, colour, material, pcsFrom, pcsTo, supplier, moldingFrom, moldingTo, kaitoFrom, kaitoTo, produceStatus, isSearchNotFinish, isSearchNotShip, isSearchNotExhibit, itemCount', 'safe'),
 		);
 	}
 	
 	public function searchByCriteria($criteria, $pages, $totalItemCount = NULL)
 	{
-		return new CActiveDataProvider(get_class(new ProductMaster), array(
+		
+		$dataProvider = new CActiveDataProvider(get_class(new ProductMasterVO), array(
 				'criteria'=>$criteria,
 				'pagination'=>$pages,
 				'totalItemCount'=>$totalItemCount
 		));
+		
+		$noJPList = array();
+		$produts = array();
+		foreach($dataProvider->getData() as $data) {
+			if (!empty($data->no_jp)) {
+				$products[$data->no_jp] = $data;
+				$noJPList[] = $data->no_jp;
+			}
+		}
+		
+		$criteria = new CDbCriteria();
+		$criteria->addInCondition('no_jp', $noJPList);
+		
+		$outputVolumes = ProductOutputVolume::model()->findAll($criteria);
+		$outputVolumeMap = array();
+		foreach ($outputVolumes as $outputVolume) {
+			
+			if ($outputVolume->source == ProductOutputVolume::SOURCE_S1) {
+				$outputVolumeMap[$outputVolume->no_jp][ProductOutputVolume::SOURCE_S1] = $outputVolume;
+			} else if ($outputVolume->source == ProductOutputVolume::SOURCE_S1CN) {
+				$outputVolumeMap[$outputVolume->no_jp][ProductOutputVolume::SOURCE_S1CN] = $outputVolume;
+			}
+		}
+		
+		$result = array();
+		foreach($dataProvider->getData() as $data) {
+			if (!empty($data->no_jp)) {
+				$outputVolumeArray = $outputVolumeMap[$data->no_jp]; 
+				
+				if (isset($outputVolumeArray[ProductOutputVolume::SOURCE_S1])) {
+					$outputVolume = $outputVolumeArray[ProductOutputVolume::SOURCE_S1];
+					$data->s1_total_unit = $outputVolume->total_unit;
+					$data->s1_unit_1 = $outputVolume->unit_1;
+					$data->s1_unit_2 = $outputVolume->unit_2;
+				}
+				
+				if (isset($outputVolumeArray[ProductOutputVolume::SOURCE_S1CN])) {
+					$outputVolume = $outputVolumeArray[ProductOutputVolume::SOURCE_S1CN];
+					$data->s1cn_total_unit = $outputVolume->total_unit;
+					$data->s1cn_unit_1 = $outputVolume->unit_1;
+					$data->s1cn_unit_2 = $outputVolume->unit_2;
+				}
+				
+				$result[] = $data;
+			} else {
+				$result[] = $data;
+			}
+		}
+		
+		$dataProvider->setData($result);
+		
+		return $dataProvider;
+		
+		/* return new CActiveDataProvider(get_class(new ProductMasterVO), array(
+				'criteria'=>$criteria,
+				'pagination'=>$pages,
+				'totalItemCount'=>$totalItemCount
+		)); */
 	}
 	
 // Search by crtieria
@@ -95,7 +156,22 @@ class ProductSearchForm extends CFormModel {
 			}
 		}
 		else { */
-		if ($this->isSearchNotFinish == 'N') {
+		
+		$criteria->select = 'id, customer, prod_sn, status, t.no_jp, factory_no, made, model, model_no, year, item_group, material, product_desc, product_desc_ch, product_desc_jp, '.
+			'pcs, colour, colour_no, moq, molding, cost, kaito, other, buy_date, receive_date, supplier, purchase_cost, business_price, auction_price, kaito_price, factory_date, '.
+			'pack_remark, order_date, progress, receive_model_date, person_in_charge, state, ship_date, market_research_price, yahoo_produce, accessory_remark, company_remark, '.
+			'produce_status, is_monopoly, is_ship, is_exhibit, is_retail ';
+			//'total_unit as total_unit, unit_1_mth as unit_1_mth, unit_2_week as unit_2_week';
+		//$criteria->join = 'left outer join product_output_volume on t.no_jp = product_output_volume.no_jp';
+		
+		if ($this->isSearchNotFinish == 'Y') {
+			$criteria->compare('produce_status', '<>'.GlobalConstants::PRODUCE_STATUS_COMPLETE);
+			$criteria->compare('is_monopoly', '<> '.ProductMaster::IS_MONOPOLY_YES);
+		} else if ($this->isSearchNotShip == 'Y') {
+			$criteria->compare('is_ship', '<> '.ProductMaster::IS_SHIP_YES);
+		} else if ($this->isSearchNotExhibit == 'Y') {
+			$criteria->compare('is_exhibit', '<> '.ProductMaster::IS_EXHIBIT_YES);
+		} else {
 			$criteria->compare('no_jp', trim($this->no_jp2));
 			$criteria->compare('prod_sn', trim($this->prod_sn2));
 			
@@ -127,17 +203,23 @@ class ProductSearchForm extends CFormModel {
 			
 			$criteria->compare('produce_status', $this->produceStatus);
 		}
-		else {
-			$criteria->compare('produce_status', '<>'.GlobalConstants::PRODUCE_STATUS_COMPLETE);
-			//$criteria->compare('produce_status', '<>'.GlobalConstants::PRODUCE_STATUS_MONOPOLY);
-			$criteria->compare('is_monopoly', '<> '.ProductMaster::IS_MONOPOLY_YES);
-		}
-		//}
 		
 		// If user is supplier, only search products belonging to this supplier
 		if (GlobalFunction::isSupplier()) {
 			$criteria->compare('supplier', GlobalFunction::getUserSupplier());
 		}
+		
+		// If user is retailer, only search products which is available for retailer
+		if (GlobalFunction::isRetail()) {
+			$criteria->compare('is_retail', ProductMaster::IS_RETAIL_YES);
+		}
+		
+		// User does not have right to see internal product, only serach products which is internal
+		if (!GlobalFunction::isAllowInternal()) {
+			$criteria->compare('is_internal', ProductMaster::IS_INTERNAL_NO);
+		}
+		
+		//echo 'Allow Int?'.GlobalFunction::isAllowInternal();
 		
 		if (!$isExcelView) {
 			//$criteria->order = 'create_date desc, no_jp, id';
@@ -186,7 +268,7 @@ class ProductSearchForm extends CFormModel {
 		$data = array();
 		$dataReader = $command->query();
 		foreach ($dataReader as $row) {
-			$product = new ProductMaster();
+			$product = new ProductMasterVO();
 			$product->id = $row['id'];
 			$product->customer = $row['customer'];
 			$product->prod_sn = $row['prod_sn'];
@@ -228,6 +310,26 @@ class ProductSearchForm extends CFormModel {
 			$product->company_remark = $row['company_remark'];
 			$product->produce_status = $row['produce_status'];
 			$product->is_monopoly = $row['is_monopoly'];
+			$product->is_exhibit = $row['is_exhibit'];
+			$product->is_ship = $row['is_ship'];
+			
+			// Get output volume
+			$criteria = new CDbCriteria();
+			$criteria->compare('no_jp', $product->no_jp);
+			$outputVolumes = ProductOutputVolume::model()->findAll($criteria);
+			
+			foreach ($outputVolumes as $outputVolume) {
+				if ($outputVolume->source == ProductOutputVolume::SOURCE_S1) {
+					$product->s1_total_unit = $outputVolume->total_unit;
+					$product->s1_unit_1 = $outputVolume->unit_1;
+					$product->s1_unit_2 = $outputVolume->unit_2;
+				} else if ($outputVolume->source == ProductOutputVolume::SOURCE_S1CN) {
+					$product->s1cn_total_unit = $outputVolume->total_unit;
+					$product->s1cn_unit_1 = $outputVolume->unit_1;
+					$product->s1cn_unit_2 = $outputVolume->unit_2;
+				}
+			}
+			
 			$data[] = $product;
 		}
 		
@@ -289,12 +391,19 @@ class ProductSearchForm extends CFormModel {
 			else {
 				$isAddUnion = true;
 			}
-				
-			$sql .= "SELECT id,customer,prod_sn,status,no_jp,factory_no,made,model,model_no,year,item_group,material,product_desc,product_desc_ch,product_desc_jp,pcs,colour,colour_no,moq,molding,cost,kaito,other,buy_date,receive_date,supplier,purchase_cost,factory_date,pack_remark,order_date,progress,receive_model_date,person_in_charge,state,ship_date,market_research_price,yahoo_produce,accessory_remark,company_remark,produce_status,is_monopoly,create_date
+
+			//total_unit, unit_1_mth, unit_2_week
+			// left outer join product_output_volume on product_master.no_jp = product_output_volume.no_jp
+			$sql .= "SELECT id,customer,prod_sn,status,product_master.no_jp,factory_no,made,model,model_no,year,item_group,material,
+			product_desc,product_desc_ch,product_desc_jp,pcs,colour,colour_no,moq,molding,cost,kaito,other,buy_date,receive_date,supplier,
+			purchase_cost,factory_date,pack_remark,order_date,progress,receive_model_date,person_in_charge,state,ship_date,market_research_price,
+			yahoo_produce,accessory_remark,company_remark,produce_status,is_monopoly,is_ship,is_exhibit,is_retail,is_internal,create_date
+			
 			FROM product_master 
+			
 			WHERE customer like :keyword_$i
 			OR prod_sn like :keyword_$i
-			OR no_jp like :keyword_$i
+			OR product_master.no_jp like :keyword_$i
 			OR factory_no like :keyword_$i
 			OR made like :keyword_$i
 			OR model like :keyword_$i
@@ -321,11 +430,21 @@ class ProductSearchForm extends CFormModel {
 		}
 		
 		$sql = 'SELECT *
-		FROM ('.$sql.') tmp';
+		FROM ('.$sql.') tmp WHERE 1 = 1 ';
 		
 		// If user is supplier, only search products belonging to this supplier
 		if (GlobalFunction::isSupplier()) {
-			$sql .= ' WHERE supplier = :supplier ';
+			$sql .= ' AND supplier = :supplier ';
+		}
+		
+		// If user is retailer, only search products which is available for retailer
+		if (GlobalFunction::isRetail()) {
+			$sql .= ' AND is_retail = '.ProductMaster::IS_RETAIL_YES.' ';
+		}
+		
+		// User does not have right to see internal product
+		if (!GlobalFunction::isAllowInternal()) {
+			$sql .= ' AND is_internal = '.ProductMaster::IS_INTERNAL_NO.' ';
 		}
 		
 		$sql .= ' GROUP BY id,customer,prod_sn,status,no_jp,factory_no,made,model,model_no,year,item_group,material,product_desc,product_desc_ch,product_desc_jp,pcs,colour,colour_no,moq,molding,cost,kaito,other,buy_date,receive_date,supplier,purchase_cost,factory_date,pack_remark,order_date,progress,receive_model_date,person_in_charge,state,ship_date,market_research_price,yahoo_produce,accessory_remark,company_remark,produce_status,create_date ';

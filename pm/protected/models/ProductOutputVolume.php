@@ -1,25 +1,24 @@
 <?php
 
 /**
- * This is the model class for table "role".
+ * This is the model class for table "product_output_volume".
  *
- * The followings are the available columns in table 'role':
- * @property string $role_code
- * @property string $role
+ * The followings are the available columns in table 'product_output_volume':
+ * @property string $no_jp
+ * @property integer $total_unit
+ * @property integer $unit_1_mth
+ * @property integer $unit_2_week
  */
-class Role extends CActiveRecord
+class ProductOutputVolume extends CActiveRecord
 {
 	
-	const IS_REATIL_YES = 1;
-	const IS_REATIL_NO = 0;
-	
-	const IS_ALLOW_INTERNAL_YES = 1;
-	const IS_ALLOW_INTERNAL_NO = 0;
+	const SOURCE_S1 = "S1";
+	const SOURCE_S1CN = "S1CN";
 	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return Role the static model class
+	 * @return ProductOutputVolume the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -31,7 +30,7 @@ class Role extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'role';
+		return 'product_output_volume';
 	}
 
 	/**
@@ -42,12 +41,12 @@ class Role extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('role_code, role', 'required'),
-			array('role_code', 'length', 'max'=>2),
-			array('role', 'length', 'max'=>20),
+			array('no_jp, total_unit, unit_1_mth, unit_2_week', 'required'),
+			array('total_unit, unit_1_mth, unit_2_week', 'numerical', 'integerOnly'=>true),
+			array('no_jp', 'length', 'max'=>32),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('role_code, role', 'safe', 'on'=>'search'),
+			array('no_jp, total_unit, unit_1_mth, unit_2_week', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -59,7 +58,6 @@ class Role extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-				'role_matrix'=>array(self::HAS_MANY, 'RoleMatrix', 'role_code'),
 		);
 	}
 
@@ -69,8 +67,10 @@ class Role extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'role_code' => 'Role Code',
-			'role' => 'Role',
+			'no_jp' => 'No Jp',
+			'total_unit' => 'Total Unit',
+			'unit_1_mth' => 'Unit 1 Mth',
+			'unit_2_week' => 'Unit 2 Week',
 		);
 	}
 
@@ -85,31 +85,13 @@ class Role extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('role_code',$this->role_code,true);
-		$criteria->compare('role',$this->role,true);
+		$criteria->compare('no_jp',$this->no_jp,true);
+		$criteria->compare('total_unit',$this->total_unit);
+		$criteria->compare('unit_1_mth',$this->unit_1_mth);
+		$criteria->compare('unit_2_week',$this->unit_2_week);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
-	}
-	
-	public static function getDropDownFromCache() {
-		$list = Yii::app()->cache->get(GlobalConstants::CACHE_ROLE);
-		if($list===false) {
-			$criteria = new CDbCriteria();
-			$criteria->order = 'role';
-				
-			$model = self::model();
-			$model->setDbCriteria($criteria);
-			$result = $model->findAll();
-	
-			$list = array();
-			foreach ($result as $item) {
-				$list[$item->role_code] = $item->role;
-			}
-	
-			Yii::app()->cache->set(GlobalConstants::CACHE_ROLE, $list, Yii::app()->params['dropdownCacheTime']);
-		}
-		return $list;
 	}
 }

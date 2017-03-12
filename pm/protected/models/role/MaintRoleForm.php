@@ -2,6 +2,8 @@
 class MaintRoleForm extends CFormModel {
 	public $role_code;
 	public $role;
+	public $is_retail;
+	public $is_allow_internal ;
 	
 	public function rules() {
 		return array(
@@ -9,6 +11,7 @@ class MaintRoleForm extends CFormModel {
 			array('role_code', 'required', 'on'=>'add'),
 			array('role_code', 'length', 'max'=>'2', 'on'=>'add'),
 			array('role_code', 'safe', 'on'=>'update,delete'),
+			array('is_retail, is_allow_internal', 'safe'),
 		);
 	}
 	
@@ -16,6 +19,8 @@ class MaintRoleForm extends CFormModel {
 		$model = Role::model()->findByPk($role_code);
 		$this->role_code = $model->role_code;
 		$this->role = $model->role;
+		$this->is_retail = $model->is_retail;
+		$this->is_allow_internal = $model->is_allow_internal;
 	}
 	
 	public function create() {
@@ -29,6 +34,8 @@ class MaintRoleForm extends CFormModel {
 		$model = new Role();
 		$model->role_code = $this->role_code;
 		$model->role = $this->role;
+		$model->is_retail = $this->is_retail;
+		$model->is_allow_internal = $this->is_allow_internal;
 		
 		$result = $model->save();
 		if ($result) {
@@ -49,8 +56,10 @@ class MaintRoleForm extends CFormModel {
 		
 		$model = Role::model()->findByPk($this->role_code);
 		$model->role = $this->role;
+		$model->is_retail = $this->is_retail;
+		$model->is_allow_internal = $this->is_allow_internal;
 		
-		$saveAttributes = array('role');
+		$saveAttributes = array('role', 'is_retail', 'is_allow_internal');
 		
 		if ($model->save(true, $saveAttributes)) {
 			return true;

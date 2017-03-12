@@ -10,6 +10,14 @@ class GlobalFunction {
 		return Yii::app()->user->getState('role') == GlobalConstants::ROLE_SUPPLIER;
 	}
 	
+	public static function isRetail() {
+		return Yii::app()->user->getState('is_retail');
+	}
+	
+	public static function isAllowInternal() {
+		return Yii::app()->user->getState('is_allow_internal');
+	}
+	
 	public static function getUserSupplier() {
 		return Yii::app()->user->getState('supplier');
 	}

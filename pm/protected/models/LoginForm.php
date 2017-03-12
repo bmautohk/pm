@@ -74,4 +74,22 @@ class LoginForm extends CFormModel
 		else
 			return false;
 	}
+
+	public function getToken() {
+		$user = Authorize::model()->findByPk($this->username);
+		
+		$token = $user->access_token;
+		if ($token === NULL) {
+			$token = $this->generateToken();
+
+			$user->access_token = $token;
+			$user->save();
+		}
+
+		return $token;
+	}
+
+	private function generateToken() {
+		return bin2hex(openssl_random_pseudo_bytes(16));
+	}
 }

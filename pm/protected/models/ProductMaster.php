@@ -51,6 +51,18 @@ class ProductMaster extends CActiveRecord
 	const IS_MONOPOLY_NO = 0;
 	const IS_MONOPOLY_YES = 1;
 	
+	const IS_RETAIL_NO = 0;
+	const IS_RETAIL_YES = 1;
+	
+	const IS_INTERNAL_YES = 1;
+	const IS_INTERNAL_NO = 0;
+
+	const IS_SHIP_YES = 1;
+	const IS_SHIP_NO = 0;
+
+	const IS_EXHIBIT_YES = 1;
+	const IS_EXHIBIT_NO = 0;
+
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -77,7 +89,7 @@ class ProductMaster extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('prod_sn, made, status, produce_status, is_monopoly', 'required'),
+			array('prod_sn, made, status, produce_status, is_monopoly, is_retail, is_internal', 'required'),
 			array('prod_sn, pcs, moq', 'numerical', 'integerOnly'=>true),
 			//array('no_jp', 'unique', 'on'=>'save'), // Black PM no need unique checking
 			array('molding, cost, kaito, other, purchase_cost, market_research_price, business_price, auction_price, kaito_price', 'numerical'),
@@ -85,7 +97,7 @@ class ProductMaster extends CActiveRecord
 			array('status', 'length', 'max'=>1),
 			array('no_jp', 'length', 'max'=>32),
 			array('factory_no', 'length', 'max'=>50),
-			array('id, product_desc, product_desc_en, product_desc_ch, product_desc_jp, buy_date, receive_date, factory_date, pack_remark, order_date, receive_model_date, ship_date, accessory_remark, company_remark, create_date', 'safe'),
+			array('id, product_desc, product_desc_en, product_desc_ch, product_desc_jp, buy_date, receive_date, factory_date, pack_remark, order_date, receive_model_date, ship_date, accessory_remark, company_remark, shop, is_ship, is_exhibit, create_date', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, customer, prod_sn, status, no_jp, factory_no, made, model, model_no, year, item_group, material, product_desc, product_desc_ch, product_desc_jp, pcs, colour, colour_no, moq, molding, cost, kaito, other, buy_date, receive_date, supplier, purchase_cost, factory_date, pack_remark, order_date, progress, receive_model_date, person_in_charge, state, ship_date, market_research_price, yahoo_produce', 'safe', 'on'=>'search'),
@@ -100,6 +112,7 @@ class ProductMaster extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+				
 		);
 	}
 
@@ -255,5 +268,28 @@ class ProductMaster extends CActiveRecord
 				//GlobalConstants::PRODUCE_STATUS_MONOPOLY=>Yii::t('common_message', 'produce_status_monopoly'),
 				GlobalConstants::PRODUCE_STATUS_COMPLETE=>Yii::t('common_message', 'produce_status_complete'),
 			);
+	}
+	
+	public static function getProductMaster($id) {
+		if (GlobalFunction::isSupplier()) {
+			$model = self::model()->findByAttributes(array('id'=>$id, 'supplier'=>GlobalFunction::getUserSupplier()));
+		}
+		else {
+			$model = self::model()->findByAttributes(array('id'=>$id));
+		}
+		
+		if($model != null) {
+			if (GlobalFunction::isRetail() && $model->is_retail != ProductMaster::IS_RETAIL_YES) {
+				// View retail product only
+				return null;
+			}
+			
+			if (!GlobalFunction::isAllowInternal() && $model->is_internal == ProductMaster::IS_INTERNAL_YES) {
+				// Not allow to view internal product
+				return null;
+			}
+		}
+		
+		return $model;
 	}
 }

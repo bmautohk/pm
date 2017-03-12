@@ -44,7 +44,14 @@ class MaintRoleMatrixForm extends CFormModel {
 		'market_research_price',
 		'yahoo_produce',
 		'produce_status',
+		'shop',
 		'is_monopoly',
+		'is_retail',
+		'is_internal',
+		'is_exhibit',
+		'is_ship',
+		'output_volume',
+		'category_id'
 	);
 	
 	public static $pages = array(
@@ -52,13 +59,16 @@ class MaintRoleMatrixForm extends CFormModel {
 			'product_management_add_product', // 新加一筆產品資料
 			'customer_management',
 			'supplier_management',
+			'category_management',
 			'order_management',
+			'cash_management',
 			'user_management',
 			'role_management',
 			'role_matrix',
 			'product_change_log',
 			'email_management',
 			'export_excel',
+			'mobile',
 	);
 	public $name = 'aaa';
 	public $action;

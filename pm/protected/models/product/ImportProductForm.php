@@ -38,13 +38,23 @@ class ImportProductForm extends CFormModel {
 		// Once we have finished using the library, give back the
 		// power to Yii...
 		//spl_autoload_register(array('YiiBase','autoload'));
+
+		// All categories
+		$tmpCategoryList = Category::model()->findAll();
+		$categories = array();
+		foreach($tmpCategoryList as $category) {
+			$categories[strtoupper($category->name)] = $category;
+		}
 		
 		$products = array();
+		$productCategoryList = array();
 		$failProducts = array();
 		$no_jp_array = array();
 		$today = date('Y-m-d');
 		$worksheet = $objPHPExcel->getActiveSheet();
 		foreach ($worksheet->getRowIterator() as $row) {
+			$isError = false;
+
 			$rowNo = $row->getRowIndex();
 			if ($rowNo == 1) {
 				// Skip 1st row (i.e. header)
@@ -96,11 +106,36 @@ class ImportProductForm extends CFormModel {
 			$product->market_research_price = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
 			$product->yahoo_produce = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
 			$product->produce_status = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue(); if (empty($product->produce_status)) { $product->produce_status = GlobalConstants::PRODUCE_STATUS_PREPARE; }
+			$product->shop = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
 			$product->is_monopoly = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue() == 'No' ? 0 : 1;
+			$product->is_retail = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue() == 'No' ? 0 : 1;
+			$product->is_internal = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue() == 'No' ? 0 : 1;
+			$product->is_exhibit = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue() == 'No' ? 0 : 1;
+			$product->is_ship = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue() == 'No' ? 0 : 1;
+
+			// Category
+			$productCategories = array();
+			$cellValue = $worksheet->getCellByColumnAndRow($i++, $rowNo)->getValue();
+			foreach (explode(",", $cellValue) as $categoryName) {
+				if (empty($categoryName)) {
+					continue;
+				}
+
+				$category = $categories[strtoupper(trim($categoryName))];
+				if ($category === NULL) {
+					$isError = true;
+
+					$product->addErrors(array('Category['.$categoryName.'] does not exist.'));
+				} else {
+					$productCategory = new ProductCategory();
+					$productCategory->category_id = $category->id;
+					$productCategories[] = $productCategory;
+				}
+			}
 			
 			$product->create_date = $today;
-			
-			if (!$product->validate()) {
+
+			if ($isError || !$product->validate()) {
 				$failProducts[$rowNo] = $product;
 				$isValid = false;
 			}
@@ -113,7 +148,8 @@ class ImportProductForm extends CFormModel {
 				$no_jp_array[$product->no_jp] = '';
 			} */
 
-			$products[] = $product;
+			$products[$rowNo] = $product;
+			$productCategoryList[$rowNo] = $productCategories;
 		}
 		
 		if (!$isValid) {
@@ -126,10 +162,21 @@ class ImportProductForm extends CFormModel {
 		// Truncate product table
 		$command = Yii::app()->db->createCommand();
 		$command->truncateTable('product_master');
+
+		$command->truncateTable('product_category');
 		
 		// Insert into DB
-		 foreach ($products as $product) {
+		 foreach ($products as $key=>$product) {
 			$product->save(false);
+
+			$product_id = Yii::app()->db->getLastInsertID();
+			$productCategories = $productCategoryList[$key];
+			if (!empty($productCategories)) {
+				foreach ($productCategories as $productCategory) {
+					$productCategory->product_id = $product_id;
+					$productCategory->save();
+				}
+			}
 		}
 		
 		return array(true);

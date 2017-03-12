@@ -8,6 +8,7 @@ class MaintUserForm extends CFormModel {
 	public function rules() {
 		return array(
 			array('username, role_code, supplier', 'required'),
+			array('username', 'uniqueUsername', 'on'=>'add'),
 			array('password', 'required', 'on'=>'add'),
 			array('password', 'safe', 'on'=>'update'),
 		);
@@ -119,5 +120,13 @@ class MaintUserForm extends CFormModel {
 		}
 		
 		return $options;
+	}
+
+	public function uniqueUsername($attribute, $params) {
+		$model = Authorize::model()->findByPk($this->$attribute);
+
+		if ($model != null) {
+			$this->addError($attribute, '用戶 has already existed!');
+		}
 	}
 }
