@@ -52,7 +52,7 @@ class Cash extends CActiveRecord
 			array('pay_from, pay_to, account', 'length', 'max'=>100),
 			array('desc, remark', 'length', 'max'=>255),
 			//array('rmb, hkd, jpy', 'length', 'max'=>8),
-			array('image_name', 'length', 'max'=>50),
+			array('image_name, invoice_image, payment_image', 'length', 'max'=>50),
 			array('created_by, last_updated_by', 'length', 'max'=>20),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.

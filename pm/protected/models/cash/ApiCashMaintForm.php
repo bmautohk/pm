@@ -181,7 +181,30 @@ class ApiCashMaintForm extends CFormModel {
 		
 		return $target;
 	}
-	
+
+	public function uploadImageV2($cash_id, $image_file) {
+		$this->error_messages = array();
+
+		$model = Cash::model()->findByAttributes(array('id'=>$cash_id, 'is_active'=>'Y'));
+		
+		if ($model === null) {
+			throw new Exception('Record not found ID['.$cash_id.']');
+		}
+
+		if ($this->image_file === NULL) {
+			throw new Exception('No image');
+		}
+
+		$target = $this->saveImage($image_file, $cash_id);
+				
+		if ($target == NULL) {
+			throw new Exception('Fail to upload image.');
+		} else {
+			$model->image_name = $target;
+			$model->save();
+		}
+	}
+
 	private function convertToModel($model) {
 		$model->pay_from = $this->pay_from;
 		$model->pay_to = $this->pay_to;
