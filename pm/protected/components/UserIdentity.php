@@ -74,8 +74,21 @@ class UserIdentity extends CUserIdentity
 			// Update country
 			try {
 				$ip = $this->getIP();
-				$tags = json_decode(file_get_contents('http://getcitydetails.geobytes.com/GetCityDetails?fqcn='.$ip), true);
-				$user->country = $tags['geobytescountry'];
+				//http://ip-api.com/json/208.80.152.201
+				//$url='http://getcitydetails.geobytes.com/GetCityDetails?fqcn='.$ip;
+				$url='http://ip-api.com/json/'.$ip;
+				$ch = curl_init();
+                        curl_setopt($ch, CURLOPT_URL, $url);
+                        curl_setopt($ch, CURLOPT_HEADER, 0);
+                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+						curl_setopt($ch,CURLOPT_TIMEOUT,5);
+                        $str = curl_exec($ch);
+                        curl_close($ch);
+						
+				//$str= file_get_contents($url,false,$ctx);
+				$tags = json_decode($str, true);
+				//$user->country = $tags['geobytescountry'];
+				$user->country = $tags['country'];
 				$user->ip = $ip;
 			} catch (Exception $e) {
 				Yii::log($e->getMessage(), 'error', 'pm.components.UserIdentity');
