@@ -4,11 +4,6 @@ Yii::import('application.models.cash.*');
 class ApiController extends ApiBaseController {
 	
 	public function actionCreateCash() {
-		if (!$this->checkPrivilege('mobile', RolePageMatrix::PERMISSION_WRITE)) {
-			$this->sendResponse(500, array('error'=>'No authority'));
-			return;
-		}
-
 		$post = file_get_contents("php://input");
 		$data = CJSON::decode($post, true);
 		
@@ -26,11 +21,6 @@ class ApiController extends ApiBaseController {
 	}
 	
 	public function actionUpdateCash() {
-		if (!$this->checkPrivilege('mobile', RolePageMatrix::PERMISSION_WRITE)) {
-			$this->sendResponse(500, array('error'=>'No authority'));
-			return;
-		}
-
 		$post = file_get_contents("php://input");
 		$data = CJSON::decode($post, true);
 		
@@ -48,11 +38,6 @@ class ApiController extends ApiBaseController {
 	}
 
 	public function actionDeleteCash() {
-		if (!$this->checkPrivilege('mobile', RolePageMatrix::PERMISSION_WRITE)) {
-			$this->sendResponse(500, array('error'=>'No authority'));
-			return;
-		}
-
 		$post = file_get_contents("php://input");
 		$data = CJSON::decode($post, true);
 		
@@ -79,6 +64,25 @@ class ApiController extends ApiBaseController {
 		header('Content-type: application/json');
 		echo CJSON::encode($searchResult);
 	}
+
+	public function actionGetCash() {
+		$id = Yii::app()->getRequest()->getQuery('id');
+
+		if ($id == NULL) {
+			throw new CHttpException(400, 'Missing parameter');
+		}
+
+		$model = new ApiCashSearchForm();
+		$searchResult = $model->searchByCashId($id, Yii::app()->user->id);
+
+		if ($searchResult != NULL) {
+			header('Content-type: application/json');
+			echo CJSON::encode($searchResult);
+		} else {
+			throw new CHttpException(404, 'Record not found');
+		}
+	}
+
 
 	public function actionImage() {
 		$model = new ApiCashMaintForm();
@@ -108,5 +112,10 @@ class ApiController extends ApiBaseController {
 		header('Access-Control-Allow-Origin: *');
 		echo CJSON::encode($data == null ? '' : $data);
 	}
+
+	public function actionLogout() {
+   		Yii::app()->user->logout();
+   		$this->sendResponse(200);
+   	}
 
 }

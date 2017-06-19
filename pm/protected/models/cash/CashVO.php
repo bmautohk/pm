@@ -29,9 +29,9 @@ class CashVO {
 		$this->created_date = date('Y-m-d', strtotime($model->created_date));
 	}
 	
-	public function setImageURL($imagePath) {
+	public function setImageURL($url) {
 		if (!empty($this->image_name)) {
-			$this->image_url = $imagePath.$this->image_name;
+			$this->image_url = $url.$this->image_name;
 		}
 	}
 }

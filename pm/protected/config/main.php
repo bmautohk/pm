@@ -47,6 +47,8 @@ return array(
 			'urlFormat'=>'path',
 			'showScriptName'=>false,
 			'rules'=>array(
+				'api/apiAuth'=>'apiAuth',
+				'<controller:\w+>/v2/<action:\w+>'=>'<controller>V2/<action>',
 				'<controller:\w+>/<id:\d+>'=>'<controller>/view',
 				'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
 				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
@@ -117,6 +119,10 @@ return array(
 		'pageSize'=>'8',
 		'excelViewPageSize'=>'50',
 		'image_dir'=>'images/product/',
-		'internal_image_dir'=>'images/product_internal/'
+		'internal_image_dir'=>'images/product_internal/',
+		'cash_image_dir'=>'images/cash/',
+		'cash_thumbnail_dir'=>'images/cash/thumbnail/',
+		'cash_image_url' => 'http://127.0.0.1/pm/pm/images/cash/',
+		'cash_thumbnail_url' => 'http://127.0.0.1/pm/pm/images/cash/thumbnail/',
 	),
 );

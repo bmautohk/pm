@@ -32,7 +32,7 @@ class ApiCashSearchForm extends CFormModel {
 			$data = Cash::model()->findAll($criteria);
 		}
 			
-		$imgDir = Yii::app()->params['cash_image_dir'];
+		$imgDir = Yii::app()->params['cash_image_url'];
 		
 		$result = array();
 		foreach($data as $cash) {
@@ -43,5 +43,24 @@ class ApiCashSearchForm extends CFormModel {
 		}
 		
 		return $result;
+	}
+
+	public function searchByCashId($id, $userId) {
+		$cash = Cash::model()->findByAttributes(array('id'=>$id, 'is_active'=>'Y', 'created_by'=>$userId));
+
+		if ($cash != NULL) {
+			$vo = new CashDetailVO();
+			$vo->convertFromModel($cash);
+
+			$imgDir = Yii::app()->params['cash_image_url'];
+			$vo->setImageURL($imgDir);
+
+			$imgDir = Yii::app()->params['cash_thumbnail_url'];
+			$vo->setThumbnailURL($imgDir);
+			
+			return $vo;
+		} else {
+			return NULL;
+		}
 	}
 }

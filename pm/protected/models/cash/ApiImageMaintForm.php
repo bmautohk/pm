@@ -21,12 +21,7 @@ class ApiImageMaintForm extends CFormModel {
 		}
 		
 		$image_name = $this->saveImage($cash_id, $image_type, $image_file);
-				
-		if ($image_name == NULL) {
-			throw new Exception('Fail to upload image.');
-		} else {
-			$this->assignCashImage($cash, $image_type, $image_name);
-		}
+		$this->assignCashImage($cash, $image_type, $image_name);
 	}
 
 	private function isValidImageType($image_type) {
@@ -56,7 +51,13 @@ class ApiImageMaintForm extends CFormModel {
 		}
 		
 		if (!move_uploaded_file($image_file["tmp_name"], $imgDir.$target)) {
-			return NULL;
+			throw new Exception('Fail to upload image to directory['.$imgDir.']');
+		}
+
+		//TODO create thumbnail
+		$thumbnailDir = Yii::app()->params['cash_thumbnail_dir'];
+		if (!copy($imgDir.$target, $thumbnailDir.$target)) {
+			throw new Exception('Fail to upload image to directory['.$thumbnailDir.']');
 		}
 
 		return $target;
