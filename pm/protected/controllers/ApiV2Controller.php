@@ -12,10 +12,9 @@ class ApiV2Controller extends ApiBaseController {
 
 		try {
 			if ($httpMethod == 'POST') {
-				$cash_id = $_GET['cash_id'];
-				$image_type = $_GET['image_type'];
-				$image_file = $_FILES["image_file"];
-				
+				$cash_id = $_POST['cash_id'];
+				$image_type = $_POST['image_type'];
+				$image_file = $_FILES['file'];
 				$model->uploadImage($cash_id, $image_type, $image_file);
 				$this->sendResponse(200);
 
