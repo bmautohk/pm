@@ -49,13 +49,22 @@ class ApiImageMaintForm extends CFormModel {
 		} else {
 			$target = $cash_id.'_'.$image_type.'.'.$ext;
 		}
-		
+
+		if (!file_exists($imgDir)) {
+			mkdir($imgDir);
+		}
+
 		if (!move_uploaded_file($image_file["tmp_name"], $imgDir.$target)) {
 			throw new Exception('Fail to upload image to directory['.$imgDir.']');
 		}
 
 		//TODO create thumbnail
 		$thumbnailDir = Yii::app()->params['cash_thumbnail_dir'];
+
+		if (!file_exists($thumbnailDir)) {
+			mkdir($thumbnailDir);
+		}
+
 		if (!copy($imgDir.$target, $thumbnailDir.$target)) {
 			throw new Exception('Fail to upload image to directory['.$thumbnailDir.']');
 		}
