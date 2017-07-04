@@ -44,11 +44,8 @@ class ApiImageMaintForm extends CFormModel {
 		
 		$imgDir = Yii::app()->params['cash_image_dir'];
 
-		if ($image_type === ApiImageMaintForm::IMAGE_TYPE_CASH) {
-			$target = $cash_id.'.'.$ext;
-		} else {
-			$target = $cash_id.'_'.$image_type.'.'.$ext;
-		}
+		// Define image name
+		$target = $cash_id.'_'.$image_type.'_'.date('YmdHis').'.'.$ext;
 
 		if (!file_exists($imgDir)) {
 			mkdir($imgDir);
@@ -74,14 +71,34 @@ class ApiImageMaintForm extends CFormModel {
 
 	private function assignCashImage($cash, $image_type, $image_name) {
 		if ($image_type === ApiImageMaintForm::IMAGE_TYPE_CASH) {
+			$this->deleteImage($cash->image_name);
 			$cash->image_name = $image_name;
 		} if ($image_type === ApiImageMaintForm::IMAGE_TYPE_PAYMENT) {
+			$this->deleteImage($cash->payment_image);
 			$cash->payment_image = $image_name;
 		} if ($image_type === ApiImageMaintForm::IMAGE_TYPE_INVOICE) {
+			$this->deleteImage($cash->invoice_image);
 			$cash->invoice_image = $image_name;
 		}
 
 		$cash->save();
+	}
+
+	private function deleteImage($imageName) {
+		if ($imageName == NULL || $imageName == '') {
+			return;
+		}
+
+		$imgDir = Yii::app()->params['cash_image_dir'];
+		$thumbnailDir = Yii::app()->params['cash_thumbnail_dir'];
+
+		if (file_exists($imgDir.'/'.$imageName)) {
+			unlink($imgDir.'/'.$imageName);
+		}
+
+		if (file_exists($thumbnailDir.'/'.$imageName)) {
+			unlink($thumbnailDir.'/'.$imageName);
+		}
 	}
 
 }
