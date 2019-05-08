@@ -31,7 +31,7 @@ if (Yii::app()->user->getState('role') == 'USER') {
 
 <div>
 	<div id="header"></div>
-	<div id="name">BM AUTO ACCESSORIES (HK) CO. LTD.</div>
+	<div id="name">Superior Auto Accessories Co LTD</div>
 	<div id="logo"><img src="<?php echo Yii::app()->request->baseUrl; ?>/images/logo.png"/></div>
 
 	<div id="login">
