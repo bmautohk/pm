@@ -5,7 +5,6 @@ $writePermission = GlobalFunction::checkPagePrivilege('category_management', Rol
 <div id="rightmain">
 	<div class="rightmain_content">
 		<? $this->widget('ResultMessage', array('msg'=>$msg)); ?>
-		<? echo CHtml::errorSummary($model, '', '', array('class'=>'errorMsg')); ?>
 		<br>
 		
 		<? if ($writePermission) { ?>
